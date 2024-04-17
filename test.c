@@ -4,6 +4,8 @@
 int main() {
     CURL *curl;
     CURLcode res;
+
+    
     
     curl = curl_easy_init();
     if (curl) {
