@@ -1,11 +1,13 @@
+
 #include <stdio.h>
-#include <curl/curl.h>
+//#include <curl/curl.h>
 
 int main() {
-    CURL *curl;
-    CURLcode res;
+/*
+    //CURL *curl;
+    //CURLcode res;
 
-    hubert
+    //hubert
     
     curl = curl_easy_init();
     if (curl) {
@@ -20,6 +22,6 @@ int main() {
         
         curl_easy_cleanup(curl);
     }
-    
+    */
     return 0;
 }
