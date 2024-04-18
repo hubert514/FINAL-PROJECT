@@ -4,6 +4,6 @@ all:
 	gcc src/main.c -o engine
 
 clean:
-	rm -f test *.exe
+	rm -f test *.exe engine
 
 .PHONY: all
