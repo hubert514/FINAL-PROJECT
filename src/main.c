@@ -28,6 +28,7 @@ int main(int argc, char const *argv[])
 
     if (load_success = load_image(renderer, imageSurface, &texture_1))
     {
+        printf("load success\n");
     }
 
     if (load_success = load_image(renderer, imageSurface_a, &texture_2))
