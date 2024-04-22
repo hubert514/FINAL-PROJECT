@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <stdint.h>
+#include "constants.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "constants.h"
-#include <unistd.h>
+#include "SDL2/SDL_ttf.h"
 #include "load_image.h"
+#include "show_image.h"
+#include "show_text.h"
+#include <unistd.h>
+#include <string.h>
 // #include "SDL_functions.h"
 
 // set up the window
@@ -13,39 +17,24 @@ int32_t initialize_window(void);
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 int imgFlags;
+char font[100] = "assets/fonts/kaiu.ttf";
 
 // main function ubuntu
 int main(int argc, char const *argv[])
 {
     // initialize window
     int32_t success = initialize_window();
-
+    if (!TTF_OpenFont(font, 24))
+    {
+        printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+    }
     // setup();
 
-    SDL_Surface *imageSurface = IMG_Load("assets/images/sw.png"), *imageSurface_a = IMG_Load("assets/images/sss.png");
-    SDL_Texture *texture_1, *texture_2;
-    int32_t load_success;
-
-    if (load_success = load_image(renderer, imageSurface, &texture_1))
-    {
-        printf("load success\n");
-    }
-
-    if (load_success = load_image(renderer, imageSurface_a, &texture_2))
-    {
-        printf("load success\n");
-    }
-
-    // 指定图片位置
-    int32_t img_sw_w = imageSurface->w * WINDOW_HEIGHT / imageSurface->h;
-
-    SDL_Rect dstRect = {0, 0, img_sw_w, WINDOW_HEIGHT}, dstRect_2 = {200, 200, img_sw_w, WINDOW_HEIGHT};
-
     // 渲染图片
-    SDL_RenderCopy(renderer, texture_1, NULL, &dstRect);
-    SDL_RenderPresent(renderer);
-
+    int8_t show_success = show_image(renderer, "assets/images/sw.png", 0, 0, 500, 500);
+    show_success = show_text(renderer, "hello world", 0, 600, strlen("hello world") * 24 / 2, 24, TTF_OpenFont(font, 24), (SDL_Color){255, 255, 255, 255});
     SDL_Event event;
+
     while (TRUE)
     {
         while (SDL_PollEvent(&event))
@@ -56,9 +45,7 @@ int main(int argc, char const *argv[])
             }
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN)
             {
-                SDL_RenderClear(renderer);
-                SDL_RenderCopy(renderer, texture_2, NULL, &dstRect);
-                SDL_RenderPresent(renderer);
+                show_image(renderer, "assets/images/sss.png", 0, 0, 500, 500);
             }
         }
         if (event.type == SDL_QUIT)
@@ -68,14 +55,10 @@ int main(int argc, char const *argv[])
     }
 
     // clean up
-    SDL_DestroyTexture(texture_1);
-    SDL_DestroyTexture(texture_2);
-    SDL_FreeSurface(imageSurface);
-    SDL_FreeSurface(imageSurface_a);
-
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
     return 0;
 }
 
@@ -112,5 +95,13 @@ int32_t initialize_window(void)
         printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
         return FALSE;
     }
+
+    // initialize SDL_ttf
+    if (TTF_Init() == -1)
+    {
+        printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+        return FALSE;
+    }
+
     return TRUE;
 }

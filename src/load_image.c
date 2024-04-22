@@ -28,7 +28,6 @@
     */
 int32_t load_image(SDL_Renderer *renderer, SDL_Surface *imageSurface,  SDL_Texture **texture)
 {
-    
     if (imageSurface == NULL)
     {
         printf("picture could not be loaded! SDL_image Error: %s\n", IMG_GetError());
