@@ -377,7 +377,12 @@ text = "不用了，整座森林都是我的房子...阿阿好啦，夜深了，
 next = "cp2.walkie_talkie"
 
 [cp2.walkie_talkie]
+charactor = "雇主"
+text = "(對講機突然傳來聲響)ARR!不要再交朋友了，那個叫隱刃的人和那個老人都不是甚麼好東西，只會影響到皇帝的計畫，快點趁他們不備時解決掉，以免成為大患!不要忘記你來這裡的目的，這點微不足道的犧牲是必要的，殺了他們吧!"
 
+[[cp2.walkie_talkie.options]]
+option = "殺了他們"
+ne
 
 
 [cp2.kingdom]
