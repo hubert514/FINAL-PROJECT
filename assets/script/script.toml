@@ -16,6 +16,16 @@ name = "影刃"
 kind = "半精靈"
 Favorability = 30
 
+[item.axe]
+name = "斧頭"
+level_of_damage = 100
+
+[item.bow]
+name = "弓"
+level_of_damage = 100
+arror = 0
+
+
 [scene.office]
 name = "辦公室"
 description = "典雅華麗，與外頭的暴亂形成對比"
@@ -159,7 +169,7 @@ option = "王國之路"
 next = "cp2.kingdom"
 
 #chapter 2
-[cp2.forest_start]
+[cp2.forest]
 scene = "forest"
 character = "player"
 player.hungry = 50
@@ -382,7 +392,148 @@ text = "(對講機突然傳來聲響)ARR!不要再交朋友了，那個叫隱刃
 
 [[cp2.walkie_talkie.options]]
 option = "殺了他們"
-ne
+next = "cp2.kill_them"
+[[cp2.walkie_talkie.options]]
+option = "忽視雇主"
+next = "cp2.dont_kill_them"
 
+[cp2.kill_them]
+character = "player"
+text = "為了正義，每個抉擇都是必要的，請安息吧"
+employer.Favorability = +20
+next = "cp2.continue"
+
+[cp2.dont_kill_them]
+character = "player"
+text = "不! 勇者有權力決定他的路，我選擇相信他們"
+employer.Favorability = -30
+next = "cp2.continue"
+
+[[cp2.shadow_blade_fight]]
+character = "player"
+text = "你這個哥布林混血的畜牲! 說話怎麼可以這麼沒禮貌! 我看我需要好好地給你上一課了"
+shadow_blade.Favorability = -20
+[[cp2.shadow_blade_fight.options]]
+option = "從背包掏出斧頭"
+player.hungry = -10
+
+next = "cp2.fight_with_axe"
+[[cp2.shadow_blade_fight.options]]
+option = "從背包掏出沒有箭矢的弓"
+next = "cp2.fight_with_bow"
+[[cp2.shadow_blade_fight.options]]
+option = "直接使用拳頭"
+next = "cp2.fight_with_fist"
+
+[cp2.fight_with_axe]
+character = "shadow_blade"
+text = "雖然眼前的人身手十分矯健，躲過了一次又一次的攻擊，但他似乎在意著某個事物，終於在你的一次劈砍之下倒臥在血泊之中，當你往旁一看，發現那個剛才躺在火堆旁邊的，是個驚恐而瘦弱的老人身影"
+next = "cp2.walkie_talkie_when_fighting"
+
+[cp2.walkie_talkie_when_fighting]
+charactor = "雇主"
+text = "(對講機傳來了聲響)任何可能妨礙任務的人，格殺勿論! 我們沒有這個聖母情結來拯救眾生，你別忘了你的任務，為了皇帝的計畫，做出微不足道的犧牲是必要的，殺了他!"
+
+[[cp2.walkie_talkie_when_fighting.options]]
+option = "殺了他"
+next = "cp2.kill_old_man"
+[[cp2.walkie_talkie_when_fighting.options]]
+option = "忽視雇主"
+next = "cp2.ignore_employer"
+
+[cp2.kill_old_man]
+employer.Favorability = +10
+character = "player"
+text = "為了正義，每個抉擇都是必要的，請安息吧((從兩人身上搜出2塊麵包)"
+player.hungry = +30
+next = "cp2.continue"
+
+[cp2.ignore_employer]
+employer.Favorability = -20
+[[cp2.ignore_employer.options]]
+option = "使用斧頭到附近打獵"
+next = "cp2.forest_hunt"
+
+[cp2.forest_hunt]
+character = "player"
+text = "取得了食物救活老人並填飽了自己的肚子，在你的悉心照料下，老人緊閉的雙眼終於咧開了一道細縫，你驚訝的發現，即使受盡了創傷，他的眼神仍然如此雪亮..."
+player.hungry = +40
+next = "cp2.old_man"
+
+[cp2.old_man]
+character = "old_man"
+text = "…額...這片森林可真大...我...我迷失了好久好...謝...謝謝你在...醫學的層面上救了我...雖然我不是很喜歡這品種的山豬肉...肌肉組織在唾液的混合下實在有點難消化...額...但還是感謝...嗯...比起一連串感恩話語的單方面輸出，我個人比較傾向採用...實際行動..."
+next = "cp.answer_old_man"
+
+[cp2.answer_old_man]
+character = "player"
+text = "嗯..."
+next = "cp2.old_is_doctor"
+
+[cp2.old_is_doctor]
+character = "old_man"
+text = "那...有鑑於我的職業是名醫生，能否讓我為你驗個血...來看看你的健康狀態呢?我們僅就學術方面進行相關的討論..."
+
+[[cp2.old_is_doctor.options]]
+option = "欣然答應"
+next = "cp2.old_is_doctor_accept"
+[[cp2.old_is_doctor.options]]
+option = "謹慎拒絕"
+next = "cp2.old_is_doctor_reject"
+
+[cp2.old_is_doctor_accept]
+character = "player"
+text = "好的，就讓你驗驗看吧..."
+next = "cp2.old_is_doctor_accept_end"
+
+[cp2.old_is_doctor_accept_end]
+character = "old_man"
+text = "老人展現出了外科醫生般的精妙手法，拿出一個嶄新的針筒，精準的對著皮膚組織包裹之下的靜脈，輕柔優雅又不失力道的命中目標，那一刻，眼中不再是瘦弱的老人，他彷彿恢復往日的神采，卻又在一段彷彿某種頓悟之下轉為黯淡，沉思，甚至批判的眼神"
+next = "end.doctor"
+
+[cp2.old_is_doctor_reject]
+character = "player"
+text = "在下我的滿腔熱血是為大義而流，沒有我的允許休想動我任何一根寒毛!!"
+next = "cp2.reject_extract_blood"
+
+[cp2.reject_extract_blood]
+character = "old_man"
+text = "至此之後，老人再也沒有說過任何一句話，爾後森林裡每一天的相處，就猶如孩童之於洋娃娃的關係般，老人忽視了你所有天真的交流，他的嘴，似乎從此被無形的回針給縫了起來，直到有天你突然再也找不到他的身影，你完全不知道他去了哪裡，只能當做他再度迷失在了這片森林，於是你只好繼續踏上了孤獨的旅程"
+next = "cp2.continue"
+
+[cp2.fight_with_bow]
+character = "player"
+text = "從背包掏出沒有箭矢的弓"
+next = "end.fight_with_bow"
+
+[cp2.fight_with_fist]
+character = "player"
+text = "你跟眼前的人影足足纏鬥了一個獸人月之久，你們雙方在無法分出勝負，卻又飢餓難耐的情形之下選擇了暫時休戰..."
+next = "cp2.meet_through_fight"
+
+[cp2.meet_through_fight]
+character = "shadow_blade"
+text = "哈哈，你這傢伙打得挺不錯嘛，不瞞你說，我的名字叫做影刃，是個半精靈，以前也跟你一樣是個勇者，但目前隱居在這片森林中啦"
+
+
+
+
+
+
+
+[cp2.forest_other_way]
 
 [cp2.kingdom]
+
+[end.reject_mission]
+#TBD
+
+[end.doctor]
+character = "player"
+text = "隨即，世界突然繞著你旋轉，在你的眼神彷彿因為離心力拋飛出眼周表面之際，你頹然倒下，望著老人若有似無的笑意，你帶著無數個不明所以，永遠躺在落葉紛飛之中..."
+
+[end.fight_with_bow]
+character = "player"
+text = "你從背包中迅速地掏出了沒有箭矢的弓，朝這個神秘的人物擲了出去，想當然耳，是完全沒有造成任何傷害，接下來的事情，幾乎僅發生在半秒之間，甚至完全沒有痛的感覺，你只感受的到全然的冷冽，那是無情的刀刃，在沿著肩胛骨劃開所留下的溫度，你的世界就此被黑與白壟罩，也許，這就是英雄的宿命吧..."
+next = "cp2.question_about_shadow"
+#go back
