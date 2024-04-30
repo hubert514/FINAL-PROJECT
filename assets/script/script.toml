@@ -1,0 +1,143 @@
+# 遊戲中各項數值計算均有調整空間，事件也可能需要調整(例如獲得武器管道過少之類的)
+
+[player]
+name = "player"
+kind = "人類"
+money = 0
+hungry = 100
+
+[character.employer]
+name = "雇主"
+kind = "獸人"
+Favorability = 60
+
+[scene]
+name = "辦公室"
+description = "典雅華麗，與外頭的暴亂形成對比"
+
+[cp1.begin]
+character = "雇主"
+text = "Arr! 歡迎你，請坐下，你果然就是那位鼎鼎大名的冒險者{player.name}吧?"
+
+[[cp1.begin.options]]
+option = "接受"
+next = "cp1.accept_text"
+[[cp1.begin.options]]
+option = "不接受"
+next = "cp1.raise_text"
+
+[cp1.accept_text]
+character = "player"
+text = "是的，我保證翻遍整個混沌紀元的史冊也找不到有我同等身手的勇者，請問有甚麼事需要我出馬的嗎?(自信)"
+employer.Favorability = +10
+next = "cp1.accept"
+
+[cp1.accept]
+character = "雇主"
+text = "ArrrArr!! 非常好，勇者，我欣賞你的膽識! 你值得一筆不斐的賞金，我願意花50元金幣僱用你，事前事後各付一半"
+get_pay = 25
+commission_left = 25
+next = "cp1.mission_explain"
+
+[cp1.raise_text]
+character = "player"
+text = "名氣是一回事，能力又是另一回事，但要說我在乎的事，恐怕是你有沒有把同等的報酬當一回事?(勢利)"
+employer.Favorability = -10
+next = "cp1.raise"
+
+[cp1.raise]
+character = "雇主"
+text = "喔喔是的，err…，賞金是吧，讓我們把客套的面具卸下來，金額的事情你甭擔心，100金幣夠你幹完這票安享晚年，事前事後各付一半，希望我不需要在你的墳前獻上剩下的50塊...這筆交易你能接受嗎?"
+[[cp1.raise.options]]
+option = "接受"
+next = "cp1.raise_accept_text"
+[[cp1.raise.options]]
+option = "不接受"
+next = "cp1.raise_rejected_text"
+
+[cp1.raise_accept_text]
+character = "player"
+text = "好的，請告訴我任務內容吧!"
+get_pay = 50
+commission_left = 50
+next = "cp1_mission_explain"
+
+[cp1.raise_rejected_text]
+character = "player"
+text = "在這時局混亂的年代，我居然需要跟一個舒服的躺在他辦公室沙發椅上的中年獸人為了為了這100金幣進行這種無稽之談?這錢連我的喪禮你都付不起呀!(不滿)"
+employer.Favorability = -20
+next = "cp1.angry"
+
+[cp1.angry]
+character = "雇主"
+text = "容我提醒你，自從你的前腳踩進我辦公室的天鵝絨起，你就該三生有幸了，Ar! 看到外頭的暴動了吧，我大可以請他們之中任何一個有能力的人來取代你的工作，所以請仔細考慮你的決定"
+[[cp1.angry.options]]
+option = "接受"
+next = "cp1.angry_accept_text"
+
+[cp1.angry_accept_text]
+character = "player"
+get_pay = 50
+commission_left = 50
+next = "cp1_mission_explain"
+
+#成就拒絕(TBD)
+
+[cp1.mission_explain]
+character = "雇主"
+text = "是這樣的，err...，在混沌紀元以前，整個星球都是我的礦業公會\n直到一名自稱龍裔救世主的神秘領袖出現，帶領他的族人四處劫掠我們精煉好的礦產\n再這樣下去可能會影響到皇帝偉大的計畫......\n因此我需要你護送這最後一匹礦產到寒冷的北方皇宮，你必須在三個獸人月之內完成任務並返回\n但是如果時限內任務沒有完成，ARR!! 建議你就不要回來了..."
+[[cp1.mission_explain.option_1]]
+option = "接受"
+next = "cp1.mission_accept"
+
+[cp1.mission_accept]
+character = "player"
+text = "好的，那關於這次任務的裝備..."
+next = "cp1.mission_get_pay"
+
+[cp1.mission_get_pay]
+character = "雇主"
+text = "喔對了，這裡是剛才說好的{get_pay}元金幣，以及骨傳導式的對講機\n你可以隨時在背包中查看他們，你可以在路上自行採買所需的裝備"
+get = "骨傳導式對講機\nmoney.{get_pay}"
+next = "cp1.mission_equipment"
+
+[cp1.mission_equipment]
+character = "player"
+text = "那能否請你提供一些上好的武器呢，我不小心注意到你房間角落的武器室"
+next = "cp1.mission_equipment_judge"
+
+[cp1.mission_equipment_get]
+character = "雇主"
+gap = "70, 50, 30"
+[[cp1.mission_equipment_get.70]]
+text = "Ar! 年輕人，不要吝於請求，我手頭正好有隻我珍藏的斧頭(折舊50%)，雖然有點舊了，但還堪用，希望對你的旅程有所幫助"
+get = "斧頭{50}"
+next = "cp1.final"
+[[cp1.mission_equipment_get.50]]
+text = "Ar! 對了，我手頭正好有張順手的弓(折舊75%)，但沒有箭矢，你就湊合著用吧"
+get = "弓{25}"
+next = "cp1.final"
+[[cp1.mission_equipment_get.30]]
+text = "Ar! 我想，憑你的本事，幾隻哥布林應該可以赤手空拳解決吧，跟一個你所謂的「中年獸人」請求武器是多麼沒出息的行為阿"
+employer.Favorability = -10
+next = "cp1.final"
+
+[cp1.final]
+character = "player"
+text = "我辦事你放心，在下定會準時完成交付的任務(自信)"
+next = "cp1.chose_road"
+
+[cp1.chose_road]
+character = "雇主"
+text = "最後，在出發之前，你必須選擇這次任務的路徑\n你可以選擇使用你可靠的雙腳穿越森林小徑\n雖然拉長旅程的天數但可以避免盜賊的攻擊\n你也可以選擇支付10元金幣雇個馬車夫，踏上尊爵不凡的直線道路\n保證你縮短至少三倍的時間，是不保證你能留下完整的屍體而已..."
+[[cp1.chose_road.options]]
+option = "森林小徑"
+next = "cp2.forest"
+[[cp1.chose_road.options]]
+option = "王國之路"
+next = "cp2.kingdom"
+
+
+[cp2.forest]
+
+[cp2.kingdom]
