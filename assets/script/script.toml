@@ -11,11 +11,24 @@ name = "雇主"
 kind = "獸人"
 Favorability = 60
 
-[scene]
+[character.shadow_blade]
+name = "影刃"
+kind = "半精靈"
+Favorability = 30
+
+[scene.office]
 name = "辦公室"
 description = "典雅華麗，與外頭的暴亂形成對比"
 
+[scene.forest]
+name = "森林小徑"
+description = "幽暗，茂密，時時有奇怪聲音作響"
+
+[scene.kingdom]
+description = ""
+
 [cp1.begin]
+scene = "office"
 character = "雇主"
 text = "Arr! 歡迎你，請坐下，你果然就是那位鼎鼎大名的冒險者{player.name}吧?"
 
@@ -48,6 +61,7 @@ next = "cp1.raise"
 [cp1.raise]
 character = "雇主"
 text = "喔喔是的，err…，賞金是吧，讓我們把客套的面具卸下來，金額的事情你甭擔心，100金幣夠你幹完這票安享晚年，事前事後各付一半，希望我不需要在你的墳前獻上剩下的50塊...這筆交易你能接受嗎?"
+
 [[cp1.raise.options]]
 option = "接受"
 next = "cp1.raise_accept_text"
@@ -71,9 +85,13 @@ next = "cp1.angry"
 [cp1.angry]
 character = "雇主"
 text = "容我提醒你，自從你的前腳踩進我辦公室的天鵝絨起，你就該三生有幸了，Ar! 看到外頭的暴動了吧，我大可以請他們之中任何一個有能力的人來取代你的工作，所以請仔細考慮你的決定"
+
 [[cp1.angry.options]]
 option = "接受"
 next = "cp1.angry_accept_text"
+[[cp1.angry.options]]
+option = "不接受"
+next = "end.reject_mission"
 
 [cp1.angry_accept_text]
 character = "player"
@@ -86,6 +104,7 @@ next = "cp1_mission_explain"
 [cp1.mission_explain]
 character = "雇主"
 text = "是這樣的，err...，在混沌紀元以前，整個星球都是我的礦業公會\n直到一名自稱龍裔救世主的神秘領袖出現，帶領他的族人四處劫掠我們精煉好的礦產\n再這樣下去可能會影響到皇帝偉大的計畫......\n因此我需要你護送這最後一匹礦產到寒冷的北方皇宮，你必須在三個獸人月之內完成任務並返回\n但是如果時限內任務沒有完成，ARR!! 建議你就不要回來了..."
+
 [[cp1.mission_explain.option_1]]
 option = "接受"
 next = "cp1.mission_accept"
@@ -109,6 +128,7 @@ next = "cp1.mission_equipment_judge"
 [cp1.mission_equipment_get]
 character = "雇主"
 gap = "70, 50, 30"
+
 [[cp1.mission_equipment_get.70]]
 text = "Ar! 年輕人，不要吝於請求，我手頭正好有隻我珍藏的斧頭(折舊50%)，雖然有點舊了，但還堪用，希望對你的旅程有所幫助"
 get = "斧頭{50}"
@@ -130,6 +150,7 @@ next = "cp1.chose_road"
 [cp1.chose_road]
 character = "雇主"
 text = "最後，在出發之前，你必須選擇這次任務的路徑\n你可以選擇使用你可靠的雙腳穿越森林小徑\n雖然拉長旅程的天數但可以避免盜賊的攻擊\n你也可以選擇支付10元金幣雇個馬車夫，踏上尊爵不凡的直線道路\n保證你縮短至少三倍的時間，是不保證你能留下完整的屍體而已..."
+
 [[cp1.chose_road.options]]
 option = "森林小徑"
 next = "cp2.forest"
@@ -137,7 +158,226 @@ next = "cp2.forest"
 option = "王國之路"
 next = "cp2.kingdom"
 
+#chapter 2
+[cp2.forest_start]
+scene = "forest"
+character = "player"
+player.hungry = 50
+text = "疑?前面好像有一團奇怪的煙霧"
 
-[cp2.forest]
+[[cp2.forest_start.options]]
+option = "查看情況"
+next = "cp2.forest_smoke_text"
+[[cp2.forest_start.options]]
+option = "繞道而行"
+next = "cp2.forest_other_way"
+
+[cp2.forest_smoke_text]
+character = "player"
+text = "嘿嘿...我覺得可以探查一下，說不定有人在餓到在self-BBQ呢!\n我手邊剛好有些調味料可以分他..."
+next = "cp2.forest_smoke"
+
+[cp2.forest_smoke]
+character = "player"
+text = "疑?看來隱隱約約有個人影坐在營火後面，旁邊似乎還躺了..."
+next = "cp2.shadow_blade"
+
+[cp2.shadow_blade]
+character = "shadow_blade"
+text = "退後!來者何人?"
+next = "cp2.show_my_self"
+
+[[cp2.shadow_blade.options]]
+option = "說明來意，以及此行的目的"
+next = "cp2.shadow_blade_explain"
+[[cp2.shadow_blade.options]]
+option = "打架"
+next = "cp2.shadow_blade_fight"
+
+
+[cp2.shadow_blade_explain]
+character = "shadow_blade"
+shadow_blade.Favorability = +30
+text = "阿阿原來是這樣呀，早說嘛，在森林中探索的人，都是一夥人，我的名字叫做影刃，是個半精靈，以前也跟你一樣是個勇者，但目前隱居在這片森林中啦"
+next = "cp2.hungry"
+
+[cp2.hungry]
+character = "player"
+text = "喔~那我想你應該有不少食物吧，我已經餓到就算一盤妖精肉擺在眼前我都會吞下肚了"
+next = "cp2.shadow_give_you_food"
+
+[cp2.shadow_give_you_food]
+character = "shadow_blade"
+text = "食物不多啦，兩塊麵包，不嫌棄的話我可以分成三份一起吃"
+player.hungry = +20
+next = "cp2.question_about_shadow"
+
+[cp2.question_about_shadow]
+character = "player"
+text = "我還有些問題..."
+
+[[cp2.question_about_shadow.options]]
+option = "關於你的種族"
+next = "cp2.about_half_elf"
+[[cp2.question_about_shadow.options]]
+option = "關於隱居生活"
+next = "cp2.about_hide_life"
+[[cp2.question_about_shadow.options]]
+option = "關於隱居原因"
+next = "cp2.about_hide_reason"
+[[cp2.question_about_shadow.options]]
+option = "關於躺在火堆旁的人"
+next = "cp2.about_man_beside_fire"
+[[cp2.question_about_shadow.options]]
+option = "關於武器"
+next = "cp2.about_weapon"
+[[cp2.question_about_shadow.options]]
+option = "關於皇帝的計畫"
+next = "cp2.about_king_plan"
+[[cp2.question_about_shadow.options]]
+option = "關於盜賊"
+next = "cp2.about_thief"
+[[cp2.question_about_shadow.options]]
+option = "關於我的雇主"
+next = "cp2.about_my_employer"
+[[cp2.question_about_shadow.options]]
+option = "...(接旅程繼續)"
+next = "cp2.continue_the_journey"
+
+[cp2.about_half_elf]
+character = "player"
+text = "你是半精靈對吧?我一直想知道精靈跟人類到底是怎麼生出小孩的?"
+next = "cp2.about_half_elf_answer"
+
+[cp2.about_half_elf_answer]
+character = "shadow_blade"
+text = "嗯...我也想知道，你懂的...飛在空中，似乎就沒有上下之分了...喔等等繼續講下去這遊戲就要被黃標了"
+next = "cp2.question_about_shadow"
+
+[cp2.about_hide_life]
+character = "player"
+text = "一個人?住在這危機四伏的森林?這是地下城遊戲不是生存遊戲耶?"
+next = "cp2.about_hide_life_answer"
+
+[cp2.about_hide_life_answer]
+character = "shadow_blade"
+text = "我不管這遊戲的開發者怎麼想，搞不好都會被紀老大當掉也說不定，但作為半精靈，靠著我的黑暗視覺在森林裡過活可不是難事，所以這幾天我甚至可以幫忙守夜也沒有關係"
+next = "cp2.question_about_shadow"
+
+[cp2.about_hide_reason]
+character = "player"
+text = "是什麼原因讓你決定隱居呢?"
+next = "cp2.about_hide_reason_answer"
+
+[cp2.about_hide_reason_answer]
+character = "shadow_blade"
+text = "從很久以前，我就選擇隱居於此，我受夠了為礦業公會，以及皇帝工作，我看不慣那些為了利益，為了他們口中自以為的正義，而不擇手段的嘴臉，這世界上沒有一條生命是應該被剝奪犧牲的，這麼簡單的道理，那些位高權重的人卻越無法理解，你看在這裡，萬物平等的世界，這才是和諧，才是規律，才是我的歸宿...話是這麼說，但有的時候我還是希望能為世界做點甚麼，會不會比袖手旁觀要來的好?"
+next = "cp2.question_about_shadow"
+
+[cp2.about_man_beside_fire]
+character = "player"
+text = "那個躺在火堆旁的人是誰?"
+next = "cp2.about_man_beside_fire_answer"
+
+[cp2.about_man_beside_fire_answer]
+character = "shadow_blade"
+text = "阿~從他的穿著打扮以及隨身用品，他似乎是名醫生的樣子，前幾天伴隨著一陣打鬥聲突然出現在森林裡，也許是念在我父親在渾沌紀元以前也曾是一名醫師的關係，我不能對他見死不救，他傷得很重，連眼睛都沒辦法睜開呢，但他的意志很強，似乎有某種執著一般，現在雖然已經恢復了些意識，但他對人戒心挺重，建議暫時不要跟他談話好一點"
+
+[cp2.about_weapon]
+character = "player"
+text = "我手頭的武器並不是很強，不知你是否有稱手的武器呢?"
+next = "cp2.about_weapon_answer"
+
+[cp2.about_weapon_answer]
+character = "shadow_blade"
+text = "手頭的武器?喔你是說這把斧頭嗎?嗯...斧柄的部分確實看起來舊了點，使用的是北方的橡木，質地輕卻夠堅韌...這樣好了，你給我10個金幣，我剛好有修過斧頭的經驗(折舊度-30%)，材料我也剛好有，這粗活就由我替你代勞吧，不知您意下如何?"
+
+[[cp2.about_weapon_answer.options]]
+option = "答應"
+next = "cp2.about_weapon_accept"
+[[cp2.about_weapon_answer.options]]
+option = "拒絕"
+next = "cp2.about_weapon_answer_2"
+
+[cp2.about_weapon_accept]
+#處理錢和武器
+next = "cp2.question_about_shadow"
+
+[cp2.about_weapon_answer_2]
+character = "shadow_blade"
+text = "手頭的武器?喔你是說這個沒有箭矢的弓嗎?嗯...我看看...彈性不太好，但彈性還可以...兄弟你可能走運了，雖然我無法強化這個弓的性能，但只要你支付給我20個金幣，我願意提供你五支上好的箭矢，省著點用吧"
+
+[[cp2.about_weapon_answer_2.options]]
+option = "答應"
+next = "cp2.about_weapon_accept_2"
+[[cp2.about_weapon_answer_2.options]]
+option = "拒絕"
+next = "cp2.about_weapon_answer_3"
+
+[cp2.about_weapon_accept_2]
+#處理錢和武器
+next = "cp2.question_about_shadow"
+
+[cp2.about_weapon_answer_3]
+character = "shadow_blade"
+text = "手頭的武器?喔你是說你的拳頭嗎?嗯...表面粗糙，關節處磨損有長繭...這確實是你僅剩的武器了呀哈哈，好啦我手上剛好有支2尺3吋的開山刀(折舊度20%)，只要你支付30個金幣他就歸你了"
+
+[[cp2.about_weapon_answer_3.options]]
+option = "答應"
+next = "cp2.about_weapon_accept_3"
+[[cp2.about_weapon_answer_3.options]]
+option = "拒絕"
+next = "cp2.question_about_shadow"
+
+[cp2.about_weapon_accept_3]
+#處理錢和武器
+next = "cp2.question_about_shadow"
+
+[cp2.about_king_plan]
+character = "player"
+text = "你知道任何有關皇帝的計畫，也就是他想要用這些礦藏的目的嗎?"
+next = "cp2.about_king_plan_answer"
+
+[cp2.about_king_plan_answer]
+character = "shadow_blade"
+text = "這位仁兄，我真的隱居多年不問世事了，但根據鄉野間的傳言，在他得到這個目的之後，就會獲得無上的力量"
+next = "cp2.question_about_shadow"
+
+[cp2.about_thief]
+character = "player"
+text = "請問你對外頭的盜賊有任何了解嗎?"
+next = "cp2.about_thief_answer"
+
+[cp2.about_thief_answer]
+character = "shadow_blade"
+text = "你選擇進入森林真的是明智的決定，那夥盜賊常常在外面的路上裝扮成各種身分來竊取通過的人，他們臉上通通穿著一樣的制服，帶著一樣的面具，在隱藏面容的同時，又能達到偽裝成某種身分階級的目的，再加上他們有個身手不凡的首領，這夥人真不是省油的燈呀~"
+
+[cp2.about_my_employer]
+character = "player"
+text = "請問你有任何關於我描述的雇主的情報嗎?"
+next = "cp2.about_my_employer_answer"
+
+[cp2.about_my_employer_answer]
+character = "shadow_blade"
+text = "當然，礦業公會的頭頭是吧，我曾為他工作過，之前不小心在他的信中看到一個驚人的真相，原來他跟皇帝竟然是同母異父的兄弟，而且他們倆一直不合，所以在你跟我說他會運送精煉好的礦藏給皇帝我是真的很驚訝，這種情況要嘛皇帝的計畫真的非同小可到被迫需要聯手，又或者這只是又一次暗潮洶湧的爭權遊戲?"
+
+[cp2.continue_the_journey]
+character = "shadow_blade"
+text = "好吧! 你的眼神...看起來不像個壞人，我願意陪你一起完成任務，反正我也需要順便帶這個人去城裡救治，我待在森林已經太久，很久沒有和別人交流和幫助別人的機會了，既然今天一次出現兩個，我就為你們出最後一次森林吧!"
+next = "cp2.thank_him"
+
+[cp2.thank_him]
+character = "player"
+text = "謝謝你...願意幫一個素昧平生的人，完成任務之後，我也許可以為你在森林蓋間房子"
+next = "cp2.thank_him_end"
+
+[cp2.thank_him_end]
+character = "shadow_blade"
+text = "不用了，整座森林都是我的房子...阿阿好啦，夜深了，今晚就由我負責守夜吧!"
+next = "cp2.walkie_talkie"
+
+[cp2.walkie_talkie]
+
+
 
 [cp2.kingdom]
