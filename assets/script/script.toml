@@ -34,8 +34,9 @@ description = "典雅華麗，與外頭的暴亂形成對比"
 name = "森林小徑"
 description = "幽暗，茂密，時時有奇怪聲音作響"
 
-[scene.kingdom]
-description = ""
+[scene.kingdom_road]
+name = "王國之路"
+description = "王國之路，萬里無雲，經過整修的寬闊，直線的石板路，邊界是森林"
 
 [cp1.begin]
 scene = "office"
@@ -166,7 +167,7 @@ option = "森林小徑"
 next = "cp2.forest"
 [[cp1.chose_road.options]]
 option = "王國之路"
-next = "cp2.kingdom"
+next = "cp2.kingdom_road"
 
 #chapter 2
 [cp2.forest]
@@ -514,16 +515,76 @@ next = "cp2.meet_through_fight"
 [cp2.meet_through_fight]
 character = "shadow_blade"
 text = "哈哈，你這傢伙打得挺不錯嘛，不瞞你說，我的名字叫做影刃，是個半精靈，以前也跟你一樣是個勇者，但目前隱居在這片森林中啦"
-
-
-
-
-
-
+next = "cp2.question_about_shadow"
+#go back
 
 [cp2.forest_other_way]
+character = "player"
+text = "繞道而行(面色凝重，飢餓度+10%):  嗯...我覺得還是謹慎點，繞道而行比較好，何況我還帶了一整背包的礦藏..."
+next = "cp2.bag"
 
-[cp2.kingdom]
+[cp2.bag]
+character = "player"
+text = "疑?前面地上似乎有一個不知名的包包，上面甚至連個扣子都沒有"
+[[cp2.bag.options]]
+option = "嘗試使用斧頭打開"
+next = "cp2.bag_with_axe"
+[[cp2.bag.options]]
+option = "嘗試使用拳頭打開"
+next = "cp2.bag_with_hand"
+
+[cp2.bag_with_axe]
+character = "player"
+text = "在一陣破碎聲中，你的斧頭(斧頭折舊100%只剩下屍體)和包包的材質隨即斷裂，從裡面滾出了一個斷成兩截的針筒，針筒裡甚麼都沒有，你完全不明白這代表甚麼意思"
+next = "cp2.cross_road"
+
+[cp2.bag_with_hand]
+character = "player"
+text = "你很生氣的揍了包包一下，除了拳頭的劇痛以外甚麼事都沒有發生"
+next = "cp2.cross_road"
+
+#隱藏事件
+
+[cp2.cross_road]
+character = "player"
+text = "由於事先沒有雇車夫，又繞了點路的關係，你發覺自己已經分不清的東南西北，不知不覺你走進了一個交叉口"
+[[cp2.cross_road.options]]
+option = "往前走: {你發現前方的地形越來越陡峭，走了一段時間你才驚覺自己已經走在了山路上，趕緊返回(飢餓度+30%，如果飢餓達到100%，會直接觸發餓死在半路上的結局) }"
+[[cp2.cross_road.options]]
+option = "往後走: 你發現前方出現了一隻矮小的妖精{妖精: 迷失的勇者阿，請跟隨我的聲音，不知您是否願意，只須掏出十個金幣，手中神器(折舊度0%)就有機會歸你(接受/不接受)(這是這遊戲目前唯一的類抽獎機制，可以是真的抽獎，也可以是跟關主玩個遊戲甚麼的，如果贏了可以拿到神器，但也可能賭到輸光，進而影響最終抉擇之類的，所以期望值理論上要調低)  }"
+[[cp2.cross_road.options]]
+option = "往左走: 這條路上頗為顛簸，你發覺背包裡的礦藏越來越熱，越來越熱{拿出來檢查: 這些精煉過的礦藏，在你的目光之下顯得不太尋常，像是個核融合的反應爐一般，似乎快要達到了某種臨界點，但當你的手接觸到其光滑表面的瞬間，迅即轉為原先的一片湛藍，看來一切都沒事了不理會:你的脊椎彷彿緊貼著燒紅的鐵一般，隨即在一聲「滋~~」這種細微卻又像是耳邊呢喃的詭異聲響後，一切又歸於寧靜，你的周圍又恢復了適溫，除了背包突然變輕了以外，彷彿甚麼都沒發生過一般(礦藏在此事件中全數溶解了，抵達王國後將會觸發沒有礦藏事件)}"
+[[cp2.cross_road.options]]
+option = "往右走: 這條路上遍布著你意想不到的各種奇珍異果，似乎可以為你提供一些旅途所需的熱量{吃(飢餓度-20%): 水果甘美的滋味讓你彷彿置身雲霄，無法自拔...迷濛之中，你從滿是落葉的地上爬起來，發現自己又回到了剛才的交叉路口(這個時候六條路徑會全部重新洗牌) 不吃(飢餓度+10%):  望著結實纍纍的樹梢，你嘆了一口氣，恐怕保險起見只能望梅止飢了 }往斜前方走: { 眼前的路越來越開闊，你才發覺不知不覺間你已走出了這片森林，抵達了北方王國了 }"
+[[cp2.cross_road.options]]
+option = "往斜後方走: 眼前的路越來越狹窄，叢林密布 {使用斧頭去除障礙: 路線的盡頭依然是條死路，但你發現了似乎是紮營過的痕跡，在營區附近找到了遺留下的半塊麵包(飢餓度-10%)後退:  你退回了原本的交叉口}"
+[[cp2.cross_road.options]]
+option = "旁邊有樹，過去休息一下吧: {   休息夠了繼續旅程吧: 你回到了叉路繼續做選擇讓我再躺一下: zzz…，過了0.2個獸人月，甚麼事也沒發生(玩家可以選擇繼續躺，躺滿5次有隱藏成就)使用斧頭砍樹(唯有遇到此抉擇時選擇查看背包並拿出斧頭，這個選項才會出現)(砍完樹之後會出現查看選項，玩家會看到樹的年輪疏密分布，只要根據密的那邊走玩家就可以推導出，寒冷的北方皇宮的方向) }"
+
+
+[cp2.kingdom_road]
+scene = "kingdom_road"
+character = "drive_man"
+text = "疑?前面有一組，穿著類似...制服之類的人馬在路上休息耶? 需不需要停下來跟他們說他們的馬車擋住了我們的路呀?"
+player.hungry = 80
+[[cp2.kingdom_road.option]]
+option = "禮貌的說明"
+next = "cp2.polite"
+[[cp2.kingdom_road.option]]
+option = "加速輾過去"
+next = "cp2.fuck_them"
+[[cp2.kingdom_road.option]]
+option = "等待他們"
+next = "cp2.wait_for_them"
+
+[cp2.wait_for_them]
+character = "player"
+text = "作為勇者，我們需要修練開闊的心胸，就讓我們在等待他們自行離去的空檔淨化我們的心靈吧{過了0.5個獸人月，前方人馬依然不為所動...(跳回其他選項)"
+next = "cp2.kingdom_road"
+
+
+
+
 
 [end.reject_mission]
 #TBD
@@ -535,5 +596,7 @@ text = "隨即，世界突然繞著你旋轉，在你的眼神彷彿因為離心
 [end.fight_with_bow]
 character = "player"
 text = "你從背包中迅速地掏出了沒有箭矢的弓，朝這個神秘的人物擲了出去，想當然耳，是完全沒有造成任何傷害，接下來的事情，幾乎僅發生在半秒之間，甚至完全沒有痛的感覺，你只感受的到全然的冷冽，那是無情的刀刃，在沿著肩胛骨劃開所留下的溫度，你的世界就此被黑與白壟罩，也許，這就是英雄的宿命吧..."
-next = "cp2.question_about_shadow"
-#go back
+
+
+
+
