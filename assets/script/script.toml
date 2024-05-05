@@ -16,6 +16,21 @@ name = "影刃"
 kind = "半精靈"
 Favorability = 30
 
+[character.sprit]
+name = "精靈"
+kind = "精靈"
+Favorability = 50
+
+[character.theif_leader]
+name = "盜賊首領"
+kind = "人類"
+Favorability = -100
+
+[character.leader_of_UBA]
+name = "聯合商業同盟會的會長"
+kind = "人類"
+Favorability = 50
+
 [item.axe]
 name = "斧頭"
 level_of_damage = 100
@@ -24,6 +39,7 @@ level_of_damage = 100
 name = "弓"
 level_of_damage = 100
 arror = 0
+
 
 
 [scene.office]
@@ -526,6 +542,7 @@ next = "cp2.bag"
 [cp2.bag]
 character = "player"
 text = "疑?前面地上似乎有一個不知名的包包，上面甚至連個扣子都沒有"
+
 [[cp2.bag.options]]
 option = "嘗試使用斧頭打開"
 next = "cp2.bag_with_axe"
@@ -535,7 +552,7 @@ next = "cp2.bag_with_hand"
 
 [cp2.bag_with_axe]
 character = "player"
-text = "在一陣破碎聲中，你的斧頭(斧頭折舊100%只剩下屍體)和包包的材質隨即斷裂，從裡面滾出了一個斷成兩截的針筒，針筒裡甚麼都沒有，你完全不明白這代表甚麼意思"
+text = "在一陣破碎聲中，你的斧頭(只剩下屍體)和包包的材質隨即斷裂，從裡面滾出了一個斷成兩截的針筒，針筒裡甚麼都沒有，你完全不明白這代表甚麼意思"
 next = "cp2.cross_road"
 
 [cp2.bag_with_hand]
@@ -549,17 +566,128 @@ next = "cp2.cross_road"
 character = "player"
 text = "由於事先沒有雇車夫，又繞了點路的關係，你發覺自己已經分不清的東南西北，不知不覺你走進了一個交叉口"
 [[cp2.cross_road.options]]
-option = "往前走: {你發現前方的地形越來越陡峭，走了一段時間你才驚覺自己已經走在了山路上，趕緊返回(飢餓度+30%，如果飢餓達到100%，會直接觸發餓死在半路上的結局) }"
+option = "往前走"
+next = "cp2.go_forward"
 [[cp2.cross_road.options]]
-option = "往後走: 你發現前方出現了一隻矮小的妖精{妖精: 迷失的勇者阿，請跟隨我的聲音，不知您是否願意，只須掏出十個金幣，手中神器(折舊度0%)就有機會歸你(接受/不接受)(這是這遊戲目前唯一的類抽獎機制，可以是真的抽獎，也可以是跟關主玩個遊戲甚麼的，如果贏了可以拿到神器，但也可能賭到輸光，進而影響最終抉擇之類的，所以期望值理論上要調低)  }"
+option = "往後走"
+next = "cp2.go_back"
 [[cp2.cross_road.options]]
-option = "往左走: 這條路上頗為顛簸，你發覺背包裡的礦藏越來越熱，越來越熱{拿出來檢查: 這些精煉過的礦藏，在你的目光之下顯得不太尋常，像是個核融合的反應爐一般，似乎快要達到了某種臨界點，但當你的手接觸到其光滑表面的瞬間，迅即轉為原先的一片湛藍，看來一切都沒事了不理會:你的脊椎彷彿緊貼著燒紅的鐵一般，隨即在一聲「滋~~」這種細微卻又像是耳邊呢喃的詭異聲響後，一切又歸於寧靜，你的周圍又恢復了適溫，除了背包突然變輕了以外，彷彿甚麼都沒發生過一般(礦藏在此事件中全數溶解了，抵達王國後將會觸發沒有礦藏事件)}"
+option = "往左走"
+next = "cp2.go_left"
 [[cp2.cross_road.options]]
-option = "往右走: 這條路上遍布著你意想不到的各種奇珍異果，似乎可以為你提供一些旅途所需的熱量{吃(飢餓度-20%): 水果甘美的滋味讓你彷彿置身雲霄，無法自拔...迷濛之中，你從滿是落葉的地上爬起來，發現自己又回到了剛才的交叉路口(這個時候六條路徑會全部重新洗牌) 不吃(飢餓度+10%):  望著結實纍纍的樹梢，你嘆了一口氣，恐怕保險起見只能望梅止飢了 }往斜前方走: { 眼前的路越來越開闊，你才發覺不知不覺間你已走出了這片森林，抵達了北方王國了 }"
+option = "往右走"
+next = "cp2.go_right"
 [[cp2.cross_road.options]]
-option = "往斜後方走: 眼前的路越來越狹窄，叢林密布 {使用斧頭去除障礙: 路線的盡頭依然是條死路，但你發現了似乎是紮營過的痕跡，在營區附近找到了遺留下的半塊麵包(飢餓度-10%)後退:  你退回了原本的交叉口}"
+option = "往斜前方走"
+next = "cp2.go_oblique_front"
 [[cp2.cross_road.options]]
-option = "旁邊有樹，過去休息一下吧: {   休息夠了繼續旅程吧: 你回到了叉路繼續做選擇讓我再躺一下: zzz…，過了0.2個獸人月，甚麼事也沒發生(玩家可以選擇繼續躺，躺滿5次有隱藏成就)使用斧頭砍樹(唯有遇到此抉擇時選擇查看背包並拿出斧頭，這個選項才會出現)(砍完樹之後會出現查看選項，玩家會看到樹的年輪疏密分布，只要根據密的那邊走玩家就可以推導出，寒冷的北方皇宮的方向) }"
+option = "往斜後方走"
+next = "cp2.go_oblique_back"
+[[cp2.cross_road.options]]
+option = "旁邊有樹，過去休息一下吧"
+next = "cp2.go_tree"
+
+[cp2.go_forward]
+character = "player"
+text = "你發現前方的地形越來越陡峭，走了一段時間你才驚覺自己已經走在了山路上，趕緊返回"
+player.hungry = -30
+next = "cp2.cross_road"
+
+[cp2.go_back]
+character = "player"
+text = "你發現前方出現了一隻矮小的妖精"
+next = "cp2.sprit"
+
+[cp2.sprit]
+character = "sprit"
+text = "迷失的勇者阿，請跟隨我的聲音，不知您是否願意，只須掏出十個金幣，手中神器(折舊度0%)就有機會歸你(接受/不接受)"
+[[cp2.sprit.options]]
+option = "接受"
+next = "cp2.sprit_accept"
+[[cp2.sprit.options]]
+option = "不接受"
+next = "cp2.sprit_reject"
+
+[cp2.sprit_accept]
+[cp2.sprit_reject]
+
+
+[cp2.go_left]
+character = "player"
+text = "這條路上頗為顛簸，你發覺背包裡的礦藏越來越熱，越來越熱"
+[[cp2.go_left.options]]
+option = "拿出來檢查"
+next = "cp2.check_bag"
+
+[cp2.check_bag]
+character = "player"
+text = "這些精煉過的礦藏，在你的目光之下顯得不太尋常，像是個核融合的反應爐一般，似乎快要達到了某種臨界點，但當你的手接觸到其光滑表面的瞬間，迅即轉為原先的一片湛藍，看來一切都沒事了"
+#礦藏不見
+next = "cp2.cross_road"
+
+[cp2.go_right]
+character = "player"
+text = "這條路上遍布著你意想不到的各種奇珍異果，似乎可以為你提供一些旅途所需的熱量"
+[[cp2.go_right.options]]
+option = "吃"
+next = "cp2.eat_fruit"
+[[cp2.go_right.options]]
+option = "不吃"
+next = "cp2.no_eat_fruit"
+
+[cp2.eat_fruit]
+character = "player"
+text = "水果甘美的滋味讓你彷彿置身雲霄，無法自拔...迷濛之中，你從滿是落葉的地上爬起來，發現自己又回到了剛才的交叉路口"
+#路線洗牌
+player.hungry = +20
+next = "cp2.cross_road"
+
+[cp2.no_eat_fruit]
+character = "player"
+text = "望著結實纍纍的樹梢，你嘆了一口氣，恐怕保險起見只能望梅止飢了"
+player.hungry = -10
+next = "cp2.cross_road"
+
+[cp2.go_oblique_front]
+character = "player"
+text = "眼前的路越來越開闊，你才發覺不知不覺間你已走出了這片森林，抵達了北方王國了"
+next = "cp3.arrive_palace"
+
+[cp2.go_oblique_back]
+character = "player"
+text = "眼前的路越來越狹窄，叢林密布 {使用斧頭去除障礙: "
+[[cp2.go_oblique_back.options]]
+option = "使用斧頭去除障礙"
+next = "cp2.remove_obstacle"
+
+[cp2.remove_obstacle]
+character = "player"
+text = "路線的盡頭依然是條死路，但你發現了似乎是紮營過的痕跡，在營區附近找到了遺留下的半塊麵包，你退回了交叉路口"
+player.hungry = +10
+next = "cp2.cross_road"
+
+[cp2.go_tree]
+character = "player"
+text = "zzz…，過了0.2個獸人月，甚麼事也沒發生"
+[[cp2.go_tree.option]]
+option = "休息夠了"
+next = "cp2.enough_rest"
+[[cp2.go_tree.option]]
+option = "再休息一下"
+next = "cp2.go_tree"
+[[cp2.go_tree.option]]
+option = "使用斧頭砍樹"
+next = "cp2.cut_tree"
+
+[cp2.enough_rest]
+character = "player"
+text = "你回到了叉路繼續做選擇"
+next = "cp2.cross_road"
+
+[cp2.cut_tree]
+character = "player"
+text = "透過觀察樹的年輪分佈，你推導出寒冷的北方皇宮的方向"
+next = "cp3.arrive_palace"
 
 
 [cp2.kingdom_road]
@@ -579,10 +707,81 @@ next = "cp2.wait_for_them"
 
 [cp2.wait_for_them]
 character = "player"
-text = "作為勇者，我們需要修練開闊的心胸，就讓我們在等待他們自行離去的空檔淨化我們的心靈吧{過了0.5個獸人月，前方人馬依然不為所動...(跳回其他選項)"
+text = "作為勇者，我們需要修練開闊的心胸，就讓我們在等待他們自行離去的空檔淨化我們的心靈吧{過了0.5個獸人月，前方人馬依然不為所動..."
 next = "cp2.kingdom_road"
 
+[cp2.polite]
+character = "player"
+text = "不好意思打擾你們，我們正在趕時間，能否請你們人馬稍微移步到路旁邊，讓我們先過呢？"
+next = "cp2.leader_show"
 
+[cp2.leader_show]
+character = "leader_of_UBA"
+text = "喔喔，可以可以，容我介紹一下，我是聯合商業同盟會的會長，我們是一批往返各大城市經銷的商隊，只是經過了長途跋涉，我們的車輪好像出了點問題，不知你們能否幫助我們呢?"
+[[cp2.leader_show.option]]
+option = "修輪子"
+next = "cp2.fix_tire"
+[[cp2.leader_show.option]]
+option = "載他們一程"
+next = "cp2.give_them_a_ride"
+[[cp2.leader_show.option]]
+option = "談交易"
+next = "cp2.make_deal"
+[[cp2.leader_show.option]]
+option = "嘗試偷竊"
+next = "cp2.steal"
+
+[cp2.fix_tire]
+character = "player"
+text = "勇者是慷慨的，我可以替你們修輪子"
+next = "cp2.leader_thank_you"
+
+[cp2.leader_thank_you]
+character = "leader_of_UBA"
+text = "喔真是太謝謝你們了，幫了我一個大忙，為了報答你們，我不會拿走你們任何東西的。在你還沒意識過來這句話中的涵義之前，他們就駕著修好的馬車揚長而去，留下一臉茫然的你，但想到仍有任務在身，於是你只好繼續了你的旅程"
+next = "cp3.arrive_palace"
+
+[cp2.give_them_a_ride]
+character = "player"
+text = "沒問題，就讓我載你們一程吧!"
+next = "cp2.thank_for_a_ride"
+
+[cp2.thank_for_a_ride]
+character = "leader_of_UBA"
+text = "會長: 感激不盡，我們就恭敬不如從命囉"
+next = "being_steal"
+
+[cp2.being_steal]
+character = "player"
+text = "會長和一行人馬浩浩蕩蕩地搬下了他們馬車上的物資到你的馬車上，但在他們的前腳踏上馬車時，就像排練好了一般，半晌之後你只看到馬車的身影離你遠去，一切的心血都白費了，爾後你才後知後覺的發現這些所謂的商隊根本就是雇主再三提醒要注意的盜賊，現在你只有兩個選擇"
+[[cp2.being_steal.options]]
+option = "繼續前往皇宮"
+next = "cp3.after_steal_going_palace"
+[[cp2.being_steal.options]]
+option = "放棄任務"
+next = "end.being_steal"
+
+[cp2.after_steal_going_palace]
+#失去礦藏
+next = "cp3.arrive_palace"
+
+[cp2.make_deal]
+character = "player"
+text = "在這混沌的年代，沒有東西是免費的，特別是任何有價值的東西，我覺得我們可以交易一下"
+
+
+
+
+
+
+
+[cp2.fuck_them]
+
+
+
+
+
+[cp3.arrive_palace]
 
 
 
@@ -597,6 +796,8 @@ text = "隨即，世界突然繞著你旋轉，在你的眼神彷彿因為離心
 character = "player"
 text = "你從背包中迅速地掏出了沒有箭矢的弓，朝這個神秘的人物擲了出去，想當然耳，是完全沒有造成任何傷害，接下來的事情，幾乎僅發生在半秒之間，甚至完全沒有痛的感覺，你只感受的到全然的冷冽，那是無情的刀刃，在沿著肩胛骨劃開所留下的溫度，你的世界就此被黑與白壟罩，也許，這就是英雄的宿命吧..."
 
-
+[end.being_steal]
+character = "player"
+text = "即便你已拚盡了全力，仍然無法阻止你現在同時成為了礦業公會及皇帝眼中的戰犯，你終期一生只能在逃亡之中過活，這就是屬於渾沌紀元最強勇者的悲哀結局"
 
 
