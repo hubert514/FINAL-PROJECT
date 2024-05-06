@@ -768,12 +768,94 @@ next = "cp3.arrive_palace"
 [cp2.make_deal]
 character = "player"
 text = "在這混沌的年代，沒有東西是免費的，特別是任何有價值的東西，我覺得我們可以交易一下"
+next = "cp2.deal"
 
+[cp2.deal]
+character = "leader_of_UBA"
+text = "嗯...我手邊只有5枚金幣，幫我修好輪子，你接受嗎?"
+leader_of_UBA.Favorability = -20
+[[cp2.deal.options]]
+option = "接受"
+next = "cp2.accept_deal"
+[[cp2.deal.options]]
+option = "拒絕"
+next = "cp2.reject_deal"
 
+[cp2.reject_deal]
+character = "player"
+text = "我拒絕"
+next = "cp2.reject_deal_q2"
 
+[cp2.reject_deal_q2]
+character = "leader_of_UBA"
+text = "嗯...我還有1包旅行用的乾糧，幫我修好輪子，你接受嗎?"
+leader_of_UBA.Favorability = -5
+[[cp2.reject_deal_q2.options]]
+option = "接受"
+next = "cp2.accept_deal"
+[[cp2.reject_deal_q2.options]]
+option = "拒絕"
+next = "cp2.reject_deal_a2"
 
+[cp2.reject_deal_a2]
+character = "player"
+text = "我拒絕"
+next = "cp2.reject_deal_q3"
 
+[cp2.reject_deal_q3]
+character = "leader_of_UBA"
+text = "嗯...兄弟你的斧頭看起來有點舊了，我幫你修好(折舊度-20%)，幫我修好輪子，你接受嗎?"
+leader_of_UBA.Favorability = -5
+[[cp2.reject_deal_q3.options]]
+option = "接受"
+next = "cp2.accept_deal"
+[[cp2.reject_deal_q3.options]]
+option = "拒絕"
+next = "cp2.reject_deal_a3"
 
+[cp2.reject_deal_a3]
+character = "player"
+text = "我拒絕"
+next = "cp2.reject_deal_q4"
+
+[cp2.reject_deal_q4]
+character = "leader_of_UBA"
+text = "嗯...兄弟你的弓好像沒有箭矢，我送你三支普通的箭矢，幫我修好輪子，你接受嗎?"
+leader_of_UBA.Favorability = -5
+[[cp2.reject_deal_q4.options]]
+option = "接受"
+next = "cp2.accept_deal"
+[[cp2.reject_deal_q4.options]]
+option = "拒絕"
+next = "cp2.reject_deal_a4"
+
+[cp2.reject_deal_a4]
+character = "player"
+text = "我拒絕"
+next = "cp2.reject_deal_q5"
+
+[cp2.reject_deal_q5]
+character = "leader_of_UBA"
+text = "嗯...兄弟你好像除了拳頭外沒有個稱手的武器，那我送你一顆昨天剛進貨的裂解手榴彈，幫我修好輪子，你接受嗎?"
+leader_of_UBA.Favorability = -5
+[[cp2.reject_deal_q5.options]]
+option = "接受"
+next = "cp2.accept_deal"
+[[cp2.reject_deal_q5.options]]
+option = "拒絕"
+next = "end.kill_by_UBA"
+
+[cp2.accept_deal]
+character = "player"
+text = "好的，我接受你的交易"
+next = "cp2.accept_deal_end"
+
+[cp2.accept_deal_end]
+character = "leader_of_UBA"
+text = "喔真是太謝謝你們了，幫了我一個大忙，為了報答你們，我不會拿走你們金幣以外的東西在你還沒意識過來這句話中的涵義之前，他們就駕著修好的馬車揚長而去，留下一臉茫然的你，片刻後你才發現自己背包裡的金幣早已被洗劫一空(金幣歸零)，但想到仍有任務在身，於是你只好繼續了你的旅程"
+next = "cp3.arrive_palace"
+
+[cp2.steal]
 
 [cp2.fuck_them]
 
@@ -800,4 +882,11 @@ text = "你從背包中迅速地掏出了沒有箭矢的弓，朝這個神秘的
 character = "player"
 text = "即便你已拚盡了全力，仍然無法阻止你現在同時成為了礦業公會及皇帝眼中的戰犯，你終期一生只能在逃亡之中過活，這就是屬於渾沌紀元最強勇者的悲哀結局"
 
+[end.kill_by_UBA]
+character = "leader_of_UBA"
+text = "會長: 哼哼，禁酒不吃吃罰酒，我本來想說趕時間不跟你們爭的，沒想到你這麼不懂規矩..."
+next = "end.kill_by_UBA_end"
 
+[end.kill_by_UBA_end]
+character = "player"
+text = "在你還沒來的及反應過來前，這位自稱會長的人以極快的速度抽出暗藏在腰間上的佩劍，像台早已暖機多時的工程用切割器般，在不到半秒間，你的全身就再也沒有任何感覺了"
