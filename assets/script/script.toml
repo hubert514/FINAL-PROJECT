@@ -856,6 +856,40 @@ text = "喔真是太謝謝你們了，幫了我一個大忙，為了報答你們
 next = "cp3.arrive_palace"
 
 [cp2.steal]
+character = "player"
+text = "鄰居有難，落井下石。馬車夫你負責跟他們閒聊，而我去他們的馬車上搜搜"
+next = "cp2.car_driver"
+
+[cp2.car_driver]
+character = "car_driver"
+text = "不好吧，這夥人看起來蠻兇的耶"
+next = "cp2.i_am_angry"
+
+[cp2.i_am_angry]
+character = "player"
+text = "我是雇你的人，我出錢的，我說的算"
+next = "cp2.walkie_talkie_ring"
+
+[cp2.walkie_talkie_ring]
+character = "雇主"
+text = "(對講機)勇者你的速度必須再快點，返回的路程比你想像中還要艱難，如果你想要竊取這夥人的貨物，趁還來的及，建議你趕快停手，別做任務以外的事，記住，如果你耽誤了太多時間，就是在耽誤皇帝的計畫，那就建議你不要回來了..."
+
+[[cp2.walkie_talkie_ring.options]]
+option = "收手"
+next = "cp2.stop_steal"
+[[cp2.walkie_talkie_ring.options]]
+option = "堅持"
+next = "cp2.continue_steal"
+
+[cp2.stop_steal]
+character = "player"
+text = "你再度走回了會長的旁邊"
+next = "cp2.leader_show"
+
+[cp2.continue_steal]
+character = "player"
+
+
 
 [cp2.fuck_them]
 
