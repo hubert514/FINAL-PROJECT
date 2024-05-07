@@ -31,6 +31,11 @@ name = "聯合商業同盟會的會長"
 kind = "人類"
 Favorability = 50
 
+[character.drive_man]
+name = "馬車夫"
+kind = "人類"
+Favorability = 50
+
 [item.axe]
 name = "斧頭"
 level_of_damage = 100
@@ -39,7 +44,6 @@ level_of_damage = 100
 name = "弓"
 level_of_damage = 100
 arror = 0
-
 
 
 [scene.office]
@@ -404,7 +408,7 @@ text = "不用了，整座森林都是我的房子...阿阿好啦，夜深了，
 next = "cp2.walkie_talkie"
 
 [cp2.walkie_talkie]
-charactor = "雇主"
+character = "雇主"
 text = "(對講機突然傳來聲響)ARR!不要再交朋友了，那個叫隱刃的人和那個老人都不是甚麼好東西，只會影響到皇帝的計畫，快點趁他們不備時解決掉，以免成為大患!不要忘記你來這裡的目的，這點微不足道的犧牲是必要的，殺了他們吧!"
 
 [[cp2.walkie_talkie.options]]
@@ -448,7 +452,7 @@ text = "雖然眼前的人身手十分矯健，躲過了一次又一次的攻擊
 next = "cp2.walkie_talkie_when_fighting"
 
 [cp2.walkie_talkie_when_fighting]
-charactor = "雇主"
+character = "雇主"
 text = "(對講機傳來了聲響)任何可能妨礙任務的人，格殺勿論! 我們沒有這個聖母情結來拯救眾生，你別忘了你的任務，為了皇帝的計畫，做出微不足道的犧牲是必要的，殺了他!"
 
 [[cp2.walkie_talkie_when_fighting.options]]
@@ -861,7 +865,7 @@ text = "鄰居有難，落井下石。馬車夫你負責跟他們閒聊，而我
 next = "cp2.car_driver"
 
 [cp2.car_driver]
-character = "car_driver"
+character = "drive_man"
 text = "不好吧，這夥人看起來蠻兇的耶"
 next = "cp2.i_am_angry"
 
@@ -888,17 +892,78 @@ next = "cp2.leader_show"
 
 [cp2.continue_steal]
 character = "player"
+text = "我不管，你給我過去拖時間，我答應取得的貨物會分你一些的"
+next = "cp2.continue_steal_drive_responed"
+
+[cp2.continue_steal_drive_responed]
+character = "drive_man"
+text = "…好吧，希望你不要後悔"
+next = "cp2.into_car"
+
+[cp2.into_car]
+character = "player"
+text = "你踏入了商隊馬車裡，當你以為裡面會是滿坑滿谷的上等好貨時，卻發現在這密閉潮濕充滿霉味的空間中心，僅擺著一個樸實無華的裝箱，完全沒有別的東西了"
+[[cp2.into_car.options]]
+option = "查看箱子"
+next = "cp2.look_box_text"
+[[cp2.into_car.options]]
+option = "尋找隱藏的貨物的按鈕"
+next = "cp2.find_bottom"
+
+[cp2.look_box_text]
+character = "player"
+text = "嗯...姑且還是打開來看看吧(你緩緩地將箱子的接口滑開，印入眼簾的，是一張驚恐，傷痕累累，佈滿皺紋的枯槁臉孔，嘴巴一開一合的，氣若游絲的吐著一個一個字的嘴型)"
+next = "cp2.open_box"
+
+[cp2.open_box]
+character = "player"
+text = "怎麼回事老先生，誰把你弄成這樣的?"
+next = "cp2.old_man_weak"
+
+[cp2.old_man_weak]
+character = "player"
+text = "他實在太虛弱了，連眼睛都沒辦法睜開，你甚至懷疑他有沒有辦法清楚的聽到你的聲音突然，老人像是下了決心一般，長繭的雙手伸進了衣服裡的暗袋，掏出一個由不明材質製成的包包，奇怪的是，這個包包在沾上了老人掌心的血液後，精心縫上的布料竟然開始一點一滴地開始溶解，彷彿有一把無形的火炬，在堅固的冰山上慢慢燒出了一個不可見，但深邃的小洞，慢慢的，擴散它的面積，直到你可以清晰地看到，中間的部分竟顯現出了一個隱藏的扣子!"
+[[cp2.old_man_weak.options]]
+option = "打開扣子查看"
+next = "cp2.open_bag"
+[[cp2.old_man_weak.options]]
+option = "質疑老人"
+next = "cp2.question_old_man"
+
+[cp2.open_bag]
+character = "player"
+text = "你小心翼翼的打開了扣子，裡面露出的，是一管有點鏽蝕，且裝了些不明液體的針筒，當你在細細端詳著管內的流體時，會長衝了進來，旁邊跟著滿臉罪惡感的馬車夫，發生了甚麼事已經不言而喻，與此同時，老人似乎拚盡了全身殘存的力氣，即便看不到方向，仍然死命地亂衝亂撞，最後成功的奪門而出，朝著一旁的森林深處狂奔，任憑一旁人馬射出多少箭矢都徒勞無功，留下了錯愕的你在原地"
+next = "cp2.leader_come_in"
+
+[cp2.leader_come_in]
+character = "leader_of_UBA"
+text = "哼哼，我本來還相信你能幫助我們的，沒想到竟然在這裡做些偷雞摸狗的事，想當盜賊還是光明正大點吧"
+next = "end.kill_by_UBA_end"
+
+[cp2.question_old_man]
+character = "player"
+text = "你不要以為你給了我這包...額不知道甚麼玩意就能讓我起甚麼憐憫之心想要救你，你懂嗎? 這是沒用的!"
+next = "cp2.throw_bag"
+
+[cp2.throw_bag]
+character = "player"
+text = "你憤怒地打開窗戶隨手一扔，將這個包包，以及他所隱藏的所有秘密，全都扔進了一旁未知的森林深處...。惱羞成怒之餘，你搜遍馬車的其餘角落仍一無所獲，正當你打開門準備偷溜回去時，正好撞見了衝進來的會長，旁邊跟著滿臉罪惡感的馬車夫，發生了甚麼事已經不言而喻。與此同時，老人似乎拚盡了全身殘存的力氣，即便看不到方向，仍然死命地亂衝亂撞，最後成功的奪門而出，朝著一旁的森林深處狂奔，任憑一旁人馬射出多少箭矢都徒勞無功，留下了錯愕的你在原地"
+#觸發隱藏事件
+next = "cp2.leader_come_in"
+
+[cp2.find_bottom]
+character = "player"
+text = "你摸索著馬車的內部，找到了一個類似開關的東西，按了下去，頓時鈴聲大作，被吸引過來的會長馬上走到你的面前"
+next = "cp2.leader_come_in"
+
+
 
 
 
 [cp2.fuck_them]
 
 
-
-
-
 [cp3.arrive_palace]
-
 
 
 [end.reject_mission]
