@@ -36,6 +36,16 @@ name = "馬車夫"
 kind = "人類"
 Favorability = 50
 
+[character.guard]
+name = "守衛隊長"
+kind = "人類"
+Favorability = 20
+
+[character.empire]
+name = "皇帝"
+kind = "人類"
+Favorability = 50
+
 [item.axe]
 name = "斧頭"
 level_of_damage = 100
@@ -57,6 +67,10 @@ description = "幽暗，茂密，時時有奇怪聲音作響"
 [scene.kingdom_road]
 name = "王國之路"
 description = "王國之路，萬里無雲，經過整修的寬闊，直線的石板路，邊界是森林"
+
+[scene.palace]
+name = "皇宮"
+description = "皇宮，金碧輝煌，氣派非凡"
 
 [cp1.begin]
 scene = "office"
@@ -956,14 +970,186 @@ character = "player"
 text = "你摸索著馬車的內部，找到了一個類似開關的東西，按了下去，頓時鈴聲大作，被吸引過來的會長馬上走到你的面前"
 next = "cp2.leader_come_in"
 
-
-
-
-
 [cp2.fuck_them]
+character = "player"
+text = "時間緊迫，不管他們了，我決定直接加速衝過去"
+next = "cp2.be_stopped"
+
+[cp2.be_stopped]
+character = "guard"
+text = "那邊那輛馬車請你停下，我是王國巡邏隊的隊長，請說明你的來意"
+[[cp2.be_stopped.options]]
+option = "說明來意"
+next = "cp2.explain_to_guard"
+
+
+[cp2.explain_to_guard]
+character = "player"
+text = "我們要去北方皇宮運送物資"
+next = "cp2.guard_response"
+
+[cp2.guard_response]
+character = "gurad"
+text = "…那麼恐怕你們得面臨一次例行性的檢查，你們應該不想違反法律吧"
+
+[[co2.guard_response.options]]
+option = "接受檢查"
+next = "cp2.take_check"
+[[cp2.guard_response.options]]
+option = "嘗試賄賂"
+next = "cp2.give_money_to_guard"
+[[cp2.guard_response.options]]
+option = "趁機跑路"
+next = "cp2.try_to_run_away"
+
+[cp2.take_check]
+character = "player"
+text = "一行人便進去進行了一番搜索，一段時間後"
+next = "cp2.steal_by_guard"
+
+[cp2.steal_by_guard]
+character = "guard"
+text = "嗯...這種等級的礦藏在黑市應該可以賣到不少錢...喔對了，你們可以通過了，我是指你們的人，馬車的部分我們就收下囉! 兄弟們! 走!"
+next = "cp2.after_being_steal_by_guard"
+
+[cp2.after_being_steal_by_guard]
+character = "player"
+text = "那一刻是如此突然，像是排練好了一般，那群人迅速的搬下了他們馬車上的物資到你的馬車上，半晌之後你只看到馬車的身影離你遠去，一切的心血都白費了，爾後你才後知後覺的發現這些所謂的巡邏隊根本就是雇主再三提醒要注意的盜賊，現在你只有兩個選擇"
+
+[[cp2.after_being_steal_by_guard.options]]
+option = "繼續前往皇宮"
+next = "cp3.after_steal_going_palace"
+[[cp2.after_being_steal_by_guard.options]]
+option = "放棄任務"
+next = "end.being_steal"
+
+[cp2.give_money_to_guard]
+character = "player"
+text = "抱歉隊長，我們還是需要通過，看到這20枚金幣上的笑臉了吧，你應該明白我的意思，希望你也能「微笑」地護送我們離去"
+next = "cp2.give_money_response"
+
+[cp2.give_money_response]
+character = "guard"
+text = "隊長臉上泛起一抹怪笑，像是被訓練成壓抑住某種忽然產生的強烈情緒反應導致的，隨即，他揮了揮手，你們安全的通過了檢查站"
+
+
+[cp2.try_to_run_away]
+character = "player"
+text = "嘿! 你鞋帶鬆了!"
+next = "cp2.run_away"
+
+[cp2.run_away]
+character = "guard"
+text = "喔~真的嗎?"
+next = "cp2.run_away_response"
+
+[cp2.run_away_response]
+character = "player"
+text = "趁現在，車夫，快點拉動韁繩! 咱們走人!"
+next = "cp2.run_away_end"
+
+[cp2.run_away_end]
+character = "guard"
+text = "哼哼~難道你沒有發現，在我們交談的同時，我的弟兄已經幫你們把輪子給卸了嗎?現在我以妨礙公務的罪名罰你10枚金幣(所以只能說明來意)"
+player.money = -10
+next = "cp2.explain_to_guard"
+
+[cp3.after_steal_going_palace]
+#失去礦藏
+next = "cp3.arrive_palace"
 
 
 [cp3.arrive_palace]
+scene = "palace"
+character = "player"
+text = "經過了一個獸人月，你們終於抵達了北方皇宮"
+next = "cp3.meet_empire"
+
+[cp3.meet_empire]
+character = "empire"
+text = "勇敢的旅行者，你終於到了呀，歡迎你來到我的北方皇宮"
+
+[[cp3.meet_empire.options]]
+option = "謙虛"
+next = "cp3.humble"
+[[cp3.meet_empire.options]]
+option = "邀功"
+next = "cp3.boast"
+
+[cp3.humble]
+character = "player"
+text = "皇上，我是{player}，我只是盡了我的本分，抵達了這裡"
+empire.Favorability = +5
+next = "cp3.response"
+
+[cp3.boast]
+character = "player"
+text = "這個艱鉅的任務花了我非常多的心力，但我最終仍然成功抵達這裡了"
+empire.Favorability = -5
+next = "cp3.response"
+
+[cp3.response]
+character = "empire"
+text = "喔是的是的，看來你經歷了一場大冒險呀，你的勇氣和精神確實值得受到表揚"
+
+[[cp3.response.options]]
+option = "提出要求"
+next = "cp3.request"
+[[cp3.response.options]]
+option = "表達感激"
+next = "cp3.thank"
+
+[cp3.request]
+character = "player"
+text = "我不敢要求太多，但如果可以，希望你能夠賜予我一些額外的報酬"
+empire.Favorability = -5
+next = "cp3.request_response"
+
+[cp3.thank]
+character = "player"
+text = "能為陛下服務乃是本人的榮幸，我永遠感激您的恩典"
+empire.Favorability = +5
+next = "cp3.request_response"
+
+[cp3.request_response]
+character = "empire"
+text = "勇者阿，謝謝你的回饋，但在表揚之前，先給我看看你帶來的礦產吧"
+
+[[cp3.request_response.1]]
+option = "有礦產"
+next = "cp3.show_mineral"
+[[cp3.request_response.0]]
+option = "沒礦產"
+next = "cp3.no_mineral"
+
+[cp3.show_mineral]
+character = "player"
+text = "這些是我帶來的，精練過後的礦產，請陛下過目"
+empire.Favorability = +30
+next = "cp3.show_mineral_response"
+
+[cp3.show_mineral_response]
+character = "empire"
+text = "嗯嗯，好，非常好，你成功的完成你的任務"
+next = "cp3.count_people"
+
+[cp3.no_mineral]
+character = "player"
+text = "..."
+empire.Favorability = -30
+next = "cp3.no_mineral_response"
+
+[cp3.no_mineral_response]
+character = "empire"
+text = "皇帝打開了背包，臉上堆滿的微笑馬上轉為滿臉怒容"
+next = "cp3.count_people"
+
+
+
+
+
+
+
 
 
 [end.reject_mission]
@@ -989,3 +1175,4 @@ next = "end.kill_by_UBA_end"
 [end.kill_by_UBA_end]
 character = "player"
 text = "在你還沒來的及反應過來前，這位自稱會長的人以極快的速度抽出暗藏在腰間上的佩劍，像台早已暖機多時的工程用切割器般，在不到半秒間，你的全身就再也沒有任何感覺了"
+
