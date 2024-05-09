@@ -1131,6 +1131,7 @@ next = "cp3.show_mineral_response"
 [cp3.show_mineral_response]
 character = "empire"
 text = "嗯嗯，好，非常好，你成功的完成你的任務"
+empire.Favorability = +30
 next = "cp3.count_people"
 
 [cp3.no_mineral]
@@ -1143,6 +1144,36 @@ next = "cp3.no_mineral_response"
 character = "empire"
 text = "皇帝打開了背包，臉上堆滿的微笑馬上轉為滿臉怒容"
 next = "cp3.count_people"
+
+//hubert
+
+[cp3.count_people]
+character = "empire"
+text = "在這場冒險之中，不知你有沒有借助其他人的力量呢?"
+
+[[cp3.count_people.option]]
+option = "有的，我身後的就是這次旅途中幫助我的人"
+empire.Favorability = -20
+next = "cp3.final_battle"
+
+[[cp3.count_people.option]]
+option = "有的，雖然我救了一個老人，但他已經消失無蹤了"
+empire.Favorability = -10
+next = "cp3.final_battle"
+
+[[cp3.count_people.option]]
+option = "並沒有..."
+empire.Favorability = +10
+next = "cp3.final_battle"
+
+[cp3.final_battle]
+
+
+
+
+
+
+
 
 
 
