@@ -1145,7 +1145,7 @@ character = "empire"
 text = "皇帝打開了背包，臉上堆滿的微笑馬上轉為滿臉怒容"
 next = "cp3.count_people"
 
-//hubert
+#hubert
 
 [cp3.count_people]
 character = "empire"
