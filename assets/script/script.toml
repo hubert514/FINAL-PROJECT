@@ -72,6 +72,9 @@ description = "王國之路，萬里無雲，經過整修的寬闊，直線的�
 name = "皇宮"
 description = "皇宮，金碧輝煌，氣派非凡"
 
+
+#劇情開始
+
 [cp1.begin]
 scene = "office"
 character = "雇主"

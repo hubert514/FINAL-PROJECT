@@ -10,3 +10,5 @@
 #include "show_text.h"
 #include <unistd.h>
 #include <string.h>
+#include "cp1.h"
+#include "set_character.h"
