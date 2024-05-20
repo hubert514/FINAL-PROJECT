@@ -5,7 +5,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "SDL2/SDL_ttf.h"
-#include "load_image.h"
 #include "show_image.h"
 #include "show_text.h"
 #include <unistd.h>
@@ -16,6 +15,7 @@
 
 int32_t cp1(char *chapter, char *player_name, int8_t player_gender)
 {
+    // setup
     FILE *script = fopen("assets/script/script.toml", "r");
     if (script == NULL)
     {
@@ -56,6 +56,9 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender)
     snprintf(scenes[PALACE].name, 20, "皇宮");
     snprintf(scenes[PALACE].discription, 200, "金碧輝煌，氣派非凡");
 
+    // end of setup
+
+
     while (fgets(line, sizeof(line), script))
     {
     }
@@ -76,13 +79,20 @@ int main(int argc, char const *argv[])
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
     int imgFlags;
-    char font[100] = "assets/fonts/kaiu.ttf";
     int32_t success = initialize_window(&window, &renderer, &imgFlags);
-    if (!TTF_OpenFont(font, 24))
+    TTF_Font *font = TTF_OpenFont("assets/fonts/kaiu.ttf", 24);
+    if (font == NULL)
     {
         printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
     }
 
     cp1(chapter, player_name, 0);
+
+    // clean up
+    TTF_CloseFont(font);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    
     return 0;
 }

@@ -4,7 +4,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "SDL2/SDL_ttf.h"
-#include "load_image.h"
 #include "show_image.h"
 #include "show_text.h"
 #include <unistd.h>
@@ -20,9 +19,9 @@ int main(int argc, char const *argv[])
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
     int imgFlags;
-    char font[100] = "assets/fonts/kaiu.ttf";
     int32_t success = initialize_window(&window, &renderer, &imgFlags);
-    if (!TTF_OpenFont(font, 24))
+    TTF_Font *font = TTF_OpenFont("assets/fonts/kaiu.ttf", 24);
+    if (font == NULL)
     {
         printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
     }
@@ -30,9 +29,8 @@ int main(int argc, char const *argv[])
 
     // 渲染图片
     int8_t show_success = show_image(renderer, "assets/images/sw.png", 0, 0, 500, 500);
-    show_success = show_text(renderer, "hello world", 0, 600, strlen("hello world") * 24 / 2, 24, TTF_OpenFont(font, 24), (SDL_Color){255, 255, 255, 255});
+    show_success = show_text(renderer, "asdjiofffj 測試", 0, 600, 24, font, (SDL_Color){255, 255, 255, 255});
     SDL_Event event;
-
     while (true)
     {
         while (SDL_PollEvent(&event))
@@ -53,6 +51,7 @@ int main(int argc, char const *argv[])
     }
 
     // clean up
+    TTF_CloseFont(font);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
