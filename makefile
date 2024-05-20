@@ -1,11 +1,14 @@
+CC = gcc
+LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf
+
 .IGNORE:
 all:
-	gcc -o engine src/*.c -lSDL2 -lSDL2_image -lSDL2_ttf
+	$(CC) -o engine src/*.c $(LIBS)
 
 cp1:
-	gcc -o cp1 src/cp1.c src/set_character.c -lSDL2 -lSDL2_image -lSDL2_ttf
+	$(CC) -o cp1 src/cp1.c src/set_character.c src/init.c $(LIBS)
 
 clean:
 	rm -f test *.exe engine cp1
 
-.PHONY: all
+.PHONY: all cp1

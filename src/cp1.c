@@ -12,6 +12,7 @@
 #include <string.h>
 #include "cp1.h"
 #include "set_character.h"
+#include "init.h"
 
 int32_t cp1(char *chapter, char *player_name, int8_t player_gender)
 {
@@ -69,7 +70,19 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender)
 int main(int argc, char const *argv[])
 {
     char *chapter = NULL;
-    char player_name[] = "steve";
+    char player_name[] = "Steve";
+    
+    // init sdl
+    SDL_Window *window = NULL;
+    SDL_Renderer *renderer = NULL;
+    int imgFlags;
+    char font[100] = "assets/fonts/kaiu.ttf";
+    int32_t success = initialize_window(&window, &renderer, &imgFlags);
+    if (!TTF_OpenFont(font, 24))
+    {
+        printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+    }
+
     cp1(chapter, player_name, 0);
     return 0;
 }

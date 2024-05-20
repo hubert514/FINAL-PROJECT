@@ -3,6 +3,7 @@
 #include "load_image.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <stdbool.h>
 
 // give a pic file and x, y, w, h, and show it on the screen
 int8_t show_image(SDL_Renderer *renderer, char *pic, int32_t x, int32_t y, int32_t w, int32_t h)
@@ -11,6 +12,12 @@ int8_t show_image(SDL_Renderer *renderer, char *pic, int32_t x, int32_t y, int32
     SDL_Texture *texture;
     int32_t load_success = load_image(renderer, imageSurface, &texture);
     SDL_FreeSurface(imageSurface);
+    if (texture == NULL)
+    {
+        printf("pic texture could not be created! SDL_Error: %s\n", SDL_GetError());
+        return false;
+    }
+    
 
     if (load_success)
     {
@@ -19,7 +26,7 @@ int8_t show_image(SDL_Renderer *renderer, char *pic, int32_t x, int32_t y, int32
         SDL_RenderPresent(renderer);
     }
     else
-        return FALSE;
+        return false;
     SDL_DestroyTexture(texture);
     
     return load_success;

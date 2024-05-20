@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "constants.h"
+#include <stdbool.h>
 
 /*
     SDL_Surface *imageSurface = IMG_Load(pic);
@@ -33,14 +34,14 @@ int32_t load_image(SDL_Renderer *renderer, SDL_Surface *imageSurface,  SDL_Textu
         printf("picture could not be loaded! SDL_image Error: %s\n", IMG_GetError());
         SDL_DestroyRenderer(renderer);
         SDL_Quit();
-        return FALSE;
+        return false;
     }
     *texture = SDL_CreateTextureFromSurface(renderer, imageSurface);
     if (texture == NULL)
     {
         printf("Texture could not be created! SDL_Error: %s\n", SDL_GetError());
         SDL_FreeSurface(imageSurface);
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
