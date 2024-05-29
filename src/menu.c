@@ -50,6 +50,7 @@ int main(int argc, char const *argv[])
                             if (event.button.button == SDL_BUTTON_LEFT) {
                                 if (event.button.x >= 0 && event.button.x <= 100 && event.button.y >= 0 && event.button.y <= 100) {
                                     mouse_press = 1;
+                                    SDL_RenderClear(renderer);
                                 }
                             }
                             break;
@@ -76,15 +77,22 @@ int main(int argc, char const *argv[])
                                     if (event.button.button == SDL_BUTTON_LEFT) {
                                         if (event.button.x >= WINDOW_WIDTH/2 - 100 && event.button.x <= WINDOW_WIDTH/2 + 100 && event.button.y >= WINDOW_HEIGHT/2 - 50 && event.button.y <= WINDOW_HEIGHT/2 + 50) {
                                             printf("Exit\n");
+                                            mouse_press = 0;
+                                            quita = 1;
+                                            quit = 1;
+                                            main_menu = 0;
+                                            SDL_RenderClear(renderer);
                                         }
                                         else if (event.button.x >= WINDOW_WIDTH/2 - 100 && event.button.x <= WINDOW_WIDTH/2 + 100 && event.button.y >= WINDOW_HEIGHT/2 - 275 && event.button.y <= WINDOW_HEIGHT/2 - 175) {
                                             printf("Back\n");
                                             mouse_press = 0;
                                             quita = 1;
+                                            SDL_RenderClear(renderer);
                                             break;
                                         }
                                         else if (event.button.x >= WINDOW_WIDTH/2 - 100 && event.button.x <= WINDOW_WIDTH/2 + 100 && event.button.y >= WINDOW_HEIGHT/2 + 175 && event.button.y <= WINDOW_HEIGHT/2 + 275) {
                                             printf("Save\n");
+                                            SDL_RenderClear(renderer);
                                         }
                                     }
                                     break;
@@ -105,41 +113,4 @@ int main(int argc, char const *argv[])
         return 0;
     }
 
-/*
-SDL_Event event;
-SDL_Texture* pic1 = IMG_LoadTexture(renderer, "pic1.png");
-SDL_Texture* pic2 = IMG_LoadTexture(renderer, "pic2.png");
-SDL_Texture* cur_pic = pic1;
-
-SDL_Rect pic_rect; 
-pic_rect.x = 100;  // 更換為pic1的x座標
-pic_rect.y = 100;  // 更換為pic1的y座標
-SDL_QueryTexture(pic1, NULL, NULL, &pic_rect.w, &pic_rect.h);  // 得到pic1的寬度和高度
-
-while (true) {
-    if (SDL_PollEvent(&event) != 0) {
-        switch (event.type) {
-            case SDL_QUIT:  // 用戶選擇退出
-                SDL_DestroyTexture(pic1);
-                SDL_DestroyTexture(pic2);
-                SDL_DestroyRenderer(renderer);
-                SDL_DestroyWindow(window);
-                SDL_Quit();
-                return 0;
-            case SDL_MOUSEMOTION:  // 滑鼠移動事件
-                int x = event.motion.x;
-                int y = event.motion.y;
-                if (x >= pic_rect.x && x <= pic_rect.x + pic_rect.w && y >= pic_rect.y && y <= pic_rect.y + pic_rect.h) {
-                    cur_pic = pic2; // 當滑鼠在pic1的範圍內時，切換圖片
-                } else {
-                    cur_pic = pic1; // 當滑鼠不在pic1的範圍內時，顯示原始圖片
-                }
-                break;
-        }
-    }
-
-    SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, cur_pic, NULL, &pic_rect);
-    SDL_RenderPresent(renderer);
-}*/
 
