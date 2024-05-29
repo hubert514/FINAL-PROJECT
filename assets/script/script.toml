@@ -1,83 +1,83 @@
 # 遊戲中各項數值計算均有調整空間，事件也可能需要調整(例如獲得武器管道過少之類的)
 
-[player]
-name = "player"
-kind = "人類"
-money = 0
-hungry = 100
+# [player]
+# name = "player"
+# kind = "人類"
+# money = 0
+# hungry = 100
 
-[character.employer]
-name = "雇主"
-kind = "獸人"
-Favorability = 60
+# [character.employer]
+# name = "employer"
+# kind = "獸人"
+# Favorability = 60
 
-[character.shadow_blade]
-name = "影刃"
-kind = "半精靈"
-Favorability = 30
+# [character.shadow_blade]
+# name = "影刃"
+# kind = "半精靈"
+# Favorability = 30
 
-[character.sprit]
-name = "精靈"
-kind = "精靈"
-Favorability = 50
+# [character.sprit]
+# name = "精靈"
+# kind = "精靈"
+# Favorability = 50
 
-[character.theif_leader]
-name = "盜賊首領"
-kind = "人類"
-Favorability = -100
+# [character.theif_leader]
+# name = "盜賊首領"
+# kind = "人類"
+# Favorability = -100
 
-[character.leader_of_UBA]
-name = "聯合商業同盟會的會長"
-kind = "人類"
-Favorability = 50
+# [character.leader_of_UBA]
+# name = "聯合商業同盟會的會長"
+# kind = "人類"
+# Favorability = 50
 
-[character.drive_man]
-name = "馬車夫"
-kind = "人類"
-Favorability = 50
+# [character.drive_man]
+# name = "馬車夫"
+# kind = "人類"
+# Favorability = 50
 
-[character.guard]
-name = "守衛隊長"
-kind = "人類"
-Favorability = 20
+# [character.guard]
+# name = "守衛隊長"
+# kind = "人類"
+# Favorability = 20
 
-[character.empire]
-name = "皇帝"
-kind = "人類"
-Favorability = 50
+# [character.empire]
+# name = "皇帝"
+# kind = "人類"
+# Favorability = 50
 
-[item.axe]
-name = "斧頭"
-level_of_damage = 100
+# [item.axe]
+# name = "斧頭"
+# level_of_damage = 100
 
-[item.bow]
-name = "弓"
-level_of_damage = 100
-arror = 0
+# [item.bow]
+# name = "弓"
+# level_of_damage = 100
+# arror = 0
 
 
-[scene.office]
-name = "辦公室"
-description = "典雅華麗，與外頭的暴亂形成對比"
+# [scene.office]
+# name = "辦公室"
+# description = "典雅華麗，與外頭的暴亂形成對比"
 
-[scene.forest]
-name = "森林小徑"
-description = "幽暗，茂密，時時有奇怪聲音作響"
+# [scene.forest]
+# name = "森林小徑"
+# description = "幽暗，茂密，時時有奇怪聲音作響"
 
-[scene.kingdom_road]
-name = "王國之路"
-description = "王國之路，萬里無雲，經過整修的寬闊，直線的石板路，邊界是森林"
+# [scene.kingdom_road]
+# name = "王國之路"
+# description = "王國之路，萬里無雲，經過整修的寬闊，直線的石板路，邊界是森林"
 
-[scene.palace]
-name = "皇宮"
-description = "皇宮，金碧輝煌，氣派非凡"
+# [scene.palace]
+# name = "皇宮"
+# description = "皇宮，金碧輝煌，氣派非凡"
 
 
 #劇情開始
 
 [cp1.begin]
 scene = "office"
-character = "雇主"
+character = "employer"
 text = "Arr! 歡迎你，請坐下，你果然就是那位鼎鼎大名的冒險者{player.name}吧?"
 
 [[cp1.begin.options]]
@@ -94,7 +94,7 @@ employer.Favorability = +10
 next = "cp1.accept"
 
 [cp1.accept]
-character = "雇主"
+character = "employer"
 text = "ArrrArr!! 非常好，勇者，我欣賞你的膽識! 你值得一筆不斐的賞金，我願意花50元金幣僱用你，事前事後各付一半"
 get_pay = 25
 commission_left = 25
@@ -107,7 +107,7 @@ employer.Favorability = -10
 next = "cp1.raise"
 
 [cp1.raise]
-character = "雇主"
+character = "employer"
 text = "喔喔是的，err…，賞金是吧，讓我們把客套的面具卸下來，金額的事情你甭擔心，100金幣夠你幹完這票安享晚年，事前事後各付一半，希望我不需要在你的墳前獻上剩下的50塊...這筆交易你能接受嗎?"
 
 [[cp1.raise.options]]
@@ -131,7 +131,7 @@ employer.Favorability = -20
 next = "cp1.angry"
 
 [cp1.angry]
-character = "雇主"
+character = "employer"
 text = "容我提醒你，自從你的前腳踩進我辦公室的天鵝絨起，你就該三生有幸了，Ar! 看到外頭的暴動了吧，我大可以請他們之中任何一個有能力的人來取代你的工作，所以請仔細考慮你的決定"
 
 [[cp1.angry.options]]
@@ -150,7 +150,7 @@ next = "cp1_mission_explain"
 #成就拒絕(TBD)
 
 [cp1.mission_explain]
-character = "雇主"
+character = "employer"
 text = "是這樣的，err...，在混沌紀元以前，整個星球都是我的礦業公會\n直到一名自稱龍裔救世主的神秘領袖出現，帶領他的族人四處劫掠我們精煉好的礦產\n再這樣下去可能會影響到皇帝偉大的計畫......\n因此我需要你護送這最後一匹礦產到寒冷的北方皇宮，你必須在三個獸人月之內完成任務並返回\n但是如果時限內任務沒有完成，ARR!! 建議你就不要回來了..."
 
 [[cp1.mission_explain.option_1]]
@@ -163,7 +163,7 @@ text = "好的，那關於這次任務的裝備..."
 next = "cp1.mission_get_pay"
 
 [cp1.mission_get_pay]
-character = "雇主"
+character = "employer"
 text = "喔對了，這裡是剛才說好的{get_pay}元金幣，以及骨傳導式的對講機\n你可以隨時在背包中查看他們，你可以在路上自行採買所需的裝備"
 get = "骨傳導式對講機\nmoney.{get_pay}"
 next = "cp1.mission_equipment"
@@ -174,7 +174,7 @@ text = "那能否請你提供一些上好的武器呢，我不小心注意到你
 next = "cp1.mission_equipment_judge"
 
 [cp1.mission_equipment_get]
-character = "雇主"
+character = "employer"
 gap = "70, 50, 30"
 
 [[cp1.mission_equipment_get.70]]
@@ -196,7 +196,7 @@ text = "我辦事你放心，在下定會準時完成交付的任務(自信)"
 next = "cp1.chose_road"
 
 [cp1.chose_road]
-character = "雇主"
+character = "employer"
 text = "最後，在出發之前，你必須選擇這次任務的路徑\n你可以選擇使用你可靠的雙腳穿越森林小徑\n雖然拉長旅程的天數但可以避免盜賊的攻擊\n你也可以選擇支付10元金幣雇個馬車夫，踏上尊爵不凡的直線道路\n保證你縮短至少三倍的時間，是不保證你能留下完整的屍體而已..."
 
 [[cp1.chose_road.options]]
@@ -425,7 +425,7 @@ text = "不用了，整座森林都是我的房子...阿阿好啦，夜深了，
 next = "cp2.walkie_talkie"
 
 [cp2.walkie_talkie]
-character = "雇主"
+character = "employer"
 text = "(對講機突然傳來聲響)ARR!不要再交朋友了，那個叫隱刃的人和那個老人都不是甚麼好東西，只會影響到皇帝的計畫，快點趁他們不備時解決掉，以免成為大患!不要忘記你來這裡的目的，這點微不足道的犧牲是必要的，殺了他們吧!"
 
 [[cp2.walkie_talkie.options]]
@@ -469,7 +469,7 @@ text = "雖然眼前的人身手十分矯健，躲過了一次又一次的攻擊
 next = "cp2.walkie_talkie_when_fighting"
 
 [cp2.walkie_talkie_when_fighting]
-character = "雇主"
+character = "employer"
 text = "(對講機傳來了聲響)任何可能妨礙任務的人，格殺勿論! 我們沒有這個聖母情結來拯救眾生，你別忘了你的任務，為了皇帝的計畫，做出微不足道的犧牲是必要的，殺了他!"
 
 [[cp2.walkie_talkie_when_fighting.options]]
@@ -892,7 +892,7 @@ text = "我是雇你的人，我出錢的，我說的算"
 next = "cp2.walkie_talkie_ring"
 
 [cp2.walkie_talkie_ring]
-character = "雇主"
+character = "employer"
 text = "(對講機)勇者你的速度必須再快點，返回的路程比你想像中還要艱難，如果你想要竊取這夥人的貨物，趁還來的及，建議你趕快停手，別做任務以外的事，記住，如果你耽誤了太多時間，就是在耽誤皇帝的計畫，那就建議你不要回來了..."
 
 [[cp2.walkie_talkie_ring.options]]

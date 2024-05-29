@@ -11,3 +11,5 @@
 #include <string.h>
 #include "cp1.h"
 #include "set_character.h"
+#include "init.h"
+#include <stdbool.h>

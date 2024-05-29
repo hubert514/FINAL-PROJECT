@@ -11,26 +11,31 @@
 #include <string.h>
 
 // character
-#define EMPLOYER 0
-#define SHADOW_BLADE 1
-#define SPRIT 2
-#define THIEF_LEADER 3
-#define LEADER_OF_UBA 4
-#define DRIVE_MAN 5
-#define GUARD 6
-#define EMPIRE 7
+#define PLAYER 0
+#define EMPLOYER 1
+#define SHADOW_BLADE 2
+#define SPRIT 3
+#define THIEF_LEADER 4
+#define LEADER_OF_UBA 5
+#define DRIVE_MAN 6
+#define GUARD 7
+#define EMPIRE 8
+#define CHARACTER_NUM 9
 
 // scene
 #define OFFICE 0
 #define FOREST 1
 #define KINGDOM_ROAD 2
 #define PALACE 3
+#define SCENE_NUM 4
 
 typedef struct _s_scene
 {
+    char name_ch[20];
     char name[20];
     char discription[200];
-    char picture[100];
+    char file[100];
 } s_scene;
 
-int32_t cp1(char *chapter, char *player_name, int8_t player_gender);
+
+int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer *renderer, TTF_Font *font);

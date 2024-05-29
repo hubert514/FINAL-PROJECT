@@ -46,6 +46,7 @@ int32_t initialize_window(SDL_Window **window, SDL_Renderer **renderer, int *img
         printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
         return false;
     }
+    SDL_SetWindowResizable(*window, SDL_FALSE);
 
     return true;
 }
