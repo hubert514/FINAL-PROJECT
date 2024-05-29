@@ -23,41 +23,80 @@ int main(int argc, char const *argv[])
     if(font == NULL) {
         printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
     }
-    //SDL_Texture* pic1 = IMG_LoadTexture(renderer, "assets/images/menu.png");
-    //SDL_Texture* pic2 = IMG_LoadTexture(renderer, "assets/images/menu2.png");
-    //SDL_Texture* cur_pic = pic1;
     SDL_Event event;
     int quit = 0;
     char pic1[] = "assets/images/menu.png";
     char pic2[] = "assets/images/menu2.png";
     char *cur_pic = pic1;
-    while (!quit) {
-            while (SDL_PollEvent(&event)) {
-                switch (event.type) {
-                    case SDL_QUIT:
-                        quit = 1;
-                        break;
-                    case SDL_MOUSEMOTION:
-                        if (event.motion.x >= 0 && event.motion.x <= 100 && event.motion.y >= 0 && event.motion.y <= 100) {
-                            cur_pic = pic2;
-                        } else {
-                            cur_pic = pic1;
-                        }
-                        break;
-                    case SDL_MOUSEBUTTONDOWN:
-                        if (event.button.button == SDL_BUTTON_LEFT) {
-                            if (event.button.x >= 0 && event.button.x <= 100 && event.button.y >= 0 && event.button.y <= 100) {
-                                show_text(renderer, "you click the botton", 0, 600, 24, font, (SDL_Color){255, 255, 255, 255});
+    int mouse_press = 0;
+    int quita = 0;
+    int main_menu = 1;
+    while(main_menu == 1){
+        while (!quit) {
+                while (SDL_PollEvent(&event)) {
+                    switch (event.type) {
+                        case SDL_QUIT:
+                            quit = 1;
+                            main_menu = 0;
+                            break;
+                        case SDL_MOUSEMOTION:
+                            if (event.motion.x >= 0 && event.motion.x <= 100 && event.motion.y >= 0 && event.motion.y <= 100) {
+                                cur_pic = pic2;
+                            } else {
+                                cur_pic = pic1;
+                            }
+                            break;
+                        case SDL_MOUSEBUTTONDOWN:
+                            if (event.button.button == SDL_BUTTON_LEFT) {
+                                if (event.button.x >= 0 && event.button.x <= 100 && event.button.y >= 0 && event.button.y <= 100) {
+                                    mouse_press = 1;
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                show_image(renderer, cur_pic, 0, 0, 100, 100);
+                SDL_Delay(5);
+                if(mouse_press == 1) {
+                    show_image(renderer, "assets/images/back.png", WINDOW_WIDTH/2 - 100, WINDOW_HEIGHT/2 - 275, 200, 100);
+                    show_image(renderer, "assets/images/exit.png", WINDOW_WIDTH/2 - 100, WINDOW_HEIGHT/2 - 50, 200, 100);
+                    show_image(renderer, "assets/images/save.png", WINDOW_WIDTH/2 - 100, WINDOW_HEIGHT/2 + 175, 200, 100);
+                    quita = 0;
+                    while( !quita ) {
+                        while (SDL_PollEvent(&event)) {
+                            switch (event.type) {
+                                case SDL_QUIT:
+                                    quit = 1;
+                                    quita = 1;
+                                    main_menu = 0;
+                                    break;
+                                case SDL_MOUSEBUTTONDOWN:
+                                    if (event.button.button == SDL_BUTTON_LEFT) {
+                                        if (event.button.x >= WINDOW_WIDTH/2 - 100 && event.button.x <= WINDOW_WIDTH/2 + 100 && event.button.y >= WINDOW_HEIGHT/2 - 50 && event.button.y <= WINDOW_HEIGHT/2 + 50) {
+                                            printf("Exit\n");
+                                        }
+                                        else if (event.button.x >= WINDOW_WIDTH/2 - 100 && event.button.x <= WINDOW_WIDTH/2 + 100 && event.button.y >= WINDOW_HEIGHT/2 - 275 && event.button.y <= WINDOW_HEIGHT/2 - 175) {
+                                            printf("Back\n");
+                                            mouse_press = 0;
+                                            quita = 1;
+                                            break;
+                                        }
+                                        else if (event.button.x >= WINDOW_WIDTH/2 - 100 && event.button.x <= WINDOW_WIDTH/2 + 100 && event.button.y >= WINDOW_HEIGHT/2 + 175 && event.button.y <= WINDOW_HEIGHT/2 + 275) {
+                                            printf("Save\n");
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    break;
                             }
                         }
                         break;
-                    default:
-                        break;
+                    }  
                 }
-            }
-            show_image(renderer, cur_pic, 0, 0, 100, 100);
-            SDL_Delay(5);
         }
+    }
 
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
