@@ -17,6 +17,7 @@
 void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *text, TTF_Font *font);
 void set_scene(char *line, s_scene *now_scene, s_scene *scenes);
 void set_character(char *line, s_character *now_character, s_character *characters);
+void clear_events();
 
 int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer *renderer, TTF_Font *font)
 {
@@ -71,8 +72,8 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
     snprintf(scenes[PALACE].file, 100, "assets/images/sw.jpg");
 
     // test
-    show(renderer, scenes[OFFICE], characters[EMPIRE], "Hello, world!", font);
-    sleep(2);
+    // show(renderer, scenes[OFFICE], characters[EMPIRE], "Hello, world!", font);
+    // sleep(2);
     // end of setup
 
     // start of script
@@ -81,6 +82,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
     char now_text[1000];
     s_scene now_scene;
     s_character now_character;
+    char next[1000] = "cp1.begin", tmp[1000];
 
     while (fgets(line, sizeof(line), script) && !quit)
     {
@@ -98,28 +100,76 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
         {
             set_character(line, &now_character, characters);
         }
-        
-        
-        if (line[0] == '[' && line[1] != '[')
+        if (strstr(line, "text ="))
         {
-            // refresh screen
-            // SDL_RenderClear(renderer);
-            // show_text(renderer, line, 0, 0, 50, font, (SDL_Color){255, 255, 255, 255});
-            // till hit enter
+            sscanf(line, "text = \"%[^\"]\"", now_text);
+            show(renderer, now_scene, now_character, now_text, font);
+
+            sleep(1);
+            clear_events();
+
             while (1)
             {
+                SDL_PollEvent(&event);
                 if (event.type == SDL_QUIT)
                 {
                     quit = true;
                     break;
                 }
-                SDL_PollEvent(&event);
                 if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN)
+                {
+                    clear_events();
+                    break;
+                }
+                // if event == space
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+                {
+                    clear_events();
+                    break;
+                }
+            }
+        }
+        if (strstr(line, "next ="))
+        {
+            sscanf(line, "next = \"%[^\"]\"", tmp);
+            snprintf(next, 1002, "[%s]", tmp);
+            printf("%s\n", next);
+            fseek(script, 0, SEEK_SET);
+            while (fgets(line, sizeof(line), script))
+            {
+                if (strstr(line, next))
                 {
                     break;
                 }
             }
         }
+
+        // if (line[0] == '[' && line[1] != '[')
+        // {
+        //     // refresh screen
+        //     // SDL_RenderClear(renderer);
+        //     // show_text(renderer, line, 0, 0, 50, font, (SDL_Color){255, 255, 255, 255});
+        //     // till hit enter
+        //     while (1)
+        //     {
+        //         SDL_PollEvent(&event);
+        //         if (event.type == SDL_QUIT)
+        //         {
+        //             quit = true;
+        //             break;
+        //         }
+        //         if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN)
+        //         {
+        //             break;
+        //         }
+        //         // if event == space
+        //         if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+        //         {
+        //             break;
+        //         }
+
+        //     }
+        // }
     }
 
     fclose(script);
@@ -157,8 +207,11 @@ void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *te
     // refresh screen
     SDL_RenderClear(renderer);
     show_image(renderer, scene.file, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-    show_image(renderer, character.picture, 0, 0, 200, 300);
-    show_text(renderer, text, 0, 400, 50, font, (SDL_Color){0, 0, 0, 255});
+    show_image(renderer, character.picture, 0, 150, 400, 600);
+    show_image(renderer, "assets/images/talk_block.png", 0, 600, WINDOW_WIDTH, 300);
+    // printf("%s\n", character.name_ch);
+    show_text(renderer, character.name_ch, 190, 620, 40, font, (SDL_Color){255, 255, 255, 255});
+    show_text(renderer, text, 20, 730, 24, font, (SDL_Color){0, 0, 0, 255});
 
     return;
 }
@@ -198,7 +251,8 @@ void set_character(char *line, s_character *now_character, s_character *characte
     {
         if (strstr(character_name, characters[i].name))
         {
-            snprintf(now_character->name, 20, "%s", character_name);
+            snprintf(now_character->name, 30, "%s", character_name);
+            snprintf(now_character->name_ch, 30, "%s", characters[i].name_ch);
             snprintf(now_character->kind, 20, "%s", characters[i].kind);
             snprintf(now_character->picture, 100, "%s", characters[i].picture);
             now_character->favorability = characters[i].favorability;
@@ -210,4 +264,13 @@ void set_character(char *line, s_character *now_character, s_character *characte
     }
 
     return;
+}
+
+void clear_events()
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        // 仅仅读取事件，而不做任何处理
+    }
 }

@@ -27,7 +27,7 @@ int8_t show_text(SDL_Renderer *renderer, char *text, int32_t x, int32_t y, int32
         return false;
     }
 
-    SDL_Rect dstRect = {x, y, strlen(text) * font_size / 2, font_size};
+    SDL_Rect dstRect = {x, y, strlen(text) * font_size / 1.9, font_size};
     SDL_RenderCopy(renderer, texture, NULL, &dstRect);
     SDL_RenderPresent(renderer);
 

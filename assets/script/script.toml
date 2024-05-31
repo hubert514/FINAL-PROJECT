@@ -171,7 +171,7 @@ next = "cp1.mission_equipment"
 [cp1.mission_equipment]
 character = "player"
 text = "那能否請你提供一些上好的武器呢，我不小心注意到你房間角落的武器室"
-next = "cp1.mission_equipment_judge"
+next = "cp1.mission_equipment_get"
 
 [cp1.mission_equipment_get]
 character = "employer"
@@ -233,7 +233,7 @@ next = "cp2.shadow_blade"
 [cp2.shadow_blade]
 character = "shadow_blade"
 text = "退後!來者何人?"
-next = "cp2.show_my_self"
+# next = "cp2.show_my_self"
 
 [[cp2.shadow_blade.options]]
 option = "說明來意，以及此行的目的"
