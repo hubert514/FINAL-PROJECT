@@ -105,7 +105,7 @@ int main(int argc, char const *argv[])
                 }
         }
     }
-
+        TTF_CloseFont(font);
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
         SDL_Quit();

@@ -453,8 +453,6 @@ text = "你這個哥布林混血的畜牲! 說話怎麼可以這麼沒禮貌! �
 shadow_blade.Favorability = -20
 [[cp2.shadow_blade_fight.options]]
 option = "從背包掏出斧頭"
-player.hungry = -10
-
 next = "cp2.fight_with_axe"
 [[cp2.shadow_blade_fight.options]]
 option = "從背包掏出沒有箭矢的弓"
@@ -466,6 +464,7 @@ next = "cp2.fight_with_fist"
 [cp2.fight_with_axe]
 character = "shadow_blade"
 text = "雖然眼前的人身手十分矯健，躲過了一次又一次的攻擊，但他似乎在意著某個事物，終於在你的一次劈砍之下倒臥在血泊之中，當你往旁一看，發現那個剛才躺在火堆旁邊的，是個驚恐而瘦弱的老人身影"
+player.hungry = -10
 next = "cp2.walkie_talkie_when_fighting"
 
 [cp2.walkie_talkie_when_fighting]
@@ -690,13 +689,13 @@ next = "cp2.cross_road"
 [cp2.go_tree]
 character = "player"
 text = "zzz…，過了0.2個獸人月，甚麼事也沒發生"
-[[cp2.go_tree.option]]
+[[cp2.go_tree.options]]
 option = "休息夠了"
 next = "cp2.enough_rest"
-[[cp2.go_tree.option]]
+[[cp2.go_tree.options]]
 option = "再休息一下"
 next = "cp2.go_tree"
-[[cp2.go_tree.option]]
+[[cp2.go_tree.options]]
 option = "使用斧頭砍樹"
 next = "cp2.cut_tree"
 
@@ -716,13 +715,13 @@ scene = "kingdom_road"
 character = "drive_man"
 text = "疑?前面有一組，穿著類似...制服之類的人馬在路上休息耶? 需不需要停下來跟他們說他們的馬車擋住了我們的路呀?"
 player.hungry = 80
-[[cp2.kingdom_road.option]]
+[[cp2.kingdom_road.options]]
 option = "禮貌的說明"
 next = "cp2.polite"
-[[cp2.kingdom_road.option]]
+[[cp2.kingdom_road.options]]
 option = "加速輾過去"
 next = "cp2.fuck_them"
-[[cp2.kingdom_road.option]]
+[[cp2.kingdom_road.options]]
 option = "等待他們"
 next = "cp2.wait_for_them"
 
@@ -739,16 +738,16 @@ next = "cp2.leader_show"
 [cp2.leader_show]
 character = "leader_of_UBA"
 text = "喔喔，可以可以，容我介紹一下，我是聯合商業同盟會的會長，我們是一批往返各大城市經銷的商隊，只是經過了長途跋涉，我們的車輪好像出了點問題，不知你們能否幫助我們呢?"
-[[cp2.leader_show.option]]
+[[cp2.leader_show.options]]
 option = "修輪子"
 next = "cp2.fix_tire"
-[[cp2.leader_show.option]]
+[[cp2.leader_show.options]]
 option = "載他們一程"
 next = "cp2.give_them_a_ride"
-[[cp2.leader_show.option]]
+[[cp2.leader_show.options]]
 option = "談交易"
 next = "cp2.make_deal"
-[[cp2.leader_show.option]]
+[[cp2.leader_show.options]]
 option = "嘗試偷竊"
 next = "cp2.steal"
 
@@ -1154,17 +1153,17 @@ next = "cp3.count_people"
 character = "empire"
 text = "在這場冒險之中，不知你有沒有借助其他人的力量呢?"
 
-[[cp3.count_people.option]]
+[[cp3.count_people.options]]
 option = "有的，我身後的就是這次旅途中幫助我的人"
 empire.Favorability = -20
 next = "cp3.final_battle"
 
-[[cp3.count_people.option]]
+[[cp3.count_people.options]]
 option = "有的，雖然我救了一個老人，但他已經消失無蹤了"
 empire.Favorability = -10
 next = "cp3.final_battle"
 
-[[cp3.count_people.option]]
+[[cp3.count_people.options]]
 option = "並沒有..."
 empire.Favorability = +10
 next = "cp3.final_battle"
@@ -1172,34 +1171,26 @@ next = "cp3.final_battle"
 [cp3.final_battle]
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 [end.reject_mission]
+character = "employer"
+text = "你拒絕了這次任務，那麼你就不用再回來了，你的勇者之路就此結束了"
+end = 1
 #TBD
 
 [end.doctor]
 character = "player"
 text = "隨即，世界突然繞著你旋轉，在你的眼神彷彿因為離心力拋飛出眼周表面之際，你頹然倒下，望著老人若有似無的笑意，你帶著無數個不明所以，永遠躺在落葉紛飛之中..."
+end = 1
 
 [end.fight_with_bow]
 character = "player"
 text = "你從背包中迅速地掏出了沒有箭矢的弓，朝這個神秘的人物擲了出去，想當然耳，是完全沒有造成任何傷害，接下來的事情，幾乎僅發生在半秒之間，甚至完全沒有痛的感覺，你只感受的到全然的冷冽，那是無情的刀刃，在沿著肩胛骨劃開所留下的溫度，你的世界就此被黑與白壟罩，也許，這就是英雄的宿命吧..."
+end = 1
 
 [end.being_steal]
 character = "player"
 text = "即便你已拚盡了全力，仍然無法阻止你現在同時成為了礦業公會及皇帝眼中的戰犯，你終期一生只能在逃亡之中過活，這就是屬於渾沌紀元最強勇者的悲哀結局"
+end = 1
 
 [end.kill_by_UBA]
 character = "leader_of_UBA"
@@ -1209,4 +1200,4 @@ next = "end.kill_by_UBA_end"
 [end.kill_by_UBA_end]
 character = "player"
 text = "在你還沒來的及反應過來前，這位自稱會長的人以極快的速度抽出暗藏在腰間上的佩劍，像台早已暖機多時的工程用切割器般，在不到半秒間，你的全身就再也沒有任何感覺了"
-
+end = 1
