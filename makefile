@@ -1,5 +1,5 @@
 CC = gcc
-LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf
+LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
 .IGNORE:
 all:
@@ -10,6 +10,9 @@ cp1:
 
 menu:
 	$(CC) -o menu src/menu.c src/init.c src/show_image.c src/show_text.c $(LIBS)
+
+sound:
+	$(CC) -o sound src/playsound.c src/init.c src/show_image.c src/show_text.c $(LIBS)
 
 install:
 	sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
