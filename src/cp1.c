@@ -18,6 +18,7 @@ void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *te
 void set_scene(char *line, s_scene *now_scene, s_scene *scenes);
 void set_character(char *line, s_character *now_character, s_character *characters);
 void clear_events();
+void display_options(SDL_Renderer *renderer, TTF_Font *font, s_options *options, int32_t option_num);
 
 int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer *renderer, TTF_Font *font)
 {
@@ -78,11 +79,13 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
 
     // start of script
     SDL_Event event;
-    bool quit = false;
+    bool quit = false, click_on_option = false;
     char now_text[1000];
     s_scene now_scene;
     s_character now_character;
+    int32_t option_num = 0, mouse_x = 0, mouse_y = 0;
     char next[1000] = "cp1.begin", tmp[1000];
+    s_options options[10];
 
     while (fgets(line, sizeof(line), script) && !quit)
     {
@@ -143,6 +146,86 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 }
             }
         }
+        // option
+        if (strstr(line, "[["))
+        {
+            option_num = 0;
+            while (fgets(line, sizeof(line), script))
+            {
+                if (line[0] == '\n' || line[0] == '\r' || line[0] == '\0')
+                {
+                    break;
+                }
+                if (strstr(line, "option ="))
+                {
+                    sscanf(line, "option = \"%[^\"]\"", options[option_num].option);
+                    printf("option%d: %s\n", option_num, options[option_num].option);
+                }
+                if (strstr(line, "next ="))
+                {
+                    sscanf(line, "next = \"%[^\"]\"", tmp);
+                    snprintf(options[option_num].next, 1002, "[%s]", tmp);
+                    printf("next%d: %s\n", option_num, options[option_num].next);
+                    option_num++;
+                }
+            }
+            // display options
+            display_options(renderer, font, options, option_num);
+            // wait for click
+            while (1)
+            {
+                click_on_option = false;
+                SDL_PollEvent(&event);
+                if (event.type == SDL_QUIT)
+                {
+                    quit = true;
+                    break;
+                }
+                if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+                {
+                    mouse_x = event.button.x;
+                    mouse_y = event.button.y;
+                    for (int32_t i = 0; i < option_num; i++)
+                    {
+                        if (event.button.x >= 0 && event.button.x <= WINDOW_WIDTH && event.button.y >= 200 + i * 55 && event.button.y <= 200 + i * 55 + 50)
+                        {
+                            snprintf(next, 1002, "%s", options[i].next);
+                            click_on_option = true;
+                            break;
+                        }
+                    }
+                    clear_events();
+                }
+                if (click_on_option)
+                {
+                    break;
+                }
+            }
+            // find next
+            fseek(script, 0, SEEK_SET);
+            while (fgets(line, sizeof(line), script))
+            {
+                if (strstr(line, next))
+                {
+                    break;
+                }
+                // scene and character and 
+                if (strstr(line, "scene ="))
+                {
+                    set_scene(line, &now_scene, scenes);
+                }
+                if (strstr(line, "character ="))
+                {
+                    set_character(line, &now_character, characters);
+                }
+                
+            }
+        }
+        if (strstr(line, "end = 1"))
+        {
+            quit = true;
+        }
+        
 
         // if (line[0] == '[' && line[1] != '[')
         // {
@@ -272,5 +355,15 @@ void clear_events()
     while (SDL_PollEvent(&event))
     {
         // 仅仅读取事件，而不做任何处理
+    }
+}
+
+void display_options(SDL_Renderer *renderer, TTF_Font *font, s_options *options, int32_t option_num)
+{
+    for (int32_t i = 0; i < option_num; i++)
+    {
+        show_image(renderer, "assets/images/black.png", 0, 200 + i * 55, WINDOW_WIDTH, 50);
+        // printf("%ld\n", strlen(options[i].option));
+        show_text(renderer, options[i].option, 50, 200 + i * 55, 40, font, (SDL_Color){255, 255, 255, 255});
     }
 }

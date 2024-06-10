@@ -37,5 +37,11 @@ typedef struct _s_scene
     char file[100];
 } s_scene;
 
+typedef struct s_options
+{
+    char option[100];
+    char next[100];
+} s_options;
+
 
 int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer *renderer, TTF_Font *font);
