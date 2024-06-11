@@ -1,25 +1,41 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+#include "playSound.h"
 
-int main(int argc,char* argv[]){
-    SDL_Init(SDL_INIT_AUDIO);   // 初始化 SDL 音訊系統
-
-    if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ){
-        printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
-        return 0;
-    } 
-
-    Mix_Chunk *gScratch = NULL; // 載入 wav 音效檔
-    gScratch = Mix_LoadWAV("assets/images/sound.wav");
-    if(gScratch == NULL) { 
-        printf( "Failed to load scratch sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
-        return 0; 
+int playSound(const char *soundFile) {
+    // 初始化 SDL 音訊系統
+    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        return 1;
     }
 
-    Mix_PlayChannel( -1, gScratch, 0 ); // 播放音效檔
-    SDL_Delay(5000); // 等待 5000 毫秒
-    Mix_FreeChunk(gScratch); // 釋放音效檔資源
-    Mix_CloseAudio(); // 退出 SDL
-    SDL_Quit();
+    // 初始化 SDL_mixer
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+        return 1;
+    }
+
+    // 載入 wav 音效檔
+    Mix_Chunk *sound = Mix_LoadWAV(soundFile);
+    if (sound == NULL) {
+        printf("Failed to load sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+        return 1;
+    }
+
+    // 播放音效
+    Mix_PlayChannel(-1, sound, 0);
+
+    // 等待然後釋放資源
+    SDL_Delay(5000);
+    Mix_FreeChunk(sound);
+
+    // 關閉 SDL_mixer 和 SDL
+    Mix_CloseAudio();
+
+    return 0;
+}
+
+int main() {
+    playSound("assets/sound.wav");
     return 0;
 }

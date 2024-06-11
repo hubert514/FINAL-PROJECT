@@ -12,6 +12,7 @@
 #include <stdbool.h>
 #include "constants.h"
 
+
 int main(int argc, char const *argv[])
 {
     SDL_Window *window = NULL;
@@ -105,13 +106,12 @@ int main(int argc, char const *argv[])
                 }
         }
     }
-        TTF_CloseFont(font);
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-
-        return 0;
-    }
+    TTF_CloseFont(font);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 0;
+}
 
 /*void menu(SDL_Window *window, SDL_Renderer *renderer, int imgFlags, SDL_Event event ){
         SDL_Event event;
