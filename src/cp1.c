@@ -13,6 +13,7 @@
 #include "set_character.h"
 #include "init.h"
 #include <stdbool.h>
+#include "playSound.h"
 
 void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *text, TTF_Font *font);
 void set_scene(char *line, s_scene *now_scene, s_scene *scenes);
@@ -127,6 +128,8 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 // if event == space
                 if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
                 {
+                    playSound("/mnt/c/Users/user/Desktop/homework/FINAL-PROJECT/assets/images/sound.wav");
+                    printf("playsound");
                     clear_events();
                     break;
                 }

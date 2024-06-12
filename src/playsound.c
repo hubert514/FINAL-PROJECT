@@ -26,7 +26,7 @@ int playSound(const char *soundFile) {
     Mix_PlayChannel(-1, sound, 0);
 
     // 等待然後釋放資源
-    SDL_Delay(5000);
+    SDL_Delay(1000);
     Mix_FreeChunk(sound);
 
     // 關閉 SDL_mixer 和 SDL
@@ -35,7 +35,7 @@ int playSound(const char *soundFile) {
     return 0;
 }
 
-int main() {
+/*int main() {
     playSound("assets/sound.wav");
     return 0;
-}
+}*/
