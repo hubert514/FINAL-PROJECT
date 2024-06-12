@@ -21,6 +21,7 @@ void set_character(char *line, s_character *now_character, s_character *characte
 void clear_events();
 void display_options(SDL_Renderer *renderer, TTF_Font *font, s_options *options, int32_t option_num);
 int32_t utf8_char_len(const char *s);
+void set_faverability(char *line, s_character *characters);
 
 int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer *renderer, TTF_Font *font)
 {
@@ -120,7 +121,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
             sscanf(line, "text = \"%[^\"]\"", now_text);
             show(renderer, now_scene, now_character, now_text, font);
 
-            sleep(1);
+            sleep(0.75);
             clear_events();
 
             while (1)
@@ -234,6 +235,67 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 }
             }
         }
+        if (strstr(line, "Favorability ="))
+        {
+            set_faverability(line, characters);
+            set_character(line, &now_character, characters);
+        }
+
+        if (strstr(line, "[cp1.mission_equipment_get]"))
+        {
+            set_character("character = \"employer\"", &now_character, characters);
+            if (characters[EMPLOYER].favorability >= 70)
+            {
+                snprintf(now_text, 1000, "Ar! 年輕人，不要吝於請求，我手頭正好有隻我珍藏的斧頭(折舊50%%)，雖然有點舊了，但還堪用，希望對你的旅程有所幫助");
+                // get 斧頭
+            }
+            if (characters[EMPLOYER].favorability < 70 && characters[EMPLOYER].favorability > 30)
+            {
+                snprintf(now_text, 1000, "Ar! 對了，我手頭正好有張順手的弓(折舊75%%)，但沒有箭矢，你就湊合著用吧");
+                // get 弓
+            }
+            if (characters[EMPLOYER].favorability <= 30)
+            {
+                snprintf(now_text, 1000, "Ar! 我想，憑你的本事，幾隻哥布林應該可以赤手空拳解決吧，跟一個你所謂的「中年獸人」請求武器是多麼沒出息的行為阿");
+                
+                // get nothing
+            }
+
+            show(renderer, now_scene, now_character, now_text, font);
+            sleep(0.75);
+            clear_events();
+
+            while (1)
+            {
+                SDL_PollEvent(&event);
+                if (event.type == SDL_QUIT)
+                {
+                    quit = true;
+                    break;
+                }
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN)
+                {
+                    clear_events();
+                    break;
+                }
+                // if event == space
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+                {
+                    playSound("assets/images/sound.wav");
+                    printf("playsound\n");
+                    clear_events();
+                    break;
+                }
+            }
+            while (fgets(line, sizeof(line), script))
+            {
+                if (strstr(line, "getequip = \"end\""))
+                {
+                    break;
+                }
+            }
+        }
+
         if (strstr(line, "end = 1"))
         {
             quit = true;
@@ -305,7 +367,18 @@ void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *te
     show_image(renderer, character.picture, 0, 150, 400, 600);
     show_image(renderer, "assets/images/talk_block.png", 0, 600, WINDOW_WIDTH, 300);
     // printf("%s\n", character.name_ch);
-    show_text(renderer, character.name_ch, 190, 620, 40, font, (SDL_Color){255, 255, 255, 255});
+    show_text(renderer, character.name_ch, 190, 630, 40, font, (SDL_Color){255, 255, 255, 255});
+    // show faverability
+    if (strstr(character.name, "player") == NULL)
+    {
+        char favorability[100];
+        snprintf(favorability, 100, "好感度: %d", character.favorability);
+        show_text(renderer, favorability, 650, 670, 30, font, (SDL_Color){0, 0, 0, 255});
+    }
+    {
+        /* code */
+    }
+
     char text_line[256];
     int32_t text_line_num = 0;
     int32_t text_len = strlen(text);
@@ -411,4 +484,43 @@ int32_t utf8_char_len(const char *s)
     if ((s[0] & 0xF8) == 0xF0)
         return 4; // 4-byte UTF-8
     return 1;     // Default fallback (應該不會到這裡)
+}
+
+void set_faverability(char *line, s_character *characters)
+{
+    char character_name[20];
+    char faverability[20];
+    int32_t character_index = 0;
+    // character.Favorability = number;
+    printf("%s\n", line);
+    sscanf(line, "%[^.].Favorability = %[^\r]", character_name, faverability);
+    printf("%s, %s\n", character_name, faverability);
+
+    for (int32_t i = 0; i < 9; i++)
+    {
+        if (strstr(character_name, characters[i].name))
+        {
+            printf("%s, %s\n", character_name, characters->name);
+            character_index = i;
+            break;
+        }
+    }
+
+    printf("%d, %d->\n", character_index, characters[character_index].favorability);
+    if (strstr(faverability, "+") || strstr(faverability, "-"))
+    {
+        if (strstr(faverability, "+"))
+        {
+            characters[character_index].favorability += atoi(&faverability[1]);
+        }
+        else
+        {
+            characters[character_index].favorability -= atoi(&faverability[1]);
+        }
+    }
+    else
+    {
+        characters[character_index].favorability = atoi(faverability);
+    }
+    printf(" %d\n", characters[character_index].favorability);
 }

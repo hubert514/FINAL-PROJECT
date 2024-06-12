@@ -79,6 +79,17 @@
 scene = "office"
 character = "employer"
 text = "Arr! 歡迎你，請坐下，你果然就是那位鼎鼎大名的冒險者{player.name}吧?"
+next = "cp1.11"
+
+[cp1.11]
+character = "player"
+text = "是的，我保證翻遍整個混沌紀元的史冊也找不到有我同等身手的勇者，請問有甚麼事需要我出馬的嗎?(自信)"
+next = "cp1.accept"
+
+[cp1.accept]
+character = "employer"
+text = "ArrrArr!! 非常好，勇者，我欣賞你的膽識! 你值得一筆不斐的賞金，我願意花50元金幣僱用你，事前事後各付一半"
+
 
 [[cp1.begin.options]]
 option = "接受"
@@ -89,15 +100,10 @@ next = "cp1.raise_text"
 
 [cp1.accept_text]
 character = "player"
-text = "是的，我保證翻遍整個混沌紀元的史冊也找不到有我同等身手的勇者，請問有甚麼事需要我出馬的嗎?(自信)"
-employer.Favorability = +10
-next = "cp1.accept"
-
-[cp1.accept]
-character = "employer"
-text = "ArrrArr!! 非常好，勇者，我欣賞你的膽識! 你值得一筆不斐的賞金，我願意花50元金幣僱用你，事前事後各付一半"
+text = "好的，請告訴我任務內容吧!"
 get_pay = 25
 commission_left = 25
+employer.Favorability = +10
 next = "cp1.mission_explain"
 
 [cp1.raise_text]
@@ -122,7 +128,7 @@ character = "player"
 text = "好的，請告訴我任務內容吧!"
 get_pay = 50
 commission_left = 50
-next = "cp1_mission_explain"
+next = "cp1.mission_explain"
 
 [cp1.raise_rejected_text]
 character = "player"
@@ -145,7 +151,7 @@ next = "end.reject_mission"
 character = "player"
 get_pay = 50
 commission_left = 50
-next = "cp1_mission_explain"
+next = "cp1.mission_explain"
 
 #成就拒絕(TBD)
 
@@ -188,6 +194,9 @@ next = "cp1.final"
 [[cp1.mission_equipment_get.30]]
 text = "Ar! 我想，憑你的本事，幾隻哥布林應該可以赤手空拳解決吧，跟一個你所謂的「中年獸人」請求武器是多麼沒出息的行為阿"
 employer.Favorability = -10
+getequip = "end"
+
+
 next = "cp1.final"
 
 [cp1.final]
@@ -1170,6 +1179,12 @@ empire.Favorability = +10
 next = "cp3.final_battle"
 
 [cp3.final_battle]
+
+
+
+
+
+
 
 
 [end.reject_mission]
