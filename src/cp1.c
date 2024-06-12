@@ -20,6 +20,7 @@ void set_scene(char *line, s_scene *now_scene, s_scene *scenes);
 void set_character(char *line, s_character *now_character, s_character *characters);
 void clear_events();
 void display_options(SDL_Renderer *renderer, TTF_Font *font, s_options *options, int32_t option_num);
+int32_t utf8_char_len(const char *s);
 
 int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer *renderer, TTF_Font *font)
 {
@@ -36,19 +37,29 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
     // setting player
     s_player player;
     init_player(&player, player_name, player_gender);
+    char player_gender_pic[100];
+    if (player_gender == 0)
+    {
+        snprintf(player_gender_pic, 100, "assets/images/character_girl.png");
+    }
+    else
+    {
+        snprintf(player_gender_pic, 100, "assets/images/character_boy.png");
+    }
+
     // printf("%s, %s\n", player.name, player.kind);
 
     // setting characters
     s_character characters[20];
-    init_character(&characters[PLAYER], "player", player_name, player.kind, 0, "assets/images/character_boy.png");
+    init_character(&characters[PLAYER], "player", player_name, player.kind, 0, player_gender_pic);
     init_character(&characters[EMPLOYER], "employer", "雇主", "獸人", 60, "assets/images/sw.png");
-    init_character(&characters[SHADOW_BLADE], "shadow_blade", "影刃", "半精靈", 30, "assets/images/sw.png");
-    init_character(&characters[SPRIT], "sprit", "精靈", "精靈", 50, "assets/images/sw.png");
-    init_character(&characters[THIEF_LEADER], "theif_leader", "盜賊領袖", "人類", -100, "assets/images/sw.png");
-    init_character(&characters[LEADER_OF_UBA], "leader_of_UBA", "聯合商業同盟會會長", "人類", 50, "assets/images/sw.png");
+    init_character(&characters[SHADOW_BLADE], "shadow_blade", "影刃", "半精靈", 30, "assets/images/shadow_blade.png");
+    init_character(&characters[SPRIT], "sprit", "精靈", "精靈", 50, "assets/images/sprit.png");
+    init_character(&characters[THIEF_LEADER], "theif_leader", "盜賊領袖", "人類", -100, "assets/images/gurad.png");
+    init_character(&characters[LEADER_OF_UBA], "leader_of_UBA", "聯合商業同盟會會長", "人類", 50, "assets/images/guard.png");
     init_character(&characters[DRIVE_MAN], "drive_man", "馬車夫", "人類", 50, "assets/images/sw.png");
-    init_character(&characters[GUARD], "guard", "守衛隊長", "人類", 20, "assets/images/sw.png");
-    init_character(&characters[EMPIRE], "empire", "皇帝", "人類", 100, "assets/images/sw.png");
+    init_character(&characters[GUARD], "guard", "守衛隊長", "人類", 20, "assets/images/guard.png");
+    init_character(&characters[EMPIRE], "empire", "皇帝", "人類", 100, "assets/images/empire.png");
     // for (int32_t i = 0; i < EMPIRE; i++)
     // {
     //     printf("%s, %s, %d\n", characters[i].name, characters[i].kind, characters[i].favorability);
@@ -59,11 +70,11 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
     snprintf(scenes[OFFICE].name, 20, "office");
     snprintf(scenes[OFFICE].name_ch, 20, "辦公室");
     snprintf(scenes[OFFICE].discription, 200, "典雅華麗，與外頭的暴亂形成對比");
-    snprintf(scenes[OFFICE].file, 100, "assets/images/sw.jpg");
+    snprintf(scenes[OFFICE].file, 100, "assets/images/office.png");
     snprintf(scenes[FOREST].name, 20, "forest");
     snprintf(scenes[FOREST].name_ch, 20, "森林小徑");
     snprintf(scenes[FOREST].discription, 200, "幽暗，茂密，時時有奇怪聲音作響");
-    snprintf(scenes[FOREST].file, 100, "assets/images/sw.jpg");
+    snprintf(scenes[FOREST].file, 100, "assets/images/forest.png");
     snprintf(scenes[KINGDOM_ROAD].name, 20, "kingdom_road");
     snprintf(scenes[KINGDOM_ROAD].name_ch, 20, "王國之路");
     snprintf(scenes[KINGDOM_ROAD].discription, 200, "萬里無雲，經過整修的寬闊，直線的石板路，邊界是森林");
@@ -71,7 +82,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
     snprintf(scenes[PALACE].name, 20, "palace");
     snprintf(scenes[PALACE].name_ch, 20, "皇宮");
     snprintf(scenes[PALACE].discription, 200, "金碧輝煌，氣派非凡");
-    snprintf(scenes[PALACE].file, 100, "assets/images/sw.jpg");
+    snprintf(scenes[PALACE].file, 100, "assets/images/palace.png");
 
     // test
     // show(renderer, scenes[OFFICE], characters[EMPIRE], "Hello, world!", font);
@@ -128,8 +139,8 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 // if event == space
                 if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
                 {
-                    playSound("/mnt/c/Users/user/Desktop/homework/FINAL-PROJECT/assets/images/sound.wav");
-                    printf("playsound");
+                    playSound("assets/images/sound.wav");
+                    printf("playsound\n");
                     clear_events();
                     break;
                 }
@@ -212,7 +223,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 {
                     break;
                 }
-                // scene and character and 
+                // scene and character and
                 if (strstr(line, "scene ="))
                 {
                     set_scene(line, &now_scene, scenes);
@@ -221,14 +232,12 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 {
                     set_character(line, &now_character, characters);
                 }
-                
             }
         }
         if (strstr(line, "end = 1"))
         {
             quit = true;
         }
-        
 
         // if (line[0] == '[' && line[1] != '[')
         // {
@@ -297,7 +306,27 @@ void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *te
     show_image(renderer, "assets/images/talk_block.png", 0, 600, WINDOW_WIDTH, 300);
     // printf("%s\n", character.name_ch);
     show_text(renderer, character.name_ch, 190, 620, 40, font, (SDL_Color){255, 255, 255, 255});
-    show_text(renderer, text, 20, 730, 24, font, (SDL_Color){0, 0, 0, 255});
+    char text_line[256];
+    int32_t text_line_num = 0;
+    int32_t text_len = strlen(text);
+    int32_t text_index = 0;
+
+    while (text_len > 0)
+    {
+        int32_t total_bytes = 0;
+
+        while (total_bytes + utf8_char_len(&text[text_index + total_bytes]) <= 140 && total_bytes < text_len)
+        {
+            total_bytes += utf8_char_len(&text[text_index + total_bytes]);
+        }
+        snprintf(text_line, 256, "%.*s", total_bytes, &text[text_index]);
+        show_text(renderer, text_line, 20, 720 + text_line_num * 30, 24, font, (SDL_Color){0, 0, 0, 255});
+        // printf("%s\n", text_line);
+        text_len -= total_bytes;
+        text_index += total_bytes;
+        text_line_num++;
+    }
+    // show_text(renderer, text, 20, 730, 24, font, (SDL_Color){0, 0, 0, 255});
 
     return;
 }
@@ -369,4 +398,17 @@ void display_options(SDL_Renderer *renderer, TTF_Font *font, s_options *options,
         // printf("%ld\n", strlen(options[i].option));
         show_text(renderer, options[i].option, 50, 200 + i * 55, 40, font, (SDL_Color){255, 255, 255, 255});
     }
+}
+
+int32_t utf8_char_len(const char *s)
+{
+    if ((s[0] & 0x80) == 0)
+        return 1; // 1-byte ASCII
+    if ((s[0] & 0xE0) == 0xC0)
+        return 2; // 2-byte UTF-8
+    if ((s[0] & 0xF0) == 0xE0)
+        return 3; // 3-byte UTF-8
+    if ((s[0] & 0xF8) == 0xF0)
+        return 4; // 4-byte UTF-8
+    return 1;     // Default fallback (應該不會到這裡)
 }

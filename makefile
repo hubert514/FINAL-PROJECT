@@ -24,4 +24,4 @@ install:
 clean:
 	rm -f test *.exe engine cp1 menu
 
-.PHONY: all cp1 menu  gif clean
+.PHONY: all cp1 menu gif clean
