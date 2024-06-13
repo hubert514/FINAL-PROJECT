@@ -266,7 +266,7 @@ void displayGif(const char *gif_file) {
         Uint32 current_time = SDL_GetTicks();
         if (current_time - last_time > 100) { // 100 ms per frame
             renderGifFrame(renderer, gif, frame, surface);
-            frame = (frame + 1) % gif->ImageCount;
+            frame++;
             if (frame >= gif->ImageCount) {
                 quit = 1; // Exit loop after playing all frames once
             }
