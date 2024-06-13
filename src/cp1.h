@@ -20,7 +20,8 @@
 #define DRIVE_MAN 6
 #define GUARD 7
 #define EMPIRE 8
-#define CHARACTER_NUM 9
+#define OLD_MAN 9
+#define CHARACTER_NUM 10
 
 // scene
 #define OFFICE 0
@@ -28,6 +29,14 @@
 #define KINGDOM_ROAD 2
 #define PALACE 3
 #define SCENE_NUM 4
+
+// item
+#define axe 1
+#define bow 2
+#define mine 3
+#define walkie_talkie 4
+#define arrow 5
+#define machete 6
 
 typedef struct _s_scene
 {

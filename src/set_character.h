@@ -1,7 +1,14 @@
+#pragma once
 #include <stdio.h>
 #include <stdint.h>
-#include "back_pack.h"
+typedef struct _s_back_pack
+{
+    int8_t item_id;
+    char item_name[30];
+    char item_pic[100];
+    int8_t item_health;
 
+} s_back_pack;
 typedef struct _s_player
 {
     char name[30];
