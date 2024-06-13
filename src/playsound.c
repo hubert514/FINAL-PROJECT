@@ -2,7 +2,7 @@
 #include <SDL2/SDL_mixer.h>
 #include "playSound.h"
 
-int playSound(const char *soundFile) {
+int playSound(const char *soundFile,int time) {
     // 初始化 SDL 音訊系統
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -26,7 +26,7 @@ int playSound(const char *soundFile) {
     Mix_PlayChannel(-1, sound, 0);
 
     // 等待然後釋放資源
-    SDL_Delay(1000);
+    SDL_Delay(time);
     Mix_FreeChunk(sound);
 
     // 關閉 SDL_mixer 和 SDL

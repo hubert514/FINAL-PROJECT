@@ -10,4 +10,4 @@
 #include <unistd.h>
 
 
-int playSound(const char *soundFile);
+int playSound(const char *soundFile,int time);
