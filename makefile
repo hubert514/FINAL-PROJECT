@@ -6,7 +6,7 @@ all:
 	$(CC) -o engine src/*.c $(LIBS)
 
 cp1:
-	$(CC) -o cp1 src/cp1.c src/set_character.c src/init.c src/show_text.c src/show_image.c src/playSound.c $(LIBS)
+	$(CC) -o cp1 src/cp1.c src/set_character.c src/init.c src/show_text.c src/show_image.c src/playSound.c src/show_GIF.c $(LIBS)
 
 menu:
 	$(CC) -o menu src/menutest.c src/init.c src/show_image.c src/show_text.c $(LIBS)

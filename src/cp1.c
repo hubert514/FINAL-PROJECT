@@ -16,6 +16,7 @@
 #include "playSound.h"
 #include "back_pack.h"
 
+
 void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *text, TTF_Font *font, s_player *player);
 void set_scene(char *line, s_scene *now_scene, s_scene *scenes);
 void set_character(char *line, s_character *now_character, s_character *characters);
