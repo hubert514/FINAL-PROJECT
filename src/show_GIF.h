@@ -14,5 +14,5 @@ void showError(const char *title);
 
 void renderGifFrame(SDL_Renderer *renderer, GifFileType *gif, int frameIndex, SDL_Surface *surface);
 
-int8_t show_GIF(SDL_Renderer *renderer, char *gif, int32_t x, int32_t y, int32_t w, int32_t h);
+void displayGif(SDL_Renderer *renderer, const char *gif_file);
 

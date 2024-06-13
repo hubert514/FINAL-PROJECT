@@ -15,7 +15,7 @@
 #include <stdbool.h>
 #include "playSound.h"
 #include "back_pack.h"
-
+#include "show_GIF.h"
 
 void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *text, TTF_Font *font, s_player *player);
 void set_scene(char *line, s_scene *now_scene, s_scene *scenes);
@@ -116,6 +116,10 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
         if (strstr(line, "scene ="))
         {
             set_scene(line, &now_scene, scenes);
+            // if (strstr(now_scene.name, "forest"))
+            // {
+            //     displayGif(renderer, "assets/images/test.gif");
+            // }
         }
         if (strstr(line, "character ="))
         {

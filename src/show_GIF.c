@@ -201,33 +201,33 @@ void renderGifFrame(SDL_Renderer *renderer, GifFileType *gif, int frameIndex, SD
     SDL_DestroyTexture(texture);
 }
 
-void displayGif(const char *gif_file) {
+void displayGif(SDL_Renderer *renderer, const char *gif_file) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         showError("SDL_Init Error");
         return;
     }
 
-    SDL_Window *win = SDL_CreateWindow("GIF Player", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
-    if (win == NULL) {
-        showError("SDL_CreateWindow Error");
-        SDL_Quit();
-        return;
-    }
+    // SDL_Window *win = SDL_CreateWindow("GIF Player", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+    // if (win == NULL) {
+    //     showError("SDL_CreateWindow Error");
+    //     SDL_Quit();
+    //     return;
+    // }
 
-    SDL_Renderer *renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (renderer == NULL) {
-        showError("SDL_CreateRenderer Error");
-        SDL_DestroyWindow(win);
-        SDL_Quit();
-        return;
-    }
+    // SDL_Renderer *renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    // if (renderer == NULL) {
+    //     showError("SDL_CreateRenderer Error");
+    //     SDL_DestroyWindow(win);
+    //     SDL_Quit();
+    //     return;
+    // }
 
     int error;
     GifFileType *gif = DGifOpenFileName(gif_file, &error);
     if (!gif) {
         fprintf(stderr, "DGifOpenFileName Error: %d\n", error);
         SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(win);
+        // SDL_DestroyWindow(win);
         SDL_Quit();
         return;
     }
@@ -236,7 +236,7 @@ void displayGif(const char *gif_file) {
         fprintf(stderr, "DGifSlurp Error: %d\n", gif->Error);
         DGifCloseFile(gif, &error);
         SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(win);
+        // SDL_DestroyWindow(win);
         SDL_Quit();
         return;
     }
@@ -251,7 +251,7 @@ void displayGif(const char *gif_file) {
         showError("SDL_CreateRGBSurface Error");
         DGifCloseFile(gif, &error);
         SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(win);
+        // SDL_DestroyWindow(win);
         SDL_Quit();
         return;
     }
@@ -278,14 +278,12 @@ void displayGif(const char *gif_file) {
 
     SDL_FreeSurface(surface);
     DGifCloseFile(gif, &error);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(win);
-    SDL_Quit();
+    // SDL_DestroyRenderer(renderer);
 }
 
-int main() {
+// int main() {
 
-    displayGif("/mnt/c/Users/user/Desktop/homework/FINAL-PROJECT/assets/images/test.gif");
+//     displayGif("/mnt/c/Users/user/Desktop/homework/FINAL-PROJECT/assets/images/test.gif");
 
-    return 0;
-}
+//     return 0;
+// }
