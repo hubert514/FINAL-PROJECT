@@ -170,8 +170,9 @@ next = "cp1.mission_get_pay"
 
 [cp1.mission_get_pay]
 character = "employer"
-text = "喔對了，這裡是剛才說好的{get_pay}元金幣，以及骨傳導式的對講機。你可以隨時在背包中查看他們，你可以在路上自行採買所需的裝備"
-get = "骨傳導式對講機。money.{get_pay}"
+text = "喔對了，這裡是剛才說好的金幣，以及骨傳導式的對講機。你可以隨時在背包中查看他們，你可以在路上自行採買所需的裝備"
+get = "骨傳導式對講機"
+get_money = "get_pay"
 next = "cp1.mission_equipment"
 
 [cp1.mission_equipment]

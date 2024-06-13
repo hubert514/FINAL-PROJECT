@@ -14,8 +14,9 @@
 #include "init.h"
 #include <stdbool.h>
 #include "playSound.h"
+#include "back_pack.h"
 
-void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *text, TTF_Font *font);
+void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *text, TTF_Font *font, s_player *player);
 void set_scene(char *line, s_scene *now_scene, s_scene *scenes);
 void set_character(char *line, s_character *now_character, s_character *characters);
 void clear_events();
@@ -99,6 +100,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
     int32_t option_num = 0, mouse_x = 0, mouse_y = 0;
     char next[1000] = "cp1.begin", tmp[1000];
     s_options options[10];
+    int32_t mission_pay = 0;
 
     while (fgets(line, sizeof(line), script) && !quit)
     {
@@ -119,7 +121,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
         if (strstr(line, "text ="))
         {
             sscanf(line, "text = \"%[^\"]\"", now_text);
-            show(renderer, now_scene, now_character, now_text, font);
+            show(renderer, now_scene, now_character, now_text, font, &player);
 
             sleep(0.75);
             clear_events();
@@ -142,6 +144,13 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 {
                     playSound("assets/images/sound.wav");
                     printf("playsound\n");
+                    clear_events();
+                    break;
+                }
+                // if event == B
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_b)
+                {
+                    show_back_pack(renderer, font, player);
                     clear_events();
                     break;
                 }
@@ -248,20 +257,22 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
             {
                 snprintf(now_text, 1000, "Ar! 年輕人，不要吝於請求，我手頭正好有隻我珍藏的斧頭(折舊50%%)，雖然有點舊了，但還堪用，希望對你的旅程有所幫助");
                 // get 斧頭
+                add_item(&player, 1, "斧頭", "assets/images/axe.png", 50);
             }
             if (characters[EMPLOYER].favorability < 70 && characters[EMPLOYER].favorability > 30)
             {
                 snprintf(now_text, 1000, "Ar! 對了，我手頭正好有張順手的弓(折舊75%%)，但沒有箭矢，你就湊合著用吧");
                 // get 弓
+                add_item(&player, 2, "弓", "assets/images/bow.png", 75);
             }
             if (characters[EMPLOYER].favorability <= 30)
             {
                 snprintf(now_text, 1000, "Ar! 我想，憑你的本事，幾隻哥布林應該可以赤手空拳解決吧，跟一個你所謂的「中年獸人」請求武器是多麼沒出息的行為阿");
-                
+
                 // get nothing
             }
 
-            show(renderer, now_scene, now_character, now_text, font);
+            show(renderer, now_scene, now_character, now_text, font, &player);
             sleep(0.75);
             clear_events();
 
@@ -286,6 +297,18 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                     clear_events();
                     break;
                 }
+                // if event == B
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_b)
+                {
+                    if (show_back_pack(renderer, font, player))
+                    {
+                        quit = true;
+                        break;
+                    }
+
+                    clear_events();
+                    break;
+                }
             }
             while (fgets(line, sizeof(line), script))
             {
@@ -295,6 +318,17 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 }
             }
         }
+        if (strstr(line, "get_pay ="))
+        {
+            mission_pay = atoi(&line[10]);
+            printf("mission pay set: %d\n", mission_pay);
+        }
+        if (strstr(line, "get_money = \"get_pay\""))
+        {
+            player.money += mission_pay;
+            printf("get pay money: %d\n", player.money);
+        }
+        
 
         if (strstr(line, "end = 1"))
         {
@@ -359,13 +393,28 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *text, TTF_Font *font)
+void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *text, TTF_Font *font, s_player *player)
 {
     // refresh screen
     SDL_RenderClear(renderer);
     show_image(renderer, scene.file, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     show_image(renderer, character.picture, 0, 150, 400, 600);
     show_image(renderer, "assets/images/talk_block.png", 0, 600, WINDOW_WIDTH, 300);
+
+    // 顯示player數值
+    show_image(renderer, "assets/images/black.png", 950, 300, 200, 400);
+    // show player's money
+    show_text(renderer, "金錢: ", 960, 320, 30, font, (SDL_Color){255, 255, 255, 255});
+    char money[100];
+    snprintf(money, 100, "%d", player->money);
+    show_text(renderer, money, 960, 360, 30, font, (SDL_Color){255, 255, 255, 255});
+    // show player's hungry
+    show_text(renderer, "飢餓: ", 950, 400, 30, font, (SDL_Color){255, 255, 255, 255});
+    char hungry[100];
+    snprintf(hungry, 100, "%d", player->hungry);
+    show_text(renderer, hungry, 960, 440, 30, font, (SDL_Color){255, 255, 255, 255});
+    show_text(renderer, "按B顯示背包", 960, 480, 30, font, (SDL_Color){255, 255, 255, 255});
+
     // printf("%s\n", character.name_ch);
     show_text(renderer, character.name_ch, 190, 630, 40, font, (SDL_Color){255, 255, 255, 255});
     // show faverability
@@ -374,9 +423,6 @@ void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *te
         char favorability[100];
         snprintf(favorability, 100, "好感度: %d", character.favorability);
         show_text(renderer, favorability, 650, 670, 30, font, (SDL_Color){0, 0, 0, 255});
-    }
-    {
-        /* code */
     }
 
     char text_line[256];
@@ -400,6 +446,8 @@ void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *te
         text_line_num++;
     }
     // show_text(renderer, text, 20, 730, 24, font, (SDL_Color){0, 0, 0, 255});
+    show_text(renderer, "按下空白繼續", 1000, WINDOW_HEIGHT - 50, 24, font, (SDL_Color){0, 0, 0, 255});
+
 
     return;
 }

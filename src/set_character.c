@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "set_character.h"
+#include "back_pack.h"
 
 int32_t init_player(s_player *player, char *player_name, int8_t gender)
 {
@@ -11,7 +12,11 @@ int32_t init_player(s_player *player, char *player_name, int8_t gender)
     player->hungry = 100;
     for (int i = 0; i < 100; i++)
     {
-        player->back_pack[i] = 0;
+        player->back_pack[i].item_id = 0;
+        snprintf(player->back_pack[i].item_name, 30, "");
+        snprintf(player->back_pack[i].item_pic, 100, "");
+        player->back_pack[i].item_health = 0;
+
     }
     return 0;
 }
