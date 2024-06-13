@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include "back_pack.h"
 
 typedef struct _s_player
 {
@@ -8,7 +9,7 @@ typedef struct _s_player
     char kind[10];
     int32_t money;
     int32_t hungry;
-    int32_t back_pack[100];
+    s_back_pack back_pack[100];
 
 } s_player;
 

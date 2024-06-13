@@ -13,3 +13,5 @@
 #include "set_character.h"
 #include "init.h"
 #include <stdbool.h>
+#include "back_pack.h"
+#include "playsound.h"
