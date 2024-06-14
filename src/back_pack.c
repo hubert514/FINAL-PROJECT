@@ -40,8 +40,8 @@ int32_t show_back_pack(SDL_Renderer *renderer, TTF_Font *font, s_player player)
             return 1;
             break;
         }
-        // if esc is pressed
-        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+        // if b is pressed
+        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_b)
         {
             return 0;
             break;

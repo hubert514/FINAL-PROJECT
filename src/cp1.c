@@ -96,7 +96,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
 
     // start of script
     SDL_Event event;
-    bool quit = false, click_on_option = false;
+    bool quit = false, click_on_option = false, fight_win = false;
     char now_text[1000];
     s_scene now_scene;
     s_character now_character;
@@ -108,6 +108,61 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
     while (fgets(line, sizeof(line), script) && !quit)
     {
         // event quit
+        if (strstr(now_scene.name, "kingdom_road"))
+        {
+            printf("%s\n", now_scene.name);
+            show_image(renderer, "assets/images/black.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+            show_text(renderer, "由於僱用不到馬車夫，所以你只能走森林小徑", 20, 20, 50, font, (SDL_Color){255, 255, 255, 255});
+            show_text(renderer, "按下空白繼續", 1000, WINDOW_HEIGHT - 50, 24, font, (SDL_Color){255, 255, 255, 255});
+            set_scene("scene = \"forest\"", &now_scene, scenes);
+            sleep(0.75);
+            clear_events();
+
+            while (1)
+            {
+                SDL_PollEvent(&event);
+                if (event.type == SDL_QUIT)
+                {
+                    quit = true;
+                    break;
+                }
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN)
+                {
+                    clear_events();
+                    break;
+                }
+                // if event == space
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+                {
+                    playSound("assets/sound/sound.wav", 1000);
+                    printf("playsound\n");
+                    clear_events();
+                    break;
+                }
+                // if event == B
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_b)
+                {
+                    if (show_back_pack(renderer, font, player))
+                    {
+                        quit = true;
+                        break;
+                    }
+                    show(renderer, now_scene, now_character, now_text, font, &player);
+                    clear_events();
+                }
+            }
+
+            // next = cp2.forrest
+            snprintf(next, 1002, "[cp2.forest]");
+            fseek(script, 0, SEEK_SET);
+            while (fgets(line, sizeof(line), script))
+            {
+                if (strstr(line, next))
+                {
+                    break;
+                }
+            }
+        }
 
         if (line[0] == '#')
         {
@@ -225,7 +280,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                         if (event.button.x >= 0 && event.button.x <= WINDOW_WIDTH && event.button.y >= 200 + i * 55 && event.button.y <= 200 + i * 55 + 50)
                         {
                             snprintf(next, 1002, "%s", options[i].next);
-                            playSound("assets/sound/click.wav", 700);
+                            playSound("assets/sound/click.wav", 550);
                             click_on_option = true;
                             break;
                         }
@@ -364,7 +419,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
         }
         int32_t money = 0;
         int8_t fix_option = 0;
-        if (strstr(line, "cp2.about_weapon_answer"))
+        if (strstr(line, "[cp2.about_weapon_answer]"))
         {
             now_character = characters[SHADOW_BLADE];
             if (characters[EMPLOYER].favorability == 70)
@@ -415,7 +470,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                         if (event.button.x >= 0 && event.button.x <= WINDOW_WIDTH && event.button.y >= 200 + i * 55 && event.button.y <= 200 + i * 55 + 50)
                         {
                             snprintf(next, 1002, "[%s]", options[i].next);
-                            playSound("assets/sound/click.wav", 700);
+                            playSound("assets/sound/click.wav", 550);
                             click_on_option = true;
                             break;
                         }
@@ -447,7 +502,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 }
             }
             // find next
-            snprintf(next, 1000, "cp2.question_about_shadow");
+            snprintf(next, 1000, "[cp2.question_about_shadow]");
             fseek(script, 0, SEEK_SET);
             while (fgets(line, sizeof(line), script))
             {
@@ -466,6 +521,351 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 }
             }
         }
+
+        if (strstr(line, "[cp2.shadow_blade_fight]"))
+        {
+            // characters[EMPLOYER].favorability = 50;// for test
+            option_num = 1;
+            if (characters[EMPLOYER].favorability == 70)
+            {
+                snprintf(options[0].option, 100, "從背包掏出斧頭");
+                snprintf(options[0].next, 100, "cp2.fight_with_axe");
+            }
+            else if (characters[EMPLOYER].favorability == 50)
+            {
+                snprintf(options[0].option, 100, "從背包掏出沒有箭矢的弓");
+                snprintf(options[0].next, 100, "cp2.fight_with_bow");
+            }
+            else
+            {
+                snprintf(options[0].option, 100, "直接使用拳頭");
+                snprintf(options[0].next, 100, "cp2.fight_with_fist");
+            }
+            display_options(renderer, font, options, option_num);
+            // wait for click
+            while (1)
+            {
+                click_on_option = false;
+                SDL_PollEvent(&event);
+                if (event.type == SDL_QUIT)
+                {
+                    quit = true;
+                    break;
+                }
+                if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+                {
+                    mouse_x = event.button.x;
+                    mouse_y = event.button.y;
+                    for (int32_t i = 0; i < option_num; i++)
+                    {
+                        if (event.button.x >= 0 && event.button.x <= WINDOW_WIDTH && event.button.y >= 200 + i * 55 && event.button.y <= 200 + i * 55 + 50)
+                        {
+                            snprintf(next, 1002, "[%s]", options[i].next);
+                            playSound("assets/sound/click.wav", 550);
+                            click_on_option = true;
+                            break;
+                        }
+                    }
+                    clear_events();
+                }
+                if (click_on_option)
+                {
+                    break;
+                }
+            }
+            // find next
+            fseek(script, 0, SEEK_SET);
+            while (fgets(line, sizeof(line), script))
+            {
+                if (strstr(line, next))
+                {
+                    break;
+                }
+                // scene and character and
+                if (strstr(line, "scene ="))
+                {
+                    set_scene(line, &now_scene, scenes);
+                }
+                if (strstr(line, "character ="))
+                {
+                    set_character(line, &now_character, characters);
+                }
+            }
+        }
+        if (strstr(line, "[cp2.bag]"))
+        {
+            printf("bag\n");
+            set_character("character = \"player\"", &now_character, characters);
+            snprintf(now_text, 1000, "疑?前面地上似乎有一個不知名的包包，上面甚至連個扣子都沒有");
+            show(renderer, now_scene, now_character, now_text, font, &player);
+            sleep(0.75);
+            clear_events();
+
+            while (1)
+            {
+                SDL_PollEvent(&event);
+                if (event.type == SDL_QUIT)
+                {
+                    quit = true;
+                    break;
+                }
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN)
+                {
+                    clear_events();
+                    break;
+                }
+                // if event == space
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+                {
+                    playSound("assets/sound/sound.wav", 1000);
+                    printf("playsound\n");
+                    clear_events();
+                    break;
+                }
+                // if event == B
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_b)
+                {
+                    if (show_back_pack(renderer, font, player))
+                    {
+                        quit = true;
+                        break;
+                    }
+                    show(renderer, now_scene, now_character, now_text, font, &player);
+                    clear_events();
+                }
+            }
+            // option
+            // if there are axe in the bag
+            // add_item(&player, 1, "斧頭", "assets/images/axe.png", 50); for test
+            option_num = 1;
+            snprintf(options[0].option, 100, "嘗試使用拳頭打開");
+            snprintf(options[0].next, 100, "cp2.bag_with_hand");
+            for (int32_t i = 0; i < 100; i++)
+            {
+                if (player.back_pack[i].item_id == 1)
+                {
+                    option_num = 2;
+                    snprintf(options[1].option, 100, "嘗試使用斧頭打開");
+                    snprintf(options[1].next, 100, "cp2.bag_with_axe");
+                    break;
+                }
+            }
+            display_options(renderer, font, options, option_num);
+            // wait for click
+            while (1)
+            {
+                click_on_option = false;
+                SDL_PollEvent(&event);
+                if (event.type == SDL_QUIT)
+                {
+                    quit = true;
+                    break;
+                }
+                if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+                {
+                    mouse_x = event.button.x;
+                    mouse_y = event.button.y;
+                    for (int32_t i = 0; i < option_num; i++)
+                    {
+                        if (event.button.x >= 0 && event.button.x <= WINDOW_WIDTH && event.button.y >= 200 + i * 55 && event.button.y <= 200 + i * 55 + 50)
+                        {
+                            snprintf(next, 1002, "[%s]", options[i].next);
+                            playSound("assets/sound/click.wav", 550);
+                            click_on_option = true;
+                            break;
+                        }
+                    }
+                    clear_events();
+                }
+                if (click_on_option)
+                {
+                    break;
+                }
+            }
+            // find next
+            fseek(script, 0, SEEK_SET);
+            while (fgets(line, sizeof(line), script))
+            {
+                if (strstr(line, next))
+                {
+                    break;
+                }
+                // scene and character and
+                if (strstr(line, "scene ="))
+                {
+                    set_scene(line, &now_scene, scenes);
+                }
+                if (strstr(line, "character ="))
+                {
+                    set_character(line, &now_character, characters);
+                }
+            }
+        }
+        if (strstr(line, "remove_item ="))
+        {
+            int32_t item_id = atoi(&line[14]);
+            printf("remove item: %d\n", item_id);
+            remove_item(&player, item_id);
+        }
+        if (strstr(line, "money_change ="))
+        {
+            if (line[15] == '+')
+            {
+                player.money += atoi(&line[16]);
+            }
+            else if (line[15] == '-')
+            {
+                player.money -= atoi(&line[16]);
+            }
+            else
+            {
+                player.money = atoi(&line[15]);
+            }
+        }
+        bool have_mine = false;
+        if (strstr(line, "[cp3.judge_mine]"))
+        {
+            for (int32_t i = 0; i < 100; i++)
+            {
+                if (player.back_pack[i].item_id == 3)
+                {
+                    have_mine = true;
+                }
+            }
+            if (have_mine)
+            {
+                snprintf(next, 1002, "[cp3.show_mineral]");
+            }
+            else
+            {
+                snprintf(next, 1002, "[cp3.no_mineral]");
+            }
+            fseek(script, 0, SEEK_SET);
+            while (fgets(line, sizeof(line), script))
+            {
+                if (strstr(line, next))
+                {
+                    break;
+                }
+            }
+        }
+
+        bool have_arrow = false;
+
+        if (strstr(line, "[cp3.final_battle_response]"))
+        {
+            option_num = 1;
+            snprintf(options[0].option, 100, "使用拳頭戰鬥");
+            snprintf(options[0].next, 100, "cp3.fight_will_lose");
+            for (int32_t i = 0; i < 100; i++)
+            {
+                if (player.back_pack[i].item_id == 1)
+                {
+                    snprintf(options[option_num].option, 100, "使用斧頭戰鬥");
+                    snprintf(options[option_num].next, 100, "cp3.fight_will_win");
+                    option_num++;
+                }
+                if (player.back_pack[i].item_id == 2)
+                {
+                    // find arrow
+                    for (int32_t j = 0; j < 100; j++)
+                    {
+                        if (player.back_pack[j].item_id == 5)
+                        {
+                            have_arrow = true;
+                            break;
+                        }
+                    }
+                    if (have_arrow)
+                    {
+                        snprintf(options[option_num].option, 100, "使用弓戰鬥");
+                        snprintf(options[option_num].next, 100, "cp3.fight_will_win");
+                    }
+                    else
+                    {
+                        snprintf(options[option_num].option, 100, "使用弓戰鬥(無箭矢)");
+                        snprintf(options[option_num].next, 100, "cp3.fight_will_lose");
+                    }
+                    option_num++;
+                }
+                if (player.back_pack[i].item_id == 6)
+                {
+                    snprintf(options[option_num].option, 100, "使用開山刀戰鬥");
+                    snprintf(options[option_num].next, 100, "cp3.fight_will_win");
+                    option_num++;
+                }
+                if (player.back_pack[i].item_id == 7)
+                {
+                    snprintf(options[option_num].option, 100, "使用聖劍戰鬥");
+                    snprintf(options[option_num].next, 100, "cp3.fight_will_win");
+                    option_num++;
+                }
+            }
+            display_options(renderer, font, options, option_num);
+            // wait for click
+            while (1)
+            {
+                click_on_option = false;
+                SDL_PollEvent(&event);
+                if (event.type == SDL_QUIT)
+                {
+                    quit = true;
+                    break;
+                }
+                if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+                {
+                    mouse_x = event.button.x;
+                    mouse_y = event.button.y;
+                    for (int32_t i = 0; i < option_num; i++)
+                    {
+                        if (event.button.x >= 0 && event.button.x <= WINDOW_WIDTH && event.button.y >= 200 + i * 55 && event.button.y <= 200 + i * 55 + 50)
+                        {
+                            snprintf(next, 1002, "%s", options[i].next);
+                            playSound("assets/sound/click.wav", 550);
+                            click_on_option = true;
+                            break;
+                        }
+                    }
+                    clear_events();
+                }
+                if (click_on_option)
+                {
+                    break;
+                }
+            }
+            // find next
+            fseek(script, 0, SEEK_SET);
+            while (fgets(line, sizeof(line), script))
+            {
+                if (strstr(line, next))
+                {
+                    break;
+                }
+                // scene and character and
+                if (strstr(line, "scene ="))
+                {
+                    set_scene(line, &now_scene, scenes);
+                }
+                if (strstr(line, "character ="))
+                {
+                    set_character(line, &now_character, characters);
+                }
+            }
+
+        }
+        if (strstr(line, "fight ="))
+        {
+            if (line[8] == 1)
+            {
+                fight_win = true;
+            }
+            else
+            {
+                fight_win = false;
+            }
+            
+        }
+        
 
         if (strstr(line, "end = 1"))
         {
@@ -553,7 +953,7 @@ void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *te
     show_text(renderer, "按B顯示背包", 960, 480, 30, font, (SDL_Color){255, 255, 255, 255});
 
     // printf("%s\n", character.name_ch);
-    show_text(renderer, character.name_ch, 190, 630, 40, font, (SDL_Color){255, 255, 255, 255});
+    show_text(renderer, character.name_ch, 190, 620, 40, font, (SDL_Color){255, 255, 255, 255});
     // show faverability
     if (strstr(character.name, "player") == NULL)
     {
@@ -712,6 +1112,15 @@ void set_faverability(char *line, s_character *characters)
 void get_item(s_player *player, char *line)
 {
     // get = item_id
+    if (line[6] == '1')
+    {
+        add_item(player, 1, "斧頭", "assets/images/axe.png", 50);
+    }
+    if (line[6] == '2')
+    {
+        add_item(player, 2, "弓", "assets/images/bow.png", 75);
+    }
+
     if (line[6] == '3')
     {
         add_item(player, 3, "礦藏", "assets/images/mine.png", 0);
@@ -719,5 +1128,18 @@ void get_item(s_player *player, char *line)
     if (line[6] == '4')
     {
         add_item(player, 4, "對講機", "assets/images/walkie_talkie.png", 0);
+    }
+    if (line[6] == '5')
+    {
+        add_item(player, 5, "箭矢X5", "assets/images/arrow.png", 0);
+    }
+    if (line[6] == '6')
+    {
+        add_item(player, 6, "開山刀", "assets/images/machete.png", 80);
+    }
+
+    if (line[6] == '7')
+    {
+        add_item(player, 7, "聖劍", "assets/images/ex_calibur.png", 0);
     }
 }

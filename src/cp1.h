@@ -37,6 +37,7 @@
 #define walkie_talkie 4
 #define arrow 5
 #define machete 6
+#define ex_calibur 7
 
 typedef struct _s_scene
 {
