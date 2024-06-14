@@ -10,7 +10,7 @@
 #include "show_text.h"
 #include <unistd.h>
 
-void showError(const char *title);
+// void showError(const char *title);
 
 void renderGifFrame(SDL_Renderer *renderer, GifFileType *gif, int frameIndex, SDL_Surface *surface);
 

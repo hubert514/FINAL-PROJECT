@@ -1250,22 +1250,26 @@ next = "end.lost_to_guard"
 
 
 
+#拒絕1, 死亡2, 完成3, 成為守衛4 
 
 [end.reject_mission]
 character = "employer"
+scene = "office"
 text = "你拒絕了這次任務，那麼你就不用再回來了，你的勇者之路就此結束了"
 end = 1
 #TBD
 
 [end.doctor]
 character = "player"
+scene = "forest"
 text = "隨即，世界突然繞著你旋轉，在你的眼神彷彿因為離心力拋飛出眼周表面之際，你頹然倒下，望著老人若有似無的笑意，你帶著無數個不明所以，永遠躺在落葉紛飛之中..."
-end = 1
+end = 2
 
 [end.fight_with_bow]
 character = "player"
+scene = "forest"
 text = "你從背包中迅速地掏出了沒有箭矢的弓，朝這個神秘的人物擲了出去，想當然耳，是完全沒有造成任何傷害，接下來的事情，幾乎僅發生在半秒之間，甚至完全沒有痛的感覺，你只感受的到全然的冷冽，那是無情的刀刃，在沿著肩胛骨劃開所留下的溫度，你的世界就此被黑與白壟罩，也許，這就是英雄的宿命吧..."
-end = 1
+end = 2
 
 # [end.being_steal]
 # character = "player"
@@ -1284,17 +1288,23 @@ end = 1
 
 [end.mission_complete]
 character = "player"
+scene = "palace"
 text = "你成功的完成了這次任務，期待著下一次的旅程"
-end = 1
+end = 3
 
 [end.lost_to_guard]
 character = "player"
 scene = "palace"
 text = "你眼角最後的餘光所看到的，是此刻皇帝的眼神，沒有悲傷，沒有憐憫，只有全然的冷酷，彷彿不管結果如何都與他無關一樣，他緩緩地把手伸向領隊，不是為了拉他起來，而就只是拍了拍領隊的肩膀，隨即面無表情的，轉身離去..."
-end = 1
+end = 2
 
 [end.being_guard]
-scene = "palace"
 character = "player"
+scene = "palace"
 text = "你成功的擊敗了領隊，成為了新任的守衛領隊，希望上一個守衛領隊的下場不會發生在你身上"
-end = 1
+end = 4
+
+[end.dead_by_hungry]
+character = "player"
+text = "你的體力已經耗盡，你倒在了路邊，再也無法起來"
+end = 2

@@ -145,9 +145,9 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }*/
-void showError(const char *title) {
-    printf("%s: %s\n", title, SDL_GetError());
-}
+// void showError(const char *title) {
+//     printf("%s: %s\n", title, SDL_GetError());
+// }
 
 void renderGifFrame(SDL_Renderer *renderer, GifFileType *gif, int frameIndex, SDL_Surface *surface) {
     GifColorType *colorMap;
@@ -191,7 +191,7 @@ void renderGifFrame(SDL_Renderer *renderer, GifFileType *gif, int frameIndex, SD
 
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (!texture) {
-        showError("SDL_CreateTextureFromSurface Error");
+        // showError("SDL_CreateTextureFromSurface Error");
         return;
     }
 
@@ -203,7 +203,7 @@ void renderGifFrame(SDL_Renderer *renderer, GifFileType *gif, int frameIndex, SD
 
 void displayGif(SDL_Renderer *renderer, const char *gif_file) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-        showError("SDL_Init Error");
+        // showError("SDL_Init Error");
         return;
     }
 
@@ -248,7 +248,7 @@ void displayGif(SDL_Renderer *renderer, const char *gif_file) {
 
     SDL_Surface *surface = SDL_CreateRGBSurface(0, gif->SWidth, gif->SHeight, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
     if (!surface) {
-        showError("SDL_CreateRGBSurface Error");
+        // showError("SDL_CreateRGBSurface Error");
         DGifCloseFile(gif, &error);
         SDL_DestroyRenderer(renderer);
         // SDL_DestroyWindow(win);

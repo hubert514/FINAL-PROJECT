@@ -104,9 +104,29 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
     char next[1000] = "cp1.begin", tmp[1000];
     s_options options[10];
     int32_t mission_pay = 0;
+    int32_t return_type = 0;
+    bool seek_hungry = false;
+
+    show_image(renderer, "assets/images/black.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    show_text(renderer, "遊戲開始", 200, 200, 60, font, (SDL_Color){255, 255, 255, 255});
+    playSound("assets/sound/enter_game.wav", 1000);
 
     while (fgets(line, sizeof(line), script) && !quit)
     {
+        if (player.hungry <= 0 && !seek_hungry)
+        {
+            snprintf(next, 1002, "[end.dead_by_hungry]");
+            fseek(script, 0, SEEK_SET);
+            while (fgets(line, sizeof(line), script))
+            {
+                if (strstr(line, next))
+                {
+                    seek_hungry = true;
+                    break;
+                }
+            }
+        }
+        
         // event quit
         if (strstr(now_scene.name, "kingdom_road"))
         {
@@ -149,6 +169,34 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                     }
                     show(renderer, now_scene, now_character, now_text, font, &player);
                     clear_events();
+                }
+                // if esc is pressed
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    clear_events();
+                    show_image(renderer, "assets/images/esc.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                    // if esc is pressed again
+                    while (1)
+                    {
+                        SDL_PollEvent(&event);
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+                        {
+                            break;
+                        }
+                        // if e is pressed
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e)
+                        {
+                            quit = true;
+                            return_type = 1;
+                            break;
+                        }
+                    }
+                    show(renderer, now_scene, now_character, now_text, font, &player);
+                    clear_events();
+                }
+                if (quit)
+                {
+                    break;
                 }
             }
 
@@ -219,6 +267,34 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                     }
                     show(renderer, now_scene, now_character, now_text, font, &player);
                     clear_events();
+                }
+                // if esc is pressed
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    clear_events();
+                    show_image(renderer, "assets/images/esc.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                    // if esc is pressed again
+                    while (1)
+                    {
+                        SDL_PollEvent(&event);
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+                        {
+                            break;
+                        }
+                        // if e is pressed
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e)
+                        {
+                            quit = true;
+                            return_type = 1;
+                            break;
+                        }
+                    }
+                    show(renderer, now_scene, now_character, now_text, font, &player);
+                    clear_events();
+                }
+                if (quit)
+                {
+                    break;
                 }
             }
         }
@@ -374,6 +450,34 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                     }
                     show(renderer, now_scene, now_character, now_text, font, &player);
                     clear_events();
+                }
+                // if esc is pressed
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    clear_events();
+                    show_image(renderer, "assets/images/esc.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                    // if esc is pressed again
+                    while (1)
+                    {
+                        SDL_PollEvent(&event);
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+                        {
+                            break;
+                        }
+                        // if e is pressed
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e)
+                        {
+                            quit = true;
+                            return_type = 1;
+                            break;
+                        }
+                    }
+                    show(renderer, now_scene, now_character, now_text, font, &player);
+                    clear_events();
+                }
+                if (quit)
+                {
+                    break;
                 }
             }
             while (fgets(line, sizeof(line), script))
@@ -633,6 +737,34 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                     show(renderer, now_scene, now_character, now_text, font, &player);
                     clear_events();
                 }
+                // if esc is pressed
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    clear_events();
+                    show_image(renderer, "assets/images/esc.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                    // if esc is pressed again
+                    while (1)
+                    {
+                        SDL_PollEvent(&event);
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+                        {
+                            break;
+                        }
+                        // if e is pressed
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e)
+                        {
+                            quit = true;
+                            return_type = 1;
+                            break;
+                        }
+                    }
+                    show(renderer, now_scene, now_character, now_text, font, &player);
+                    clear_events();
+                }
+                if (quit)
+                {
+                    break;
+                }
             }
             // option
             // if there are axe in the bag
@@ -851,7 +983,6 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                     set_character(line, &now_character, characters);
                 }
             }
-
         }
         if (strstr(line, "fight ="))
         {
@@ -863,13 +994,114 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
             {
                 fight_win = false;
             }
-            
         }
-        
 
-        if (strstr(line, "end = 1"))
+        if (strstr(line, "end = "))
         {
-            quit = true;
+            if (line[6] == '1')
+            {
+                show_image(renderer, "assets/images/office.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                show_image(renderer, "assets/images/black.png", 90, 90, 500, 300);
+                show_text(renderer, "結局: 拒絕接取任務", 100, 100, 50, font, (SDL_Color){255, 255, 255, 255});
+                show_text(renderer, "遊戲結束", 100, 200, 50, font, (SDL_Color){255, 255, 255, 255});
+                playSound("assets/sound/fail.wav", 4200);
+                show_text(renderer, "按空白鍵回到主選單", 100, 300, 50, font, (SDL_Color){255, 255, 255, 255});
+                // wait for space
+                while (1)
+                {
+                    clear_events();
+                    SDL_PollEvent(&event);
+                    if (event.type == SDL_QUIT)
+                    {
+                        quit = true;
+                        break;
+                    }
+                    if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+                    {
+                        quit = true;
+                        return_type = 1;
+                        break;
+                    }
+                }
+            }
+            if (line[6] == '2')
+            {
+                show_image(renderer, "assets/images/go_die.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                show_image(renderer, "assets/images/black.png", 90, 90, 500, 300);
+                show_text(renderer, "結局: 死亡", 100, 100, 50, font, (SDL_Color){255, 255, 255, 255});
+                show_text(renderer, "遊戲結束", 100, 200, 50, font, (SDL_Color){255, 255, 255, 255});
+                playSound("assets/sound/fail.wav", 4200);
+                show_text(renderer, "按空白鍵回到主選單", 100, 300, 50, font, (SDL_Color){255, 255, 255, 255});
+                // wait for space
+                while (1)
+                {
+                    clear_events();
+                    SDL_PollEvent(&event);
+                    if (event.type == SDL_QUIT)
+                    {
+                        quit = true;
+                        break;
+                    }
+                    if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+                    {
+                        quit = true;
+                        return_type = 1;
+                        break;
+                    }
+                }
+            }
+            if (line[6] == '3')
+            {
+                show_image(renderer, "assets/images/palace.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                show_image(renderer, "assets/images/black.png", 90, 90, 500, 300);
+                show_text(renderer, "結局: 完成任務", 100, 100, 50, font, (SDL_Color){255, 255, 255, 255});
+                show_text(renderer, "遊戲結束", 100, 200, 50, font, (SDL_Color){255, 255, 255, 255});
+                playSound("assets/sound/goodresult.wav", 3000);
+                show_text(renderer, "按空白鍵回到主選單", 100, 300, 50, font, (SDL_Color){255, 255, 255, 255});
+                // wait for space
+                while (1)
+                {
+                    clear_events();
+                    SDL_PollEvent(&event);
+                    if (event.type == SDL_QUIT)
+                    {
+                        quit = true;
+                        break;
+                    }
+                    if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+                    {
+                        quit = true;
+                        return_type = 1;
+                        break;
+                    }
+                }
+            }
+            if (line[6] == '4')
+            {
+                show_image(renderer, "assets/images/palace.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                show_image(renderer, "assets/images/black.png", 90, 90, 500, 300);
+                show_text(renderer, "結局: 成為守衛領隊", 100, 100, 50, font, (SDL_Color){255, 255, 255, 255});
+                show_text(renderer, "遊戲結束", 100, 200, 50, font, (SDL_Color){255, 255, 255, 255});
+                playSound("assets/sound/goodresult.wav", 4200);
+                show_text(renderer, "按空白鍵回到主選單", 100, 300, 50, font, (SDL_Color){255, 255, 255, 255});
+                // wait for space
+                while (1)
+                {
+                    clear_events();
+                    SDL_PollEvent(&event);
+                    if (event.type == SDL_QUIT)
+                    {
+                        quit = true;
+                        break;
+                    }
+                    if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+                    {
+                        quit = true;
+                        return_type = 1;
+                        break;
+                    }
+                }
+            }         
         }
 
         // if (line[0] == '[' && line[1] != '[')
@@ -901,34 +1133,35 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
     }
 
     fclose(script);
+    return return_type;
 }
 
-int main(int argc, char const *argv[])
-{
-    char *chapter = NULL;
-    char player_name[] = "Steve";
+// int main(int argc, char const *argv[])
+// {
+//     char *chapter = NULL;
+//     char player_name[] = "Steve";
 
-    // init sdl
-    SDL_Window *window = NULL;
-    SDL_Renderer *renderer = NULL;
-    int imgFlags;
-    int32_t success = initialize_window(&window, &renderer, &imgFlags);
-    TTF_Font *font = TTF_OpenFont("assets/fonts/kaiu.ttf", 24);
-    if (font == NULL)
-    {
-        printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
-    }
+//     // init sdl
+//     SDL_Window *window = NULL;
+//     SDL_Renderer *renderer = NULL;
+//     int imgFlags;
+//     int32_t success = initialize_window(&window, &renderer, &imgFlags);
+//     TTF_Font *font = TTF_OpenFont("assets/fonts/kaiu.ttf", 24);
+//     if (font == NULL)
+//     {
+//         printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+//     }
 
-    cp1(chapter, player_name, 0, renderer, font);
+//     cp1(chapter, player_name, 0, renderer, font);
 
-    // clean up
-    TTF_CloseFont(font);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+//     // clean up
+//     TTF_CloseFont(font);
+//     SDL_DestroyRenderer(renderer);
+//     SDL_DestroyWindow(window);
+//     SDL_Quit();
 
-    return 0;
-}
+//     return 0;
+// }
 
 void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *text, TTF_Font *font, s_player *player)
 {
