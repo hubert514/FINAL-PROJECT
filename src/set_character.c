@@ -13,8 +13,8 @@ int32_t init_player(s_player *player, char *player_name, int8_t gender)
     for (int i = 0; i < 100; i++)
     {
         player->back_pack[i].item_id = 0;
-        snprintf(player->back_pack[i].item_name, 30, "");
-        snprintf(player->back_pack[i].item_pic, 100, "");
+        snprintf(player->back_pack[i].item_name, 30, "none");
+        snprintf(player->back_pack[i].item_pic, 100, "none");
         player->back_pack[i].item_health = 0;
 
     }

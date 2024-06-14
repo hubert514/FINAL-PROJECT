@@ -15,7 +15,7 @@
 #include <stdbool.h>
 #include "playSound.h"
 #include "back_pack.h"
-
+#include "show_GIF.h"
 
 void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *text, TTF_Font *font, s_player *player);
 void set_scene(char *line, s_scene *now_scene, s_scene *scenes);
@@ -24,6 +24,7 @@ void clear_events();
 void display_options(SDL_Renderer *renderer, TTF_Font *font, s_options *options, int32_t option_num);
 int32_t utf8_char_len(const char *s);
 void set_faverability(char *line, s_character *characters);
+void get_item(s_player *player, char *line);
 
 int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer *renderer, TTF_Font *font)
 {
@@ -63,6 +64,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
     init_character(&characters[DRIVE_MAN], "drive_man", "馬車夫", "人類", 50, "assets/images/sw.png");
     init_character(&characters[GUARD], "guard", "守衛隊長", "人類", 20, "assets/images/guard.png");
     init_character(&characters[EMPIRE], "empire", "皇帝", "人類", 100, "assets/images/empire.png");
+    init_character(&characters[OLD_MAN], "old_man", "老人", "人類", 50, "assets/images/sw.png");
     // for (int32_t i = 0; i < EMPIRE; i++)
     // {
     //     printf("%s, %s, %d\n", characters[i].name, characters[i].kind, characters[i].favorability);
@@ -114,6 +116,10 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
         if (strstr(line, "scene ="))
         {
             set_scene(line, &now_scene, scenes);
+            // if (strstr(now_scene.name, "forest"))
+            // {
+            //     displayGif(renderer, "assets/images/test.gif");
+            // }
         }
         if (strstr(line, "character ="))
         {
@@ -143,7 +149,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 // if event == space
                 if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
                 {
-                    playSound("assets/images/sound.wav");
+                    playSound("assets/sound/sound.wav", 1000);
                     printf("playsound\n");
                     clear_events();
                     break;
@@ -151,9 +157,13 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 // if event == B
                 if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_b)
                 {
-                    show_back_pack(renderer, font, player);
+                    if (show_back_pack(renderer, font, player))
+                    {
+                        quit = true;
+                        break;
+                    }
+                    show(renderer, now_scene, now_character, now_text, font, &player);
                     clear_events();
-                    break;
                 }
             }
         }
@@ -215,6 +225,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                         if (event.button.x >= 0 && event.button.x <= WINDOW_WIDTH && event.button.y >= 200 + i * 55 && event.button.y <= 200 + i * 55 + 50)
                         {
                             snprintf(next, 1002, "%s", options[i].next);
+                            playSound("assets/sound/click.wav", 700);
                             click_on_option = true;
                             break;
                         }
@@ -293,7 +304,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 // if event == space
                 if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
                 {
-                    playSound("assets/images/sound.wav");
+                    playSound("assets/sound/sound.wav", 1000);
                     printf("playsound\n");
                     clear_events();
                     break;
@@ -306,9 +317,8 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                         quit = true;
                         break;
                     }
-
+                    show(renderer, now_scene, now_character, now_text, font, &player);
                     clear_events();
-                    break;
                 }
             }
             while (fgets(line, sizeof(line), script))
@@ -329,7 +339,133 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
             player.money += mission_pay;
             printf("get pay money: %d\n", player.money);
         }
-        
+        if (strstr(line, "player.hungry ="))
+        {
+            if (line[16] == '+')
+            {
+                player.hungry += atoi(&line[17]);
+                printf("player hungry: %d\n", player.hungry);
+            }
+            else if (line[16] == '-')
+            {
+                player.hungry -= atoi(&line[17]);
+                printf("player hungry: %d\n", player.hungry);
+            }
+            else
+            {
+                player.hungry = atoi(&line[16]);
+                printf("player hungry: %d\n", player.hungry);
+            }
+            printf("player hungry: %d\n", player.hungry);
+        }
+        if (strstr(line, "get ="))
+        {
+            get_item(&player, line);
+        }
+        int32_t money = 0;
+        int8_t fix_option = 0;
+        if (strstr(line, "cp2.about_weapon_answer"))
+        {
+            now_character = characters[SHADOW_BLADE];
+            if (characters[EMPLOYER].favorability == 70)
+            {
+                snprintf(now_text, 1000, "手頭的武器?喔你是說這把斧頭嗎?嗯...斧柄的部分確實看起來舊了點，使用的是北方的橡木，質地輕卻夠堅韌...這樣好了，你給我10個金幣，我剛好有修過斧頭的經驗(折舊度-30%%)，材料我也剛好有，這粗活就由我替你代勞吧，不知您意下如何?");
+                money = 10;
+                fix_option = 1;
+                show(renderer, now_scene, now_character, now_text, font, &player);
+            }
+            if (characters[EMPLOYER].favorability == 50)
+            {
+                snprintf(now_text, 1000, "手頭的武器?喔你是說這個沒有箭矢的弓嗎?嗯...我看看...彈性不太好，但彈性還可以...兄弟你可能走運了，雖然我無法強化這個弓的性能，但只要你支付給我20個金幣，我願意提供你五支上好的箭矢，省著點用吧");
+                money = 20;
+                fix_option = 2;
+                show(renderer, now_scene, now_character, now_text, font, &player);
+            }
+            if (characters[EMPLOYER].favorability == 30)
+            {
+                snprintf(now_text, 1000, "手頭的武器?喔你是說你的拳頭嗎?嗯...表面粗糙，關節處磨損有長繭...這確實是你僅剩的武器了呀哈哈，好啦我手上剛好有支2尺3吋的開山刀(折舊度20%%)，只要你支付30個金幣他就歸你了");
+                money = 30;
+                fix_option = 3;
+                show(renderer, now_scene, now_character, now_text, font, &player);
+            }
+
+            // option
+            option_num = 2;
+            snprintf(options[0].option, 100, "同意");
+            snprintf(options[0].next, 100, "cp2.about_weapon_answer.agree");
+            snprintf(options[1].option, 100, "拒絕");
+            snprintf(options[1].next, 100, "cp2.about_weapon_answer.refuse");
+            display_options(renderer, font, options, option_num);
+            // wait for click
+            while (1)
+            {
+                click_on_option = false;
+                SDL_PollEvent(&event);
+                if (event.type == SDL_QUIT)
+                {
+                    quit = true;
+                    break;
+                }
+                if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+                {
+                    mouse_x = event.button.x;
+                    mouse_y = event.button.y;
+                    for (int32_t i = 0; i < option_num; i++)
+                    {
+                        if (event.button.x >= 0 && event.button.x <= WINDOW_WIDTH && event.button.y >= 200 + i * 55 && event.button.y <= 200 + i * 55 + 50)
+                        {
+                            snprintf(next, 1002, "[%s]", options[i].next);
+                            playSound("assets/sound/click.wav", 700);
+                            click_on_option = true;
+                            break;
+                        }
+                    }
+                    clear_events();
+                }
+                if (click_on_option)
+                {
+                    break;
+                }
+            }
+            if (strstr(next, "cp2.about_weapon_answer.agree"))
+            {
+                player.money -= money;
+                if (fix_option == 1)
+                {
+                    remove_item(&player, 1);
+                    add_item(&player, 1, "斧頭", "assets/images/axe.png", 20);
+                }
+                if (fix_option == 2)
+                {
+                    // add arrow
+                    add_item(&player, 5, "箭矢X5", "assets/images/arrow.png", 0);
+                }
+                if (fix_option == 3)
+                {
+                    remove_item(&player, 2);
+                    add_item(&player, 6, "開山刀", "assets/images/machete.png", 80);
+                }
+            }
+            // find next
+            snprintf(next, 1000, "cp2.question_about_shadow");
+            fseek(script, 0, SEEK_SET);
+            while (fgets(line, sizeof(line), script))
+            {
+                if (strstr(line, next))
+                {
+                    break;
+                }
+                // scene and character and
+                if (strstr(line, "scene ="))
+                {
+                    set_scene(line, &now_scene, scenes);
+                }
+                if (strstr(line, "character ="))
+                {
+                    set_character(line, &now_character, characters);
+                }
+            }
+        }
 
         if (strstr(line, "end = 1"))
         {
@@ -449,7 +585,6 @@ void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *te
     // show_text(renderer, text, 20, 730, 24, font, (SDL_Color){0, 0, 0, 255});
     show_text(renderer, "按下空白繼續", 1000, WINDOW_HEIGHT - 50, 24, font, (SDL_Color){0, 0, 0, 255});
 
-
     return;
 }
 
@@ -545,7 +680,7 @@ void set_faverability(char *line, s_character *characters)
     sscanf(line, "%[^.].Favorability = %[^\r]", character_name, faverability);
     printf("%s, %s\n", character_name, faverability);
 
-    for (int32_t i = 0; i < 9; i++)
+    for (int32_t i = 0; i < 10; i++)
     {
         if (strstr(character_name, characters[i].name))
         {
@@ -572,4 +707,17 @@ void set_faverability(char *line, s_character *characters)
         characters[character_index].favorability = atoi(faverability);
     }
     printf(" %d\n", characters[character_index].favorability);
+}
+
+void get_item(s_player *player, char *line)
+{
+    // get = item_id
+    if (line[6] == '3')
+    {
+        add_item(player, 3, "礦藏", "assets/images/mine.png", 0);
+    }
+    if (line[6] == '4')
+    {
+        add_item(player, 4, "對講機", "assets/images/walkie_talkie.png", 0);
+    }
 }

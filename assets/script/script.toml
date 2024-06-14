@@ -79,138 +79,139 @@
 scene = "office"
 character = "employer"
 text = "Arr! 歡迎你，請坐下，你果然就是那位鼎鼎大名的冒險者{player.name}吧?"
-next = "cp1.11"
+# next = "cp1.11"
 
-[cp1.11]
-character = "player"
-text = "是的，我保證翻遍整個混沌紀元的史冊也找不到有我同等身手的勇者，請問有甚麼事需要我出馬的嗎?(自信)"
-next = "cp1.accept"
+# [cp1.11]
+# character = "player"
+# text = "是的，我保證翻遍整個混沌紀元的史冊也找不到有我同等身手的勇者，請問有甚麼事需要我出馬的嗎?(自信)"
+# next = "cp1.accept"
 
-[cp1.accept]
-character = "employer"
-text = "ArrrArr!! 非常好，勇者，我欣賞你的膽識! 你值得一筆不斐的賞金，我願意花50元金幣僱用你，事前事後各付一半"
-
-
-[[cp1.begin.options]]
-option = "接受"
-next = "cp1.accept_text"
-[[cp1.begin.options]]
-option = "不接受"
-next = "cp1.raise_text"
-
-[cp1.accept_text]
-character = "player"
-text = "好的，請告訴我任務內容吧!"
-get_pay = 25
-commission_left = 25
-employer.Favorability = +10
-next = "cp1.mission_explain"
-
-[cp1.raise_text]
-character = "player"
-text = "名氣是一回事，能力又是另一回事，但要說我在乎的事，恐怕是你有沒有把同等的報酬當一回事?(勢利)"
-employer.Favorability = -10
-next = "cp1.raise"
-
-[cp1.raise]
-character = "employer"
-text = "喔喔是的，err…，賞金是吧，讓我們把客套的面具卸下來，金額的事情你甭擔心，100金幣夠你幹完這票安享晚年，事前事後各付一半，希望我不需要在你的墳前獻上剩下的50塊...這筆交易你能接受嗎?"
-
-[[cp1.raise.options]]
-option = "接受"
-next = "cp1.raise_accept_text"
-[[cp1.raise.options]]
-option = "不接受"
-next = "cp1.raise_rejected_text"
-
-[cp1.raise_accept_text]
-character = "player"
-text = "好的，請告訴我任務內容吧!"
-get_pay = 50
-commission_left = 50
-next = "cp1.mission_explain"
-
-[cp1.raise_rejected_text]
-character = "player"
-text = "在這時局混亂的年代，我居然需要跟一個舒服的躺在他辦公室沙發椅上的中年獸人為了為了這100金幣進行這種無稽之談?這錢連我的喪禮你都付不起呀!(不滿)"
-employer.Favorability = -20
-next = "cp1.angry"
-
-[cp1.angry]
-character = "employer"
-text = "容我提醒你，自從你的前腳踩進我辦公室的天鵝絨起，你就該三生有幸了，Ar! 看到外頭的暴動了吧，我大可以請他們之中任何一個有能力的人來取代你的工作，所以請仔細考慮你的決定"
-
-[[cp1.angry.options]]
-option = "接受"
-next = "cp1.angry_accept_text"
-[[cp1.angry.options]]
-option = "不接受"
-next = "end.reject_mission"
-
-[cp1.angry_accept_text]
-character = "player"
-get_pay = 50
-commission_left = 50
-next = "cp1.mission_explain"
-
-#成就拒絕(TBD)
-
-[cp1.mission_explain]
-character = "employer"
-text = "是這樣的，err...，在混沌紀元以前，整個星球都是我的礦業公會。直到一名自稱龍裔救世主的神秘領袖出現，帶領他的族人四處劫掠我們精煉好的礦產。再這樣下去可能會影響到皇帝偉大的計畫......。因此我需要你護送這最後一匹礦產到寒冷的北方皇宮，你必須在三個獸人月之內完成任務並返回。但是如果時限內任務沒有完成，ARR!! 建議你就不要回來了..."
-
-[[cp1.mission_explain.option_1]]
-option = "接受"
-next = "cp1.mission_accept"
-
-[cp1.mission_accept]
-character = "player"
-text = "好的，那關於這次任務的裝備..."
-next = "cp1.mission_get_pay"
-
-[cp1.mission_get_pay]
-character = "employer"
-text = "喔對了，這裡是剛才說好的金幣，以及骨傳導式的對講機。你可以隨時在背包中查看他們，你可以在路上自行採買所需的裝備"
-get = "骨傳導式對講機"
-get_money = "get_pay"
-next = "cp1.mission_equipment"
-
-[cp1.mission_equipment]
-character = "player"
-text = "那能否請你提供一些上好的武器呢，我不小心注意到你房間角落的武器室"
-next = "cp1.mission_equipment_get"
-
-[cp1.mission_equipment_get]
-character = "employer"
-gap = "70, 50, 30"
-
-[[cp1.mission_equipment_get.70]]
-text = "Ar! 年輕人，不要吝於請求，我手頭正好有隻我珍藏的斧頭(折舊50%)，雖然有點舊了，但還堪用，希望對你的旅程有所幫助"
-get = "斧頭{50}"
-next = "cp1.final"
-[[cp1.mission_equipment_get.50]]
-text = "Ar! 對了，我手頭正好有張順手的弓(折舊75%)，但沒有箭矢，你就湊合著用吧"
-get = "弓{25}"
-next = "cp1.final"
-[[cp1.mission_equipment_get.30]]
-text = "Ar! 我想，憑你的本事，幾隻哥布林應該可以赤手空拳解決吧，跟一個你所謂的「中年獸人」請求武器是多麼沒出息的行為阿"
-employer.Favorability = -10
-getequip = "end"
+# [cp1.accept]
+# character = "employer"
+# text = "ArrrArr!! 非常好，勇者，我欣賞你的膽識! 你值得一筆不斐的賞金，我願意花50元金幣僱用你，事前事後各付一半"
 
 
-next = "cp1.final"
+# [[cp1.begin.options]]
+# option = "接受"
+# next = "cp1.accept_text"
+# [[cp1.begin.options]]
+# option = "不接受"
+# next = "cp1.raise_text"
 
-[cp1.final]
-character = "player"
-text = "我辦事你放心，在下定會準時完成交付的任務(自信)"
-next = "cp1.chose_road"
+# [cp1.accept_text]
+# character = "player"
+# text = "好的，請告訴我任務內容吧!"
+# get_pay = 25
+# commission_left = 25
+# employer.Favorability = +10
+# next = "cp1.mission_explain"
 
-[cp1.chose_road]
-character = "employer"
-text = "最後，在出發之前，你必須選擇這次任務的路徑，你可以選擇使用你可靠的雙腳穿越森林小徑，雖然拉長旅程的天數但可以避免盜賊的攻擊，你也可以選擇支付10元金幣雇個馬車夫，踏上尊爵不凡的直線道路，保證你縮短至少三倍的時間，是不保證你能留下完整的屍體而已..."
+# [cp1.raise_text]
+# character = "player"
+# text = "名氣是一回事，能力又是另一回事，但要說我在乎的事，恐怕是你有沒有把同等的報酬當一回事?(勢利)"
+# employer.Favorability = -10
+# next = "cp1.raise"
 
-[[cp1.chose_road.options]]
-option = "森林小徑"
+# [cp1.raise]
+# character = "employer"
+# text = "喔喔是的，err…，賞金是吧，讓我們把客套的面具卸下來，金額的事情你甭擔心，100金幣夠你幹完這票安享晚年，事前事後各付一半，希望我不需要在你的墳前獻上剩下的50塊...這筆交易你能接受嗎?"
+
+# [[cp1.raise.options]]
+# option = "接受"
+# next = "cp1.raise_accept_text"
+# [[cp1.raise.options]]
+# option = "不接受"
+# next = "cp1.raise_rejected_text"
+
+# [cp1.raise_accept_text]
+# character = "player"
+# text = "好的，請告訴我任務內容吧!"
+# get_pay = 50
+# commission_left = 50
+# next = "cp1.mission_explain"
+
+# [cp1.raise_rejected_text]
+# character = "player"
+# text = "在這時局混亂的年代，我居然需要跟一個舒服的躺在他辦公室沙發椅上的中年獸人為了為了這100金幣進行這種無稽之談?這錢連我的喪禮你都付不起呀!(不滿)"
+# employer.Favorability = -20
+# next = "cp1.angry"
+
+# [cp1.angry]
+# character = "employer"
+# text = "容我提醒你，自從你的前腳踩進我辦公室的天鵝絨起，你就該三生有幸了，Ar! 看到外頭的暴動了吧，我大可以請他們之中任何一個有能力的人來取代你的工作，所以請仔細考慮你的決定"
+
+# [[cp1.angry.options]]
+# option = "接受"
+# next = "cp1.angry_accept_text"
+# [[cp1.angry.options]]
+# option = "不接受"
+# next = "end.reject_mission"
+
+# [cp1.angry_accept_text]
+# character = "player"
+# get_pay = 50
+# commission_left = 50
+# next = "cp1.mission_explain"
+
+# #成就拒絕(TBD)
+
+# [cp1.mission_explain]
+# character = "employer"
+# text = "是這樣的，err...，在混沌紀元以前，整個星球都是我的礦業公會。直到一名自稱龍裔救世主的神秘領袖出現，帶領他的族人四處劫掠我們精煉好的礦產。再這樣下去可能會影響到皇帝偉大的計畫......。因此我需要你護送這最後一匹礦產到寒冷的北方皇宮，你必須在三個獸人月之內完成任務並返回。但是如果時限內任務沒有完成，ARR!! 建議你就不要回來了..."
+# get = 3
+
+# [[cp1.mission_explain.option_1]]
+# option = "接受"
+# next = "cp1.mission_accept"
+
+# [cp1.mission_accept]
+# character = "player"
+# text = "好的，那關於這次任務的裝備..."
+# next = "cp1.mission_get_pay"
+
+# [cp1.mission_get_pay]
+# character = "employer"
+# text = "喔對了，這裡是剛才說好的金幣，以及骨傳導式的對講機。你可以隨時在背包中查看他們，你可以在路上自行採買所需的裝備"
+# get = 4
+# get_money = "get_pay"
+# next = "cp1.mission_equipment"
+
+# [cp1.mission_equipment]
+# character = "player"
+# text = "那能否請你提供一些上好的武器呢，我不小心注意到你房間角落的武器室"
+# next = "cp1.mission_equipment_get"
+
+# [cp1.mission_equipment_get]
+# character = "employer"
+# gap = "70, 50, 30"
+
+# [[cp1.mission_equipment_get.70]]
+# text = "Ar! 年輕人，不要吝於請求，我手頭正好有隻我珍藏的斧頭(折舊50%)，雖然有點舊了，但還堪用，希望對你的旅程有所幫助"
+# get = "斧頭{50}"
+# next = "cp1.final"
+# [[cp1.mission_equipment_get.50]]
+# text = "Ar! 對了，我手頭正好有張順手的弓(折舊75%)，但沒有箭矢，你就湊合著用吧"
+# get = "弓{25}"
+# next = "cp1.final"
+# [[cp1.mission_equipment_get.30]]
+# text = "Ar! 我想，憑你的本事，幾隻哥布林應該可以赤手空拳解決吧，跟一個你所謂的「中年獸人」請求武器是多麼沒出息的行為阿"
+# employer.Favorability = -10
+# getequip = "end"
+
+
+# next = "cp1.final"
+
+# [cp1.final]
+# character = "player"
+# text = "我辦事你放心，在下定會準時完成交付的任務(自信)"
+# next = "cp1.chose_road"
+
+# [cp1.chose_road]
+# character = "employer"
+# text = "最後，在出發之前，你必須選擇這次任務的路徑，你可以選擇使用你可靠的雙腳穿越森林小徑，雖然拉長旅程的天數但可以避免盜賊的攻擊，你也可以選擇支付10元金幣雇個馬車夫，踏上尊爵不凡的直線道路，保證你縮短至少三倍的時間，是不保證你能留下完整的屍體而已..."
+
+# [[cp1.chose_road.options]]
+# option = "森林小徑"
 next = "cp2.forest"
 [[cp1.chose_road.options]]
 option = "王國之路"
@@ -340,6 +341,7 @@ next = "cp2.about_man_beside_fire_answer"
 [cp2.about_man_beside_fire_answer]
 character = "shadow_blade"
 text = "阿~從他的穿著打扮以及隨身用品，他似乎是名醫生的樣子，前幾天伴隨著一陣打鬥聲突然出現在森林裡，也許是念在我父親在渾沌紀元以前也曾是一名醫師的關係，我不能對他見死不救，他傷得很重，連眼睛都沒辦法睜開呢，但他的意志很強，似乎有某種執著一般，現在雖然已經恢復了些意識，但他對人戒心挺重，建議暫時不要跟他談話好一點"
+next = "cp2.question_about_shadow"
 
 [cp2.about_weapon]
 character = "player"
@@ -359,6 +361,8 @@ next = "cp2.about_weapon_answer_2"
 
 [cp2.about_weapon_accept]
 #處理錢和武器
+money = -10
+fix = ""
 next = "cp2.question_about_shadow"
 
 [cp2.about_weapon_answer_2]
@@ -409,6 +413,7 @@ next = "cp2.about_thief_answer"
 [cp2.about_thief_answer]
 character = "shadow_blade"
 text = "你選擇進入森林真的是明智的決定，那夥盜賊常常在外面的路上裝扮成各種身分來竊取通過的人，他們臉上通通穿著一樣的制服，帶著一樣的面具，在隱藏面容的同時，又能達到偽裝成某種身分階級的目的，再加上他們有個身手不凡的首領，這夥人真不是省油的燈呀~"
+next = "cp2.question_about_shadow"
 
 [cp2.about_my_employer]
 character = "player"
@@ -450,13 +455,13 @@ next = "cp2.dont_kill_them"
 character = "player"
 text = "為了正義，每個抉擇都是必要的，請安息吧"
 employer.Favorability = +20
-next = "cp2.cross_road"
+next = "cp3.arrive_palace"
 
 [cp2.dont_kill_them]
 character = "player"
 text = "不! 勇者有權力決定他的路，我選擇相信他們"
 employer.Favorability = -30
-next = "cp2.cross_road"
+next = "cp3.arrive_palace"
 
 [[cp2.shadow_blade_fight]]
 character = "player"
@@ -494,24 +499,19 @@ employer.Favorability = +10
 character = "player"
 text = "為了正義，每個抉擇都是必要的，請安息吧((從兩人身上搜出2塊麵包)"
 player.hungry = +30
-next = "cp2.cross_road"
+next = "cp3.arrive_palace"
 
 [cp2.ignore_employer]
 employer.Favorability = -20
-[[cp2.ignore_employer.options]]
-option = "使用斧頭到附近打獵"
-next = "cp2.forest_hunt"
-
-[cp2.forest_hunt]
 character = "player"
-text = "取得了食物救活老人並填飽了自己的肚子，在你的悉心照料下，老人緊閉的雙眼終於咧開了一道細縫，你驚訝的發現，即使受盡了創傷，他的眼神仍然如此雪亮..."
+text = "你到附近打獵，取得了食物救活老人並填飽了自己的肚子，在你的悉心照料下，老人緊閉的雙眼終於咧開了一道細縫，你驚訝的發現，即使受盡了創傷，他的眼神仍然如此雪亮..."
 player.hungry = +40
 next = "cp2.old_man"
 
 [cp2.old_man]
 character = "old_man"
 text = "…額...這片森林可真大...我...我迷失了好久好...謝...謝謝你在...醫學的層面上救了我...雖然我不是很喜歡這品種的山豬肉...肌肉組織在唾液的混合下實在有點難消化...額...但還是感謝...嗯...比起一連串感恩話語的單方面輸出，我個人比較傾向採用...實際行動..."
-next = "cp.answer_old_man"
+next = "cp2.answer_old_man"
 
 [cp2.answer_old_man]
 character = "player"
@@ -547,7 +547,7 @@ next = "cp2.reject_extract_blood"
 [cp2.reject_extract_blood]
 character = "old_man"
 text = "至此之後，老人再也沒有說過任何一句話，爾後森林裡每一天的相處，就猶如孩童之於洋娃娃的關係般，老人忽視了你所有天真的交流，他的嘴，似乎從此被無形的回針給縫了起來，直到有天你突然再也找不到他的身影，你完全不知道他去了哪裡，只能當做他再度迷失在了這片森林，於是你只好繼續踏上了孤獨的旅程"
-next = "cp2.cross_road"
+next = "cp3.arrive_palace"
 
 [cp2.fight_with_bow]
 character = "player"
@@ -1072,10 +1072,12 @@ next = "cp2.explain_to_guard"
 next = "cp3.arrive_palace"
 
 
+
+
 [cp3.arrive_palace]
 scene = "palace"
 character = "player"
-text = "經過了一個獸人月，你們終於抵達了北方皇宮"
+text = "經過了一個獸人月，終於抵達了北方皇宮"
 next = "cp3.meet_empire"
 
 [cp3.meet_empire]
