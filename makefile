@@ -17,11 +17,14 @@ sound:
 gif:
 	$(CC) -o gif src/show_GIF.c src/init.c src/show_image.c src/show_text.c $(LIBS)
 
+name:
+	$(CC) -o name src/enter_name.c src/init.c src/show_image.c src/show_text.c $(LIBS)
+
 install:
 	sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev libgif-dev
 
 
 clean:
-	rm -f test *.exe engine cp1 menu
+	rm -f test *.exe engine cp1 menu 
 
-.PHONY: all cp1 menu gif clean
+.PHONY: all cp1 menu gif name clean 
