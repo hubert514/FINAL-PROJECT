@@ -28,5 +28,6 @@ int32_t init_character(s_character *character, char *character_name, char *chara
     snprintf(character->kind, 10, "%s", kind);
     character->favorability = favorability;
     snprintf(character->picture, 100, "%s", picture);
+    printf("init_character [%s] success\n", character->name);
     return 0;
 }

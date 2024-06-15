@@ -15,22 +15,27 @@ int32_t show_back_pack(SDL_Renderer *renderer, TTF_Font *font, s_player player)
     char health[30];
 
     show_image(renderer, "assets/images/black.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-    if (player.back_pack[0].item_id == 0)
+
+    int32_t item_count = 0;
+
+    for (int i = 0; i < 100; i++)
     {
-        show_text(renderer, "No items in the backpack", 50, 50, 48, font, (SDL_Color){255, 255, 255, 255});
-    }
-    else
-    {
-        for (int i = 0; i < 100; i++)
+        if (player.back_pack[i].item_id != 0)
         {
-            if (player.back_pack[i].item_id != 0)
-            {
-                show_text(renderer, player.back_pack[i].item_name, 50, 50 + i * 100, 48, font, (SDL_Color){255, 255, 255, 255});
-                snprintf(health, 30, "損壞度: %d%%", player.back_pack[i].item_health);
-                show_text(renderer, health, 50, 50 + i * 100 + 50, 48, font, (SDL_Color){255, 255, 255, 255});
-            }
+            show_text(renderer, player.back_pack[i].item_name, 150, 50 + item_count * 100, 48, font, (SDL_Color){255, 255, 255, 255});
+            snprintf(health, 30, "損壞度: %d%%", player.back_pack[i].item_health);
+            show_text(renderer, health, 150, 50 + item_count * 100 + 50, 48, font, (SDL_Color){255, 255, 255, 255});
+            show_image(renderer, player.back_pack[i].item_pic, 500, 50 + item_count * 100, 90, 90);
+            item_count++;
         }
     }
+    if (item_count == 0)
+    {
+        show_text(renderer, "背包裡沒有物品", 50, 50, 48, font, (SDL_Color){255, 255, 255, 255});
+    }
+    show_text(renderer, "按b返回", 50, 50 + item_count * 100 + 50, 48, font, (SDL_Color){255, 255, 255, 255});
+    
+
     SDL_Event event;
     while (1)
     {
@@ -46,7 +51,6 @@ int32_t show_back_pack(SDL_Renderer *renderer, TTF_Font *font, s_player player)
             return 0;
             break;
         }
-
     }
     return 0;
 }
@@ -66,7 +70,6 @@ int32_t add_item(s_player *player, int8_t item_id, char *item_name, char *item_p
         }
     }
     return 0;
-
 }
 
 int32_t remove_item(s_player *player, int8_t item_id)

@@ -25,9 +25,13 @@ void display_options(SDL_Renderer *renderer, TTF_Font *font, s_options *options,
 int32_t utf8_char_len(const char *s);
 void set_faverability(char *line, s_character *characters);
 void get_item(s_player *player, char *line);
+void save(s_player player, s_character *characters, s_scene *scenes, s_scene now_scene, s_character now_character, char *line, char *next);
+void load_data(s_player *player, s_character *characters, s_scene *scenes, s_scene *now_scene, s_character *now_character, char *line, char *next);
+void print_data(s_player player, s_character *characters, s_scene *scenes, s_scene now_scene, s_character now_character, char *line, char *next);
 
-int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer *renderer, TTF_Font *font)
+int32_t cp1(int8_t load, char *player_name, int8_t player_gender, SDL_Renderer *renderer, TTF_Font *font)
 {
+
     // setup
     FILE *script = fopen("assets/script/script.toml", "r");
     if (script == NULL)
@@ -56,7 +60,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
     // setting characters
     s_character characters[20];
     init_character(&characters[PLAYER], "player", player_name, player.kind, 0, player_gender_pic);
-    init_character(&characters[EMPLOYER], "employer", "雇主", "獸人", 60, "assets/images/sw.png");
+    init_character(&characters[EMPLOYER], "employer", "雇主(冒險家協會會長)", "人類", 60, "assets/images/employer_normal.png");
     init_character(&characters[SHADOW_BLADE], "shadow_blade", "影刃", "半精靈", 30, "assets/images/shadow_blade.png");
     init_character(&characters[SPRIT], "sprit", "精靈", "精靈", 50, "assets/images/sprit.png");
     init_character(&characters[THIEF_LEADER], "theif_leader", "盜賊領袖", "人類", -100, "assets/images/gurad.png");
@@ -99,6 +103,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
     bool quit = false, click_on_option = false, fight_win = false;
     char now_text[1000];
     s_scene now_scene;
+    snprintf(now_scene.name, 20, "n");
     s_character now_character;
     int32_t option_num = 0, mouse_x = 0, mouse_y = 0;
     char next[1000] = "cp1.begin", tmp[1000];
@@ -107,12 +112,29 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
     int32_t return_type = 0;
     bool seek_hungry = false;
 
-    show_image(renderer, "assets/images/black.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-    show_text(renderer, "遊戲開始", 200, 200, 60, font, (SDL_Color){255, 255, 255, 255});
+    show_image(renderer, "assets/images/black.png", 200, 200, WINDOW_WIDTH - 400, WINDOW_HEIGHT - 400);
+    show_text(renderer, "遊戲開始", 200, 350, 150, font, (SDL_Color){255, 255, 255, 255});
     playSound("assets/sound/enter_game.wav", 1000);
 
     while (fgets(line, sizeof(line), script) && !quit)
     {
+        // check load
+        if (load)
+        {
+            // load all data
+            load_data(&player, characters, scenes, &now_scene, &now_character, line, next);
+            print_data(player, characters, scenes, now_scene, now_character, line, next);
+            load = 0;
+            // find next
+            fseek(script, 0, SEEK_SET);
+            while (fgets(line, sizeof(line), script))
+            {
+                if (strstr(line, next))
+                {
+                    break;
+                }
+            }
+        }
         if (player.hungry <= 0 && !seek_hungry)
         {
             snprintf(next, 1002, "[end.dead_by_hungry]");
@@ -126,7 +148,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                 }
             }
         }
-        
+
         // event quit
         if (strstr(now_scene.name, "kingdom_road"))
         {
@@ -135,7 +157,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
             show_text(renderer, "由於僱用不到馬車夫，所以你只能走森林小徑", 20, 20, 50, font, (SDL_Color){255, 255, 255, 255});
             show_text(renderer, "按下空白繼續", 1000, WINDOW_HEIGHT - 50, 24, font, (SDL_Color){255, 255, 255, 255});
             set_scene("scene = \"forest\"", &now_scene, scenes);
-            sleep(0.75);
+            sleep(0.25);
             clear_events();
 
             while (1)
@@ -189,6 +211,17 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                             quit = true;
                             return_type = 1;
                             break;
+                        }
+                        // if s is pressed
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s)
+                        {
+                            // save_system
+                            // save all data
+                            save(player, characters, scenes, now_scene, now_character, line, next);
+                            show_image(renderer, "assets/images/black.png", 200, 200, WINDOW_WIDTH - 400, WINDOW_HEIGHT - 400);
+                            show_text(renderer, "Saved", 200, 350, 150, font, (SDL_Color){255, 255, 255, 255});
+                            sleep(1);
+                            show_image(renderer, "assets/images/esc.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
                         }
                     }
                     show(renderer, now_scene, now_character, now_text, font, &player);
@@ -218,11 +251,41 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
         }
         if (strstr(line, "scene ="))
         {
-            set_scene(line, &now_scene, scenes);
-            // if (strstr(now_scene.name, "forest"))
-            // {
-            //     displayGif(renderer, "assets/images/test.gif");
-            // }
+            if (!strstr(line, now_scene.name) || strlen(now_scene.name) < 2)
+            {
+                if (strstr(now_scene.name, "office"))
+                {
+                    displayGif(renderer, "assets/images/left_office.gif");
+                }
+                if (strstr(now_scene.name, "forest"))
+                {
+                    displayGif(renderer, "assets/images/to_forest.gif");
+                }
+                if (strstr(now_scene.name, "palace"))
+                {
+                    displayGif(renderer, "assets/images/left_palace.gif");
+                }
+
+                set_scene(line, &now_scene, scenes);
+
+                if (strstr(now_scene.name, "forest"))
+                {
+                    displayGif(renderer, "assets/images/to_forest.gif");
+                }
+                if (strstr(now_scene.name, "office"))
+                {
+                    displayGif(renderer, "assets/images/to_office.gif");
+                }
+                if (strstr(now_scene.name, "palace"))
+                {
+                    displayGif(renderer, "assets/images/to_palace.gif");
+                }
+            }
+            else
+            {
+                printf("same scene\n");
+                printf("%s\n", now_scene.name);
+            }
         }
         if (strstr(line, "character ="))
         {
@@ -233,7 +296,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
             sscanf(line, "text = \"%[^\"]\"", now_text);
             show(renderer, now_scene, now_character, now_text, font, &player);
 
-            sleep(0.75);
+            sleep(0.25);
             clear_events();
 
             while (1)
@@ -287,6 +350,17 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                             quit = true;
                             return_type = 1;
                             break;
+                        }
+                        // if s is pressed
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s)
+                        {
+                            // save_system
+                            // save all data
+                            save(player, characters, scenes, now_scene, now_character, line, next);
+                            show_image(renderer, "assets/images/black.png", 200, 200, WINDOW_WIDTH - 400, WINDOW_HEIGHT - 400);
+                            show_text(renderer, "Saved", 200, 350, 150, font, (SDL_Color){255, 255, 255, 255});
+                            sleep(1);
+                            show_image(renderer, "assets/images/esc.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
                         }
                     }
                     show(renderer, now_scene, now_character, now_text, font, &player);
@@ -377,10 +451,10 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                     break;
                 }
                 // scene and character and
-                if (strstr(line, "scene ="))
-                {
-                    set_scene(line, &now_scene, scenes);
-                }
+                // if (strstr(line, "scene ="))
+                // {
+                //     set_scene(line, &now_scene, scenes);
+                // }
                 if (strstr(line, "character ="))
                 {
                     set_character(line, &now_character, characters);
@@ -389,7 +463,28 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
         }
         if (strstr(line, "Favorability ="))
         {
+            printf("setting favorability\n");
             set_faverability(line, characters);
+            printf("Favorability: %d\n", characters[EMPLOYER].favorability);
+            if (characters[EMPLOYER].favorability == 70)
+            {
+                // happy
+                printf("happy\n");
+                init_character(&characters[EMPLOYER], "employer", "雇主", "獸人", 70, "assets/images/employer_normal.png");
+            }
+            else if (characters[EMPLOYER].favorability == 50)
+            {
+                // normal
+                printf("normal\n");
+                init_character(&characters[EMPLOYER], "employer", "雇主", "獸人", 50, "assets/images/employer_unhappy.png");
+            }
+            else if (characters[EMPLOYER].favorability == 30)
+            {
+                // angry
+                printf("angry\n");
+                init_character(&characters[EMPLOYER], "employer", "雇主", "獸人", 30, "assets/images/employer_superunhappy.png");
+            }
+
             set_character(line, &now_character, characters);
         }
 
@@ -398,25 +493,25 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
             set_character("character = \"employer\"", &now_character, characters);
             if (characters[EMPLOYER].favorability >= 70)
             {
-                snprintf(now_text, 1000, "Ar! 年輕人，不要吝於請求，我手頭正好有隻我珍藏的斧頭(折舊50%%)，雖然有點舊了，但還堪用，希望對你的旅程有所幫助");
+                snprintf(now_text, 1000, "年輕人，不要吝於請求，我手頭正好有隻我珍藏的斧頭(折舊50%%)，雖然有點舊了，但還堪用，希望對你的旅程有所幫助");
                 // get 斧頭
                 add_item(&player, 1, "斧頭", "assets/images/axe.png", 50);
             }
             if (characters[EMPLOYER].favorability < 70 && characters[EMPLOYER].favorability > 30)
             {
-                snprintf(now_text, 1000, "Ar! 對了，我手頭正好有張順手的弓(折舊75%%)，但沒有箭矢，你就湊合著用吧");
+                snprintf(now_text, 1000, "對了，我手頭正好有張順手的弓(折舊75%%)，但沒有箭矢，你就湊合著用吧");
                 // get 弓
                 add_item(&player, 2, "弓", "assets/images/bow.png", 75);
             }
             if (characters[EMPLOYER].favorability <= 30)
             {
-                snprintf(now_text, 1000, "Ar! 我想，憑你的本事，幾隻哥布林應該可以赤手空拳解決吧，跟一個你所謂的「中年獸人」請求武器是多麼沒出息的行為阿");
+                snprintf(now_text, 1000, "我想，憑你的本事，幾隻哥布林應該可以赤手空拳解決吧，跟一個你所謂的「中年獸人」請求武器是多麼沒出息的行為阿");
 
                 // get nothing
             }
 
             show(renderer, now_scene, now_character, now_text, font, &player);
-            sleep(0.75);
+            sleep(0.25);
             clear_events();
 
             while (1)
@@ -470,6 +565,17 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                             quit = true;
                             return_type = 1;
                             break;
+                        }
+                        // if s is pressed
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s)
+                        {
+                            // save_system
+                            // save all data
+                            save(player, characters, scenes, now_scene, now_character, line, next);
+                            show_image(renderer, "assets/images/black.png", 200, 200, WINDOW_WIDTH - 400, WINDOW_HEIGHT - 400);
+                            show_text(renderer, "Saved", 200, 350, 150, font, (SDL_Color){255, 255, 255, 255});
+                            sleep(1);
+                            show_image(renderer, "assets/images/esc.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
                         }
                     }
                     show(renderer, now_scene, now_character, now_text, font, &player);
@@ -615,10 +721,10 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                     break;
                 }
                 // scene and character and
-                if (strstr(line, "scene ="))
-                {
-                    set_scene(line, &now_scene, scenes);
-                }
+                // if (strstr(line, "scene ="))
+                // {
+                //     set_scene(line, &now_scene, scenes);
+                // }
                 if (strstr(line, "character ="))
                 {
                     set_character(line, &now_character, characters);
@@ -686,10 +792,10 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                     break;
                 }
                 // scene and character and
-                if (strstr(line, "scene ="))
-                {
-                    set_scene(line, &now_scene, scenes);
-                }
+                // if (strstr(line, "scene ="))
+                // {
+                //     set_scene(line, &now_scene, scenes);
+                // }
                 if (strstr(line, "character ="))
                 {
                     set_character(line, &now_character, characters);
@@ -702,7 +808,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
             set_character("character = \"player\"", &now_character, characters);
             snprintf(now_text, 1000, "疑?前面地上似乎有一個不知名的包包，上面甚至連個扣子都沒有");
             show(renderer, now_scene, now_character, now_text, font, &player);
-            sleep(0.75);
+            sleep(0.25);
             clear_events();
 
             while (1)
@@ -756,6 +862,17 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                             quit = true;
                             return_type = 1;
                             break;
+                        }
+                        // if s is pressed
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s)
+                        {
+                            // save_system
+                            // save all data
+                            save(player, characters, scenes, now_scene, now_character, line, next);
+                            show_image(renderer, "assets/images/black.png", 200, 200, WINDOW_WIDTH - 400, WINDOW_HEIGHT - 400);
+                            show_text(renderer, "Saved", 200, 350, 150, font, (SDL_Color){255, 255, 255, 255});
+                            sleep(1);
+                            show_image(renderer, "assets/images/esc.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
                         }
                     }
                     show(renderer, now_scene, now_character, now_text, font, &player);
@@ -823,10 +940,10 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                     break;
                 }
                 // scene and character and
-                if (strstr(line, "scene ="))
-                {
-                    set_scene(line, &now_scene, scenes);
-                }
+                // if (strstr(line, "scene ="))
+                // {
+                //     set_scene(line, &now_scene, scenes);
+                // }
                 if (strstr(line, "character ="))
                 {
                     set_character(line, &now_character, characters);
@@ -974,10 +1091,10 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                     break;
                 }
                 // scene and character and
-                if (strstr(line, "scene ="))
-                {
-                    set_scene(line, &now_scene, scenes);
-                }
+                // if (strstr(line, "scene ="))
+                // {
+                //     set_scene(line, &now_scene, scenes);
+                // }
                 if (strstr(line, "character ="))
                 {
                     set_character(line, &now_character, characters);
@@ -1101,7 +1218,7 @@ int32_t cp1(char *chapter, char *player_name, int8_t player_gender, SDL_Renderer
                         break;
                     }
                 }
-            }         
+            }
         }
 
         // if (line[0] == '[' && line[1] != '[')
@@ -1179,14 +1296,14 @@ void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *te
     snprintf(money, 100, "%d", player->money);
     show_text(renderer, money, 960, 360, 30, font, (SDL_Color){255, 255, 255, 255});
     // show player's hungry
-    show_text(renderer, "飢餓: ", 950, 400, 30, font, (SDL_Color){255, 255, 255, 255});
+    show_text(renderer, "飽食度: ", 950, 400, 30, font, (SDL_Color){255, 255, 255, 255});
     char hungry[100];
     snprintf(hungry, 100, "%d", player->hungry);
     show_text(renderer, hungry, 960, 440, 30, font, (SDL_Color){255, 255, 255, 255});
     show_text(renderer, "按B顯示背包", 960, 480, 30, font, (SDL_Color){255, 255, 255, 255});
 
     // printf("%s\n", character.name_ch);
-    show_text(renderer, character.name_ch, 190, 620, 40, font, (SDL_Color){255, 255, 255, 255});
+    show_text(renderer, character.name_ch, 170, 620, 40, font, (SDL_Color){255, 255, 255, 255});
     // show faverability
     if (strstr(character.name, "player") == NULL)
     {
@@ -1340,6 +1457,7 @@ void set_faverability(char *line, s_character *characters)
         characters[character_index].favorability = atoi(faverability);
     }
     printf(" %d\n", characters[character_index].favorability);
+    return;
 }
 
 void get_item(s_player *player, char *line)
@@ -1375,4 +1493,140 @@ void get_item(s_player *player, char *line)
     {
         add_item(player, 7, "聖劍", "assets/images/ex_calibur.png", 0);
     }
+}
+
+void save(s_player player, s_character *characters, s_scene *scenes, s_scene now_scene, s_character now_character, char *line, char *next)
+{
+    FILE *save = fopen("assets/save/save.txt", "w");
+    // next
+    fprintf(save, "%s\n", next);
+    // player
+    fprintf(save, "player.name = %s\n", player.name);
+    fprintf(save, "player.money = %d\n", player.money);
+    fprintf(save, "player.hungry = %d\n", player.hungry);
+    for (int32_t i = 0; i < 100; i++)
+    {
+        if (player.back_pack[i].item_id != 0)
+        {
+            fprintf(save, "player.back_pack[%d].item_id = %d\n", i, player.back_pack[i].item_id);
+            fprintf(save, "player.back_pack[%d].name = %s\n", i, player.back_pack[i].item_name);
+            fprintf(save, "player.back_pack[%d].picture = %s\n", i, player.back_pack[i].item_pic);
+            fprintf(save, "player.back_pack[%d].durability = %d\n", i, player.back_pack[i].item_health);
+        }
+    }
+    // character
+    for (int32_t i = 0; i < CHARACTER_NUM; i++)
+    {
+        fprintf(save, "characters[%d].name = %s\n", i, characters[i].name);
+        fprintf(save, "characters[%d].name_ch = %s\n", i, characters[i].name_ch);
+        fprintf(save, "characters[%d].kind = %s\n", i, characters[i].kind);
+        fprintf(save, "characters[%d].picture = %s\n", i, characters[i].picture);
+        fprintf(save, "characters[%d].favorability = %d\n", i, characters[i].favorability);
+    }
+    // scene
+    fprintf(save, "now_scene = %s\n", now_scene.name);
+    fprintf(save, "now_scene.name_ch = %s\n", now_scene.name_ch);
+    fprintf(save, "now_scene.discription = %s\n", now_scene.discription);
+    fprintf(save, "now_scene.file = %s\n", now_scene.file);
+    // now_character
+    fprintf(save, "now_character = %s\n", now_character.name);
+    fprintf(save, "now_character.name_ch = %s\n", now_character.name_ch);
+    fprintf(save, "now_character.kind = %s\n", now_character.kind);
+    fprintf(save, "now_character.picture = %s\n", now_character.picture);
+    fprintf(save, "now_character.favorability = %d\n", now_character.favorability);
+    // line
+    fprintf(save, "%s\n", line);
+
+    fclose(save);
+
+    return;
+}
+
+void load_data(s_player *player, s_character *characters, s_scene *scenes, s_scene *now_scene, s_character *now_character, char *line, char *next)
+{
+    printf("load data form last save\n");
+    FILE *save = fopen("assets/save/save.txt", "r");
+    char tmp[1000];
+    int32_t itmp;
+
+    // next
+    fscanf(save, "%s\n", next);
+    // player
+    fscanf(save, "player.name = %s\n", player->name);
+    // money
+    fscanf(save, "player.money = %s\n", tmp);
+    player->money = atoi(tmp);
+    // hungry
+    fscanf(save, "player.hungry = %s\n", tmp);
+    player->hungry = atoi(tmp);
+    // back_pack
+    for (int32_t i = 0; i < 100; i++)
+    {
+        fscanf(save, "player.back_pack[%d].item_id = %hhd\n", &itmp, &player->back_pack[i].item_id);
+        fscanf(save, "player.back_pack[%d].name = %s\n", &itmp, player->back_pack[i].item_name);
+        fscanf(save, "player.back_pack[%d].picture = %s\n", &itmp, player->back_pack[i].item_pic);
+        fscanf(save, "player.back_pack[%d].durability = %hhd\n", &itmp, &player->back_pack[i].item_health);
+    }
+    // character
+    for (int32_t i = 0; i < CHARACTER_NUM; i++)
+    {
+        fscanf(save, "characters[%d].name = %s\n", &itmp, characters[i].name);
+        fscanf(save, "characters[%d].name_ch = %s\n", &itmp, characters[i].name_ch);
+        fscanf(save, "characters[%d].kind = %s\n", &itmp, characters[i].kind);
+        fscanf(save, "characters[%d].picture = %s\n", &itmp, characters[i].picture);
+        fscanf(save, "characters[%d].favorability = %d\n", &itmp, &characters[i].favorability);
+    }
+    // scene
+    fscanf(save, "now_scene = %s\n", now_scene->name);
+    fscanf(save, "now_scene.name_ch = %s\n", now_scene->name_ch);
+    fscanf(save, "now_scene.discription = %s\n", now_scene->discription);
+    fscanf(save, "now_scene.file = %s\n", now_scene->file);
+    // now_character
+    fscanf(save, "now_character = %s\n", now_character->name);
+    fscanf(save, "now_character.name_ch = %s\n", now_character->name_ch);
+    fscanf(save, "now_character.kind = %s\n", now_character->kind);
+    fscanf(save, "now_character.picture = %s\n", now_character->picture);
+    fscanf(save, "now_character.favorability = %d\n", &now_character->favorability);
+    // line
+    fscanf(save, "text = \"%[^\"]\"", line);
+
+    fclose(save);
+
+    return;
+}
+
+void print_data(s_player player, s_character *characters, s_scene *scenes, s_scene now_scene, s_character now_character, char *line, char *next)
+{
+    // printf all
+    printf("next: %s\n", next);
+    printf("player.name: %s\n", player.name);
+    printf("player.money: %d\n", player.money);
+    printf("player.hungry: %d\n", player.hungry);
+    for (int32_t i = 0; i < 100; i++)
+    {
+        printf("player.back_pack[%d].item_id: %d\n", i, player.back_pack[i].item_id);
+        printf("player.back_pack[%d].name: %s\n", i, player.back_pack[i].item_name);
+        printf("player.back_pack[%d].picture: %s\n", i, player.back_pack[i].item_pic);
+        printf("player.back_pack[%d].durability: %d\n", i, player.back_pack[i].item_health);
+    }
+    for (int32_t i = 0; i < CHARACTER_NUM; i++)
+    {
+        printf("characters[%d].name: %s\n", i, characters[i].name);
+        printf("characters[%d].name_ch: %s\n", i, characters[i].name_ch);
+        printf("characters[%d].kind: %s\n", i, characters[i].kind);
+        printf("characters[%d].picture: %s\n", i, characters[i].picture);
+        printf("characters[%d].favorability: %d\n", i, characters[i].favorability);
+    }
+    printf("now_scene: %s\n", now_scene.name);
+    printf("now_scene.name_ch: %s\n", now_scene.name_ch);
+    printf("now_scene.discription: %s\n", now_scene.discription);
+    printf("now_scene.file: %s\n", now_scene.file);
+    printf("now_character: %s\n", now_character.name);
+    printf("now_character.name_ch: %s\n", now_character.name_ch);
+    printf("now_character.kind: %s\n", now_character.kind);
+    printf("now_character.picture: %s\n", now_character.picture);
+    printf("now_character.favorability: %d\n", now_character.favorability);
+    printf("line: %s\n", line);
+
+    return;
 }
