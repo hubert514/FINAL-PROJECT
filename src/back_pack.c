@@ -25,7 +25,7 @@ int32_t show_back_pack(SDL_Renderer *renderer, TTF_Font *font, s_player player)
             show_text(renderer, player.back_pack[i].item_name, 150, 50 + item_count * 100, 48, font, (SDL_Color){255, 255, 255, 255});
             snprintf(health, 30, "損壞度: %d%%", player.back_pack[i].item_health);
             show_text(renderer, health, 150, 50 + item_count * 100 + 50, 48, font, (SDL_Color){255, 255, 255, 255});
-            show_image(renderer, player.back_pack[i].item_pic, 500, 50 + item_count * 100, 90, 90);
+            show_image(renderer, player.back_pack[i].item_pic, 50, 50 + item_count * 100, 90, 90);
             item_count++;
         }
     }
@@ -33,7 +33,7 @@ int32_t show_back_pack(SDL_Renderer *renderer, TTF_Font *font, s_player player)
     {
         show_text(renderer, "背包裡沒有物品", 50, 50, 48, font, (SDL_Color){255, 255, 255, 255});
     }
-    show_text(renderer, "按b返回", 50, 50 + item_count * 100 + 50, 48, font, (SDL_Color){255, 255, 255, 255});
+    show_text(renderer, "按b返回", 200, 50 + item_count * 100 + 50, 48, font, (SDL_Color){255, 255, 255, 255});
     
 
     SDL_Event event;

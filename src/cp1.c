@@ -46,29 +46,27 @@ int32_t cp1(int8_t load, char *player_name, int8_t player_gender, SDL_Renderer *
     s_player player;
     init_player(&player, player_name, player_gender);
     char player_gender_pic[100];
-    if (player_gender == 0)
-    {
-        snprintf(player_gender_pic, 100, "assets/images/character_girl.png");
-    }
-    else
-    {
-        snprintf(player_gender_pic, 100, "assets/images/character_boy.png");
-    }
+    
+        snprintf(player_gender_pic, 100, "assets/images/character_player.png");
+    
 
     // printf("%s, %s\n", player.name, player.kind);
 
     // setting characters
     s_character characters[20];
+
+    // initcharacters
+    // if read "init_character"
     init_character(&characters[PLAYER], "player", player_name, player.kind, 0, player_gender_pic);
     init_character(&characters[EMPLOYER], "employer", "雇主(冒險家協會會長)", "人類", 60, "assets/images/employer_normal.png");
     init_character(&characters[SHADOW_BLADE], "shadow_blade", "影刃", "半精靈", 30, "assets/images/shadow_blade.png");
     init_character(&characters[SPRIT], "sprit", "精靈", "精靈", 50, "assets/images/sprit.png");
     init_character(&characters[THIEF_LEADER], "theif_leader", "盜賊領袖", "人類", -100, "assets/images/gurad.png");
     init_character(&characters[LEADER_OF_UBA], "leader_of_UBA", "聯合商業同盟會會長", "人類", 50, "assets/images/guard.png");
-    init_character(&characters[DRIVE_MAN], "drive_man", "馬車夫", "人類", 50, "assets/images/sw.png");
+    init_character(&characters[DRIVE_MAN], "drive_man", "馬車夫", "人類", 50, "assets/images/driveman.png");
     init_character(&characters[GUARD], "guard", "守衛隊長", "人類", 20, "assets/images/guard.png");
     init_character(&characters[EMPIRE], "empire", "皇帝", "人類", 100, "assets/images/empire.png");
-    init_character(&characters[OLD_MAN], "old_man", "老人", "人類", 50, "assets/images/sw.png");
+    init_character(&characters[OLD_MAN], "old_man", "老人", "人類", 50, "assets/images/oldman.png");
     // for (int32_t i = 0; i < EMPIRE; i++)
     // {
     //     printf("%s, %s, %d\n", characters[i].name, characters[i].kind, characters[i].favorability);
@@ -735,6 +733,7 @@ int32_t cp1(int8_t load, char *player_name, int8_t player_gender, SDL_Renderer *
         if (strstr(line, "[cp2.shadow_blade_fight]"))
         {
             // characters[EMPLOYER].favorability = 50;// for test
+            show(renderer, now_scene, characters[SHADOW_BLADE], now_text, font, &player);
             option_num = 1;
             if (characters[EMPLOYER].favorability == 70)
             {
@@ -1291,25 +1290,25 @@ void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *te
     // 顯示player數值
     show_image(renderer, "assets/images/black.png", 950, 300, 200, 400);
     // show player's money
-    show_text(renderer, "金錢: ", 960, 320, 30, font, (SDL_Color){255, 255, 255, 255});
+    show_text(renderer, "金錢: ", 960, 320, 40, font, (SDL_Color){255, 255, 255, 255});
     char money[100];
     snprintf(money, 100, "%d", player->money);
-    show_text(renderer, money, 960, 360, 30, font, (SDL_Color){255, 255, 255, 255});
+    show_text(renderer, money, 960, 360, 40, font, (SDL_Color){255, 255, 255, 255});
     // show player's hungry
-    show_text(renderer, "飽食度: ", 950, 400, 30, font, (SDL_Color){255, 255, 255, 255});
+    show_text(renderer, "飽食度: ", 960, 400, 40, font, (SDL_Color){255, 255, 255, 255});
     char hungry[100];
     snprintf(hungry, 100, "%d", player->hungry);
-    show_text(renderer, hungry, 960, 440, 30, font, (SDL_Color){255, 255, 255, 255});
-    show_text(renderer, "按B顯示背包", 960, 480, 30, font, (SDL_Color){255, 255, 255, 255});
+    show_text(renderer, hungry, 960, 440, 40, font, (SDL_Color){255, 255, 255, 255});
+    show_text(renderer, "按B顯示背包", 960, 480, 40, font, (SDL_Color){255, 255, 255, 255});
 
     // printf("%s\n", character.name_ch);
-    show_text(renderer, character.name_ch, 170, 620, 40, font, (SDL_Color){255, 255, 255, 255});
+    show_text(renderer, character.name_ch, 170, 620, 50, font, (SDL_Color){255, 255, 255, 255});
     // show faverability
     if (strstr(character.name, "player") == NULL)
     {
         char favorability[100];
         snprintf(favorability, 100, "好感度: %d", character.favorability);
-        show_text(renderer, favorability, 650, 670, 30, font, (SDL_Color){0, 0, 0, 255});
+        show_text(renderer, favorability, 650, 670, 40, font, (SDL_Color){0, 0, 0, 255});
     }
 
     char text_line[256];
@@ -1321,12 +1320,12 @@ void show(SDL_Renderer *renderer, s_scene scene, s_character character, char *te
     {
         int32_t total_bytes = 0;
 
-        while (total_bytes + utf8_char_len(&text[text_index + total_bytes]) <= 140 && total_bytes < text_len)
+        while (total_bytes + utf8_char_len(&text[text_index + total_bytes]) <= 120 && total_bytes < text_len)
         {
             total_bytes += utf8_char_len(&text[text_index + total_bytes]);
         }
         snprintf(text_line, 256, "%.*s", total_bytes, &text[text_index]);
-        show_text(renderer, text_line, 20, 720 + text_line_num * 30, 24, font, (SDL_Color){0, 0, 0, 255});
+        show_text(renderer, text_line, 20, 720 + text_line_num * 30, 36, font, (SDL_Color){0, 0, 0, 255});
         // printf("%s\n", text_line);
         text_len -= total_bytes;
         text_index += total_bytes;
@@ -1403,7 +1402,7 @@ void display_options(SDL_Renderer *renderer, TTF_Font *font, s_options *options,
     {
         show_image(renderer, "assets/images/black.png", 0, 200 + i * 55, WINDOW_WIDTH, 50);
         // printf("%ld\n", strlen(options[i].option));
-        show_text(renderer, options[i].option, 50, 200 + i * 55, 40, font, (SDL_Color){255, 255, 255, 255});
+        show_text(renderer, options[i].option, 50, 200 + i * 55, 50, font, (SDL_Color){255, 255, 255, 255});
     }
 }
 
@@ -1604,6 +1603,11 @@ void print_data(s_player player, s_character *characters, s_scene *scenes, s_sce
     printf("player.hungry: %d\n", player.hungry);
     for (int32_t i = 0; i < 100; i++)
     {
+        if (player.back_pack[i].item_id == 0)
+        {
+            continue;
+        }
+        
         printf("player.back_pack[%d].item_id: %d\n", i, player.back_pack[i].item_id);
         printf("player.back_pack[%d].name: %s\n", i, player.back_pack[i].item_name);
         printf("player.back_pack[%d].picture: %s\n", i, player.back_pack[i].item_pic);
