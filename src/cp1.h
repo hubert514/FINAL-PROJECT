@@ -45,6 +45,8 @@ typedef struct _s_scene
     char name[20];
     char discription[200];
     char file[100];
+    char entergif[100];
+    char leftgif[100];
 } s_scene;
 
 typedef struct s_options
@@ -52,6 +54,14 @@ typedef struct s_options
     char option[100];
     char next[100];
 } s_options;
+
+typedef struct s_item
+{
+    int8_t item_id;
+    char item_name[20];
+    char item_pic[100];
+    int8_t item_health;
+} s_item;
 
 
 int32_t cp1(int8_t load, char *player_name, int8_t player_gender, SDL_Renderer *renderer, TTF_Font *font);

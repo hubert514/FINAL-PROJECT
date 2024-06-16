@@ -24,10 +24,11 @@ void clear_events();
 void display_options(SDL_Renderer *renderer, TTF_Font *font, s_options *options, int32_t option_num);
 int32_t utf8_char_len(const char *s);
 void set_faverability(char *line, s_character *characters);
-void get_item(s_player *player, char *line);
+void get_item(s_player *player, char *line, s_item *items);
 void save(s_player player, s_character *characters, s_scene *scenes, s_scene now_scene, s_character now_character, char *line, char *next);
 void load_data(s_player *player, s_character *characters, s_scene *scenes, s_scene *now_scene, s_character *now_character, char *line, char *next);
 void print_data(s_player player, s_character *characters, s_scene *scenes, s_scene now_scene, s_character now_character, char *line, char *next);
+void init_item(s_item *item, int8_t item_id, char *item_name, char *item_pic, int8_t item_health);
 
 int32_t cp1(int8_t load, char *player_name, int8_t player_gender, SDL_Renderer *renderer, TTF_Font *font)
 {
@@ -46,27 +47,75 @@ int32_t cp1(int8_t load, char *player_name, int8_t player_gender, SDL_Renderer *
     s_player player;
     init_player(&player, player_name, player_gender);
     char player_gender_pic[100];
-    
-        snprintf(player_gender_pic, 100, "assets/images/character_player.png");
-    
+
+    snprintf(player_gender_pic, 100, "assets/images/character_player.png");
 
     // printf("%s, %s\n", player.name, player.kind);
+    // init
+    while (fgets(line, sizeof(line), script))
+    {
+        if (strstr(line, "init = 1"))
+        {
+            break;
+        }
+    }
 
     // setting characters
     s_character characters[20];
-
     // initcharacters
-    // if read "init_character"
+
     init_character(&characters[PLAYER], "player", player_name, player.kind, 0, player_gender_pic);
-    init_character(&characters[EMPLOYER], "employer", "雇主(冒險家協會會長)", "人類", 60, "assets/images/employer_normal.png");
-    init_character(&characters[SHADOW_BLADE], "shadow_blade", "影刃", "半精靈", 30, "assets/images/shadow_blade.png");
-    init_character(&characters[SPRIT], "sprit", "精靈", "精靈", 50, "assets/images/sprit.png");
-    init_character(&characters[THIEF_LEADER], "theif_leader", "盜賊領袖", "人類", -100, "assets/images/gurad.png");
-    init_character(&characters[LEADER_OF_UBA], "leader_of_UBA", "聯合商業同盟會會長", "人類", 50, "assets/images/guard.png");
-    init_character(&characters[DRIVE_MAN], "drive_man", "馬車夫", "人類", 50, "assets/images/driveman.png");
-    init_character(&characters[GUARD], "guard", "守衛隊長", "人類", 20, "assets/images/guard.png");
-    init_character(&characters[EMPIRE], "empire", "皇帝", "人類", 100, "assets/images/empire.png");
-    init_character(&characters[OLD_MAN], "old_man", "老人", "人類", 50, "assets/images/oldman.png");
+    // if read "init_character"
+    // read [set_character]
+    while (fgets(line, sizeof(line), script))
+    {
+        if (strstr(line, "[end_of_set_character]"))
+        {
+            printf("end of set character\n");
+            break;
+        }
+        if (strstr(line, "[[init_character]]"))
+        {
+            // set_character = 0
+            // character = "employer"
+            // name = "雇主(冒險家協會會長)"
+            // kind = "人類"
+            // Favorability = 60
+            // pic = "assets/images/employer_normal.png"
+            int32_t set_character = 0;
+            char name[100], kind[100], pic[100], name_ch[100];
+            int32_t favorability = 0;
+
+            fgets(line, sizeof(line), script);
+            sscanf(line, "set_character = %d", &set_character);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "character = \"%[^\"]\"", name);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "name = \"%[^\"]\"", name_ch);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "kind = \"%[^\"]\"", kind);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "Favorability = %d", &favorability);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "pic = \"%[^\"]\"", pic);
+            init_character(&characters[set_character], name, name_ch, kind, favorability, pic);
+        }
+    }
+    // test
+    // for (int32_t i = 0; i < CHARACTER_NUM; i++)
+    // {
+    //     printf("%s, %s, %s, %d, %s\n", characters[i].name, characters[i].name_ch, characters[i].kind, characters[i].favorability, characters[i].picture);
+    // }
+
+    // init_character(&characters[EMPLOYER], "employer", "雇主(冒險家協會會長)", "人類", 60, "assets/images/employer_normal.png");
+    // init_character(&characters[SHADOW_BLADE], "shadow_blade", "影刃", "半精靈", 30, "assets/images/shadow_blade.png");
+    // init_character(&characters[SPRIT], "sprit", "精靈", "精靈", 50, "assets/images/sprit.png");
+    // init_character(&characters[THIEF_LEADER], "theif_leader", "盜賊領袖", "人類", -100, "assets/images/gurad.png");
+    // init_character(&characters[LEADER_OF_UBA], "leader_of_UBA", "聯合商業同盟會會長", "人類", 50, "assets/images/guard.png");
+    // init_character(&characters[DRIVE_MAN], "drive_man", "馬車夫", "人類", 50, "assets/images/driveman.png");
+    // init_character(&characters[GUARD], "guard", "守衛隊長", "人類", 20, "assets/images/guard.png");
+    // init_character(&characters[EMPIRE], "empire", "皇帝", "人類", 100, "assets/images/empire.png");
+    // init_character(&characters[OLD_MAN], "old_man", "老人", "人類", 50, "assets/images/oldman.png");
     // for (int32_t i = 0; i < EMPIRE; i++)
     // {
     //     printf("%s, %s, %d\n", characters[i].name, characters[i].kind, characters[i].favorability);
@@ -74,22 +123,101 @@ int32_t cp1(int8_t load, char *player_name, int8_t player_gender, SDL_Renderer *
 
     // set scene
     s_scene scenes[5];
-    snprintf(scenes[OFFICE].name, 20, "office");
-    snprintf(scenes[OFFICE].name_ch, 20, "辦公室");
-    snprintf(scenes[OFFICE].discription, 200, "典雅華麗，與外頭的暴亂形成對比");
-    snprintf(scenes[OFFICE].file, 100, "assets/images/office.png");
-    snprintf(scenes[FOREST].name, 20, "forest");
-    snprintf(scenes[FOREST].name_ch, 20, "森林小徑");
-    snprintf(scenes[FOREST].discription, 200, "幽暗，茂密，時時有奇怪聲音作響");
-    snprintf(scenes[FOREST].file, 100, "assets/images/forest.png");
-    snprintf(scenes[KINGDOM_ROAD].name, 20, "kingdom_road");
-    snprintf(scenes[KINGDOM_ROAD].name_ch, 20, "王國之路");
-    snprintf(scenes[KINGDOM_ROAD].discription, 200, "萬里無雲，經過整修的寬闊，直線的石板路，邊界是森林");
-    snprintf(scenes[KINGDOM_ROAD].file, 100, "assets/images/sw.jpg");
-    snprintf(scenes[PALACE].name, 20, "palace");
-    snprintf(scenes[PALACE].name_ch, 20, "皇宮");
-    snprintf(scenes[PALACE].discription, 200, "金碧輝煌，氣派非凡");
-    snprintf(scenes[PALACE].file, 100, "assets/images/palace.png");
+    // snprintf(scenes[OFFICE].name, 20, "office");
+    // snprintf(scenes[OFFICE].name_ch, 20, "辦公室");
+    // snprintf(scenes[OFFICE].discription, 200, "典雅華麗，與外頭的暴亂形成對比");
+    // snprintf(scenes[OFFICE].file, 100, "assets/images/office.png");
+    // snprintf(scenes[FOREST].name, 20, "forest");
+    // snprintf(scenes[FOREST].name_ch, 20, "森林小徑");
+    // snprintf(scenes[FOREST].discription, 200, "幽暗，茂密，時時有奇怪聲音作響");
+    // snprintf(scenes[FOREST].file, 100, "assets/images/forest.png");
+    // snprintf(scenes[KINGDOM_ROAD].name, 20, "kingdom_road");
+    // snprintf(scenes[KINGDOM_ROAD].name_ch, 20, "王國之路");
+    // snprintf(scenes[KINGDOM_ROAD].discription, 200, "萬里無雲，經過整修的寬闊，直線的石板路，邊界是森林");
+    // snprintf(scenes[KINGDOM_ROAD].file, 100, "assets/images/sw.jpg");
+    // snprintf(scenes[PALACE].name, 20, "palace");
+    // snprintf(scenes[PALACE].name_ch, 20, "皇宮");
+    // snprintf(scenes[PALACE].discription, 200, "金碧輝煌，氣派非凡");
+    // snprintf(scenes[PALACE].file, 100, "assets/images/palace.png");
+    while (fgets(line, sizeof(line), script))
+    {
+        if (strstr(line, "[end_of_set_scene]"))
+        {
+            printf("end of set scene\n");
+            break;
+        }
+        if (strstr(line, "[[init_scene]]"))
+        {
+            // set_scene = 0
+            // scene = "office"
+            // name = "辦公室"
+            // description = "典雅華麗，與外頭的暴亂形成對比"
+            // pic = "assets/images/office.png"
+            // enter = "assets/images/to_office.png"
+            // left = "assets/images/left_office.png"
+            int32_t set_scene = 0;
+            char name[20], name_ch[20], pic[100], description[200], entergif[100], leftgif[100];
+
+            fgets(line, sizeof(line), script);
+            sscanf(line, "set_scene = %d", &set_scene);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "scene = \"%[^\"]\"", name);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "name = \"%[^\"]\"", name_ch);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "description = \"%[^\"]\"", description);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "pic = \"%[^\"]\"", pic);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "enter = \"%[^\"]\"", entergif);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "left = \"%[^\"]\"", leftgif);
+            snprintf(scenes[set_scene].name, 20, "%s", name);
+            snprintf(scenes[set_scene].name_ch, 20, "%s", name_ch);
+            snprintf(scenes[set_scene].discription, 200, "%s", description);
+            snprintf(scenes[set_scene].file, 100, "%s", pic);
+            snprintf(scenes[set_scene].entergif, 100, "%s", entergif);
+            snprintf(scenes[set_scene].leftgif, 100, "%s", leftgif);
+
+            printf("%s, %s, %s, %s, %s, %s\n", scenes[set_scene].name, scenes[set_scene].name_ch, scenes[set_scene].discription, scenes[set_scene].file, scenes[set_scene].entergif, scenes[set_scene].leftgif);
+        }
+    }
+    {
+        /* code */
+    }
+
+    // init_item
+    s_item items[100];
+
+    while (fgets(line, sizeof(line), script))
+    {
+        if (strstr(line, "[end_of_set_item]"))
+        {
+            printf("end of set item\n");
+            break;
+        }
+        if (strstr(line, "[[init_item]]"))
+        {
+            // item_id = 1
+            // name = "斧頭"
+            // pic = "assets/images/axe.png"
+            // health = 50
+            int8_t item_id = 0, health = 0;
+            char name[20], pic[100];
+
+            fgets(line, sizeof(line), script);
+            sscanf(line, "item_id = %hhd", &item_id);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "name = \"%[^\"]\"", name);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "pic = \"%[^\"]\"", pic);
+            fgets(line, sizeof(line), script);
+            sscanf(line, "health = %hhd", &health);
+            init_item(&items[item_id], item_id, name, pic, health);
+
+            printf("%d, %s, %s, %d\n", items[item_id].item_id, items[item_id].item_name, items[item_id].item_pic, items[item_id].item_health);
+        }
+    }
 
     // test
     // show(renderer, scenes[OFFICE], characters[EMPIRE], "Hello, world!", font);
@@ -113,6 +241,21 @@ int32_t cp1(int8_t load, char *player_name, int8_t player_gender, SDL_Renderer *
     show_image(renderer, "assets/images/black.png", 200, 200, WINDOW_WIDTH - 400, WINDOW_HEIGHT - 400);
     show_text(renderer, "遊戲開始", 200, 350, 150, font, (SDL_Color){255, 255, 255, 255});
     playSound("assets/sound/enter_game.wav", 1000);
+    // printf("playsound\n");
+    // fseek(script, 0, SEEK_SET);
+    // printf("playsound\n");
+    fseek(script, 0, SEEK_SET);
+    while (fgets(line, sizeof(line), script))
+    {
+        if (strstr(line, "[story_start]"))
+        {
+            fgets(line, sizeof(line), script);
+            sscanf(line, "next = \"%[^\"]\"", tmp);
+            snprintf(next, 1002, "[%s]", tmp);
+            printf("%s\n", next);
+            break;
+        }
+    }
 
     while (fgets(line, sizeof(line), script) && !quit)
     {
@@ -148,100 +291,6 @@ int32_t cp1(int8_t load, char *player_name, int8_t player_gender, SDL_Renderer *
         }
 
         // event quit
-        if (strstr(now_scene.name, "kingdom_road"))
-        {
-            printf("%s\n", now_scene.name);
-            show_image(renderer, "assets/images/black.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-            show_text(renderer, "由於僱用不到馬車夫，所以你只能走森林小徑", 20, 20, 50, font, (SDL_Color){255, 255, 255, 255});
-            show_text(renderer, "按下空白繼續", 1000, WINDOW_HEIGHT - 50, 24, font, (SDL_Color){255, 255, 255, 255});
-            set_scene("scene = \"forest\"", &now_scene, scenes);
-            sleep(0.25);
-            clear_events();
-
-            while (1)
-            {
-                SDL_PollEvent(&event);
-                if (event.type == SDL_QUIT)
-                {
-                    quit = true;
-                    break;
-                }
-                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN)
-                {
-                    clear_events();
-                    break;
-                }
-                // if event == space
-                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
-                {
-                    playSound("assets/sound/sound.wav", 1000);
-                    printf("playsound\n");
-                    clear_events();
-                    break;
-                }
-                // if event == B
-                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_b)
-                {
-                    if (show_back_pack(renderer, font, player))
-                    {
-                        quit = true;
-                        break;
-                    }
-                    show(renderer, now_scene, now_character, now_text, font, &player);
-                    clear_events();
-                }
-                // if esc is pressed
-                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
-                {
-                    clear_events();
-                    show_image(renderer, "assets/images/esc.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-                    // if esc is pressed again
-                    while (1)
-                    {
-                        SDL_PollEvent(&event);
-                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
-                        {
-                            break;
-                        }
-                        // if e is pressed
-                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e)
-                        {
-                            quit = true;
-                            return_type = 1;
-                            break;
-                        }
-                        // if s is pressed
-                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s)
-                        {
-                            // save_system
-                            // save all data
-                            save(player, characters, scenes, now_scene, now_character, line, next);
-                            show_image(renderer, "assets/images/black.png", 200, 200, WINDOW_WIDTH - 400, WINDOW_HEIGHT - 400);
-                            show_text(renderer, "Saved", 200, 350, 150, font, (SDL_Color){255, 255, 255, 255});
-                            sleep(1);
-                            show_image(renderer, "assets/images/esc.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-                        }
-                    }
-                    show(renderer, now_scene, now_character, now_text, font, &player);
-                    clear_events();
-                }
-                if (quit)
-                {
-                    break;
-                }
-            }
-
-            // next = cp2.forrest
-            snprintf(next, 1002, "[cp2.forest]");
-            fseek(script, 0, SEEK_SET);
-            while (fgets(line, sizeof(line), script))
-            {
-                if (strstr(line, next))
-                {
-                    break;
-                }
-            }
-        }
 
         if (line[0] == '#')
         {
@@ -251,32 +300,120 @@ int32_t cp1(int8_t load, char *player_name, int8_t player_gender, SDL_Renderer *
         {
             if (!strstr(line, now_scene.name) || strlen(now_scene.name) < 2)
             {
-                if (strstr(now_scene.name, "office"))
+                for (int32_t i = 0; i < SCENE_NUM; i++)
                 {
-                    displayGif(renderer, "assets/images/left_office.gif");
-                }
-                if (strstr(now_scene.name, "forest"))
-                {
-                    displayGif(renderer, "assets/images/to_forest.gif");
-                }
-                if (strstr(now_scene.name, "palace"))
-                {
-                    displayGif(renderer, "assets/images/left_palace.gif");
+                    if (strstr(now_scene.name, scenes[i].name) && strlen(scenes[i].leftgif) > 2)
+                    {
+                        printf("left %s", scenes[i].leftgif);
+                        displayGif(renderer, scenes[i].leftgif);
+                        break;
+                    }
                 }
 
                 set_scene(line, &now_scene, scenes);
+                if (strstr(now_scene.name, "kingdom_road"))
+                {
+                    printf("%s\n", now_scene.name);
+                    show_image(renderer, "assets/images/black.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                    show_text(renderer, "由於僱用不到馬車夫，所以你只能走森林小徑", 20, 20, 50, font, (SDL_Color){255, 255, 255, 255});
+                    show_text(renderer, "按下空白繼續", 1000, WINDOW_HEIGHT - 50, 24, font, (SDL_Color){255, 255, 255, 255});
+                    set_scene("scene = \"forest\"", &now_scene, scenes);
+                    sleep(0.25);
+                    clear_events();
 
-                if (strstr(now_scene.name, "forest"))
-                {
-                    displayGif(renderer, "assets/images/to_forest.gif");
+                    while (1)
+                    {
+                        SDL_PollEvent(&event);
+                        if (event.type == SDL_QUIT)
+                        {
+                            quit = true;
+                            break;
+                        }
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN)
+                        {
+                            clear_events();
+                            break;
+                        }
+                        // if event == space
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+                        {
+                            playSound("assets/sound/sound.wav", 1000);
+                            printf("playsound\n");
+                            clear_events();
+                            break;
+                        }
+                        // if event == B
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_b)
+                        {
+                            if (show_back_pack(renderer, font, player))
+                            {
+                                quit = true;
+                                break;
+                            }
+                            show(renderer, now_scene, now_character, now_text, font, &player);
+                            clear_events();
+                        }
+                        // if esc is pressed
+                        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+                        {
+                            clear_events();
+                            show_image(renderer, "assets/images/esc.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                            // if esc is pressed again
+                            while (1)
+                            {
+                                SDL_PollEvent(&event);
+                                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+                                {
+                                    break;
+                                }
+                                // if e is pressed
+                                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e)
+                                {
+                                    quit = true;
+                                    return_type = 1;
+                                    break;
+                                }
+                                // if s is pressed
+                                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s)
+                                {
+                                    // save_system
+                                    // save all data
+                                    save(player, characters, scenes, now_scene, now_character, line, next);
+                                    show_image(renderer, "assets/images/black.png", 200, 200, WINDOW_WIDTH - 400, WINDOW_HEIGHT - 400);
+                                    show_text(renderer, "Saved", 200, 350, 150, font, (SDL_Color){255, 255, 255, 255});
+                                    sleep(1);
+                                    show_image(renderer, "assets/images/esc.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                                }
+                            }
+                            show(renderer, now_scene, now_character, now_text, font, &player);
+                            clear_events();
+                        }
+                        if (quit)
+                        {
+                            break;
+                        }
+                    }
+
+                    // next = cp2.forrest
+                    snprintf(next, 1002, "[cp2.forest]");
+                    fseek(script, 0, SEEK_SET);
+                    while (fgets(line, sizeof(line), script))
+                    {
+                        if (strstr(line, next))
+                        {
+                            break;
+                        }
+                    }
                 }
-                if (strstr(now_scene.name, "office"))
+
+                for (int32_t i = 0; i < SCENE_NUM; i++)
                 {
-                    displayGif(renderer, "assets/images/to_office.gif");
-                }
-                if (strstr(now_scene.name, "palace"))
-                {
-                    displayGif(renderer, "assets/images/to_palace.gif");
+                    if (strstr(now_scene.name, scenes[i].name) && strlen(scenes[i].entergif) > 2)
+                    {
+                        printf("ender %s", scenes[i].entergif);
+                        displayGif(renderer, scenes[i].entergif);
+                        break;
+                    }
                 }
             }
             else
@@ -623,7 +760,7 @@ int32_t cp1(int8_t load, char *player_name, int8_t player_gender, SDL_Renderer *
         }
         if (strstr(line, "get ="))
         {
-            get_item(&player, line);
+            get_item(&player, line, items);
         }
         int32_t money = 0;
         int8_t fix_option = 0;
@@ -1459,39 +1596,12 @@ void set_faverability(char *line, s_character *characters)
     return;
 }
 
-void get_item(s_player *player, char *line)
+void get_item(s_player *player, char *line, s_item *items)
 {
     // get = item_id
-    if (line[6] == '1')
-    {
-        add_item(player, 1, "斧頭", "assets/images/axe.png", 50);
-    }
-    if (line[6] == '2')
-    {
-        add_item(player, 2, "弓", "assets/images/bow.png", 75);
-    }
+    int32_t item_id = atoi(&line[6]);
 
-    if (line[6] == '3')
-    {
-        add_item(player, 3, "礦藏", "assets/images/mine.png", 0);
-    }
-    if (line[6] == '4')
-    {
-        add_item(player, 4, "對講機", "assets/images/walkie_talkie.png", 0);
-    }
-    if (line[6] == '5')
-    {
-        add_item(player, 5, "箭矢X5", "assets/images/arrow.png", 0);
-    }
-    if (line[6] == '6')
-    {
-        add_item(player, 6, "開山刀", "assets/images/machete.png", 80);
-    }
-
-    if (line[6] == '7')
-    {
-        add_item(player, 7, "聖劍", "assets/images/ex_calibur.png", 0);
-    }
+    add_item(player, items[item_id].item_id, items[item_id].item_name, items[item_id].item_pic, items[item_id].item_health);
 }
 
 void save(s_player player, s_character *characters, s_scene *scenes, s_scene now_scene, s_character now_character, char *line, char *next)
@@ -1607,7 +1717,7 @@ void print_data(s_player player, s_character *characters, s_scene *scenes, s_sce
         {
             continue;
         }
-        
+
         printf("player.back_pack[%d].item_id: %d\n", i, player.back_pack[i].item_id);
         printf("player.back_pack[%d].name: %s\n", i, player.back_pack[i].item_name);
         printf("player.back_pack[%d].picture: %s\n", i, player.back_pack[i].item_pic);
@@ -1631,6 +1741,16 @@ void print_data(s_player player, s_character *characters, s_scene *scenes, s_sce
     printf("now_character.picture: %s\n", now_character.picture);
     printf("now_character.favorability: %d\n", now_character.favorability);
     printf("line: %s\n", line);
+
+    return;
+}
+
+void init_item(s_item *item, int8_t item_id, char *item_name, char *item_pic, int8_t item_health)
+{
+    item->item_id = item_id;
+    snprintf(item->item_name, 20, "%s", item_name);
+    snprintf(item->item_pic, 100, "%s", item_pic);
+    item->item_health = item_health;
 
     return;
 }

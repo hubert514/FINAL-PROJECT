@@ -1,0 +1,4 @@
+player.back_pack[3].item_id = 7
+player.back_pack[3].name = 聖劍
+player.back_pack[3].picture = assets/images/excalibur.png
+player.back_pack[3].durability = 0

@@ -1,3 +1,4 @@
+
 init = 1
 # [player]
 # name = "player"
@@ -5,72 +6,225 @@ init = 1
 # money = 0
 # hungry = 100
 
-# [character.employer]
-# name = "employer"
-# kind = "獸人"
-# Favorability = 60
+# // if read "init_character"
+#     // read name, kind, favorability, pic
+#     init_character(&characters[EMPLOYER], "employer", "雇主(冒險家協會會長)", "人類", 60, "assets/images/employer_normal.png");
+#     init_character(&characters[SHADOW_BLADE], "shadow_blade", "影刃", "半精靈", 30, "assets/images/shadow_blade.png");
+#     init_character(&characters[SPRIT], "sprit", "精靈", "精靈", 50, "assets/images/sprit.png");
+#     init_character(&characters[THIEF_LEADER], "theif_leader", "盜賊領袖", "人類", -100, "assets/images/gurad.png");
+#     init_character(&characters[LEADER_OF_UBA], "leader_of_UBA", "聯合商業同盟會會長", "人類", 50, "assets/images/guard.png");
+#     init_character(&characters[DRIVE_MAN], "drive_man", "馬車夫", "人類", 50, "assets/images/driveman.png");
+#     init_character(&characters[GUARD], "guard", "守衛隊長", "人類", 20, "assets/images/guard.png");
+#     init_character(&characters[EMPIRE], "empire", "皇帝", "人類", 100, "assets/images/empire.png");
+#     init_character(&characters[OLD_MAN], "old_man", "老人", "人類", 50, "assets/images/oldman.png");
 
-# [character.shadow_blade]
-# name = "影刃"
-# kind = "半精靈"
-# Favorability = 30
+[set_character]
 
-# [character.sprit]
-# name = "精靈"
-# kind = "精靈"
-# Favorability = 50
+[[init_character]]
+set_character = 1
+character = "employer"
+name = "雇主(冒險家協會會長)"
+kind = "人類"
+Favorability = 60
+pic = "assets/images/employer_normal.png"
 
-# [character.theif_leader]
-# name = "盜賊首領"
-# kind = "人類"
-# Favorability = -100
+[[init_character]]
+set_character = 2
+character = "shadow_blade"
+name = "影刃"
+kind = "半精靈"
+Favorability = 30
+pic = "assets/images/shadow_blade.png"
 
-# [character.leader_of_UBA]
-# name = "聯合商業同盟會的會長"
-# kind = "人類"
-# Favorability = 50
+[[init_character]]
+set_character = 3
+character = "sprit"
+name = "精靈"
+kind = "精靈"
+Favorability = 50
+pic = "assets/images/sprit.png"
 
-# [character.drive_man]
-# name = "馬車夫"
-# kind = "人類"
-# Favorability = 50
+[[init_character]]
+set_character = 4
+character = "theif_leader"
+name = "盜賊領袖"
+kind = "人類"
+Favorability = -100
+pic = "assets/images/gurad.png"
 
-# [character.guard]
-# name = "守衛隊長"
-# kind = "人類"
-# Favorability = 20
+[[init_character]]
+set_character = 5
+character = "leader_of_UBA"
+name = "聯合商業同盟會會長"
+kind = "人類"
+Favorability = 50
+pic = "assets/images/guard.png"
 
-# [character.empire]
-# name = "皇帝"
-# kind = "人類"
-# Favorability = 50
+[[init_character]]
+set_character = 6
+character = "drive_man"
+name = "馬車夫"
+kind = "人類"
+Favorability = 50
+pic = "assets/images/driveman.png"
 
-# [item.axe]
-# name = "斧頭"
-# level_of_damage = 100
+[[init_character]]
+set_character = 7
+character = "guard"
+name = "守衛隊長"
+kind = "人類"
+Favorability = 20
+pic = "assets/images/guard.png"
 
-# [item.bow]
-# name = "弓"
-# level_of_damage = 100
-# arror = 0
+[[init_character]]
+set_character = 8
+character = "empire"
+name = "皇帝"
+kind = "人類"
+Favorability = 100
+pic = "assets/images/empire.png"
+
+[[init_character]]
+set_character = 9
+character = "old_man"
+name = "老人"
+kind = "人類"
+Favorability = 50
+pic = "assets/images/oldman.png"
+
+[end_of_set_character]
+
+# s_scene scenes[5];
+#     snprintf(scenes[OFFICE].name, 20, "office");
+#     snprintf(scenes[OFFICE].name_ch, 20, "辦公室");
+#     snprintf(scenes[OFFICE].discription, 200, "典雅華麗，與外頭的暴亂形成對比");
+#     snprintf(scenes[OFFICE].file, 100, "assets/images/office.png");
+#     snprintf(scenes[FOREST].name, 20, "forest");
+#     snprintf(scenes[FOREST].name_ch, 20, "森林小徑");
+#     snprintf(scenes[FOREST].discription, 200, "幽暗，茂密，時時有奇怪聲音作響");
+#     snprintf(scenes[FOREST].file, 100, "assets/images/forest.png");
+#     snprintf(scenes[KINGDOM_ROAD].name, 20, "kingdom_road");
+#     snprintf(scenes[KINGDOM_ROAD].name_ch, 20, "王國之路");
+#     snprintf(scenes[KINGDOM_ROAD].discription, 200, "萬里無雲，經過整修的寬闊，直線的石板路，邊界是森林");
+#     snprintf(scenes[KINGDOM_ROAD].file, 100, "assets/images/sw.jpg");
+#     snprintf(scenes[PALACE].name, 20, "palace");
+#     snprintf(scenes[PALACE].name_ch, 20, "皇宮");
+#     snprintf(scenes[PALACE].discription, 200, "金碧輝煌，氣派非凡");
+#     snprintf(scenes[PALACE].file, 100, "assets/images/palace.png");
+
+[set_scene]
+
+[[init_scene]]
+set_scene = 0
+scene = "office"
+name = "辦公室"
+description = "典雅華麗，與外頭的暴亂形成對比"
+pic = "assets/images/office.png"
+enter = "assets/images/to_office.gif"
+left = "assets/images/left_office.gif"
+
+[[init_scene]]
+set_scene = 1
+scene = "forest"
+name = "森林小徑"
+description = "幽暗，茂密，時時有奇怪聲音作響"
+pic = "assets/images/forest.png"
+enter = "assets/images/to_forest.gif"
+left = "assets/images/left_forest.gif"
+
+[[init_scene]]
+set_scene = 2
+scene = "kingdom_road"
+name = "王國之路"
+description = "王國之路，萬里無雲，經過整修的寬闊，直線的石板路，邊界是森林"
+pic = "assets/images/sw.jpg"
+enter = "assets/images/to_sw.gif"
+left = "assets/images/left_sw.gif"
+
+[[init_scene]]
+set_scene = 3
+scene = "palace"
+name = "皇宮"
+description = "皇宮，金碧輝煌，氣派非凡"
+pic = "assets/images/palace.png"
+enter = "assets/images/to_palace.gif"
+left = "assets/images/left_palace.gif"
 
 
-# [scene.office]
-# name = "辦公室"
-# description = "典雅華麗，與外頭的暴亂形成對比"
+[end_of_set_scene]
 
-# [scene.forest]
-# name = "森林小徑"
-# description = "幽暗，茂密，時時有奇怪聲音作響"
 
-# [scene.kingdom_road]
-# name = "王國之路"
-# description = "王國之路，萬里無雲，經過整修的寬闊，直線的石板路，邊界是森林"
 
-# [scene.palace]
-# name = "皇宮"
-# description = "皇宮，金碧輝煌，氣派非凡"
 
+# void init_item(s_item *item, int8_t item_id, char *item_name, char *item_pic, int8_t item_health)
+# {
+#     item->item_id = item_id;
+#     snprintf(item->item_name, 20, "%s", item_name);
+#     snprintf(item->item_pic, 100, "%s", item_pic);
+#     item->item_health = item_health;
+
+#     return;
+# }
+#define axe 1
+#define bow 2
+#define mine 3
+#define walkie_talkie 4
+#define arrow 5
+#define machete 6
+#define ex_calibur 7
+
+[set_item]
+
+[[init_item]]
+item_id = 1
+name = "斧頭"
+pic = "assets/images/axe.png"
+health = 50
+
+[[init_item]]
+item_id = 2
+name = "弓"
+pic = "assets/images/bow.png"
+health = 25
+
+[[init_item]]
+item_id = 3
+name = "礦石"
+pic = "assets/images/mine.png"
+health = 0
+
+[[init_item]]
+item_id = 4
+name = "對講機"
+pic = "assets/images/walkie_talkie.png"
+health = 0
+
+[[init_item]]
+item_id = 5
+name = "箭矢"
+pic = "assets/images/arrow.png"
+health = 0
+
+[[init_item]]
+item_id = 6
+name = "開山刀"
+pic = "assets/images/machete.png"
+health = 20
+
+[[init_item]]
+item_id = 7
+name = "聖劍"
+pic = "assets/images/excalibur.png"
+health = 0
+
+[end_of_set_item]
+
+[end_of_init]
+
+
+[story_start]
+
+next = "cp1.begin"
 
 #劇情開始
 
@@ -1109,7 +1263,7 @@ next = "cp3.boast"
 
 [cp3.humble]
 character = "player"
-text = "皇上，我是{player}，我只是盡了我的本分，抵達了這裡"
+text = "皇上，我只是盡了我的本分，抵達了這裡"
 empire.Favorability = +5
 next = "cp3.response"
 
@@ -1250,8 +1404,14 @@ next = "end.lost_to_guard"
 
 
 
-#拒絕1, 死亡2, 完成3, 成為守衛4 
+#end = 0 結束
 
+[end.end]
+character = "player"
+text = "遊戲結束"
+end = 0
+
+# 拒絕, 死亡2, 完成3, 成為守衛4 
 [end.reject_mission]
 character = "employer"
 scene = "office"
