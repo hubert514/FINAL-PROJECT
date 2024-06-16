@@ -214,7 +214,7 @@ health = 20
 [[init_item]]
 item_id = 7
 name = "聖劍"
-pic = "assets/images/excalibur.png"
+pic = "assets/images/ex_calibur.png"
 health = 0
 
 [end_of_set_item]

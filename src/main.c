@@ -141,8 +141,48 @@ int8_t enter_name(SDL_Renderer *renderer, TTF_Font *font, char *playerName, int3
     }
     SDL_StartTextInput(); // Start text input
     playerName[0] = '\0';
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    SDL_Color textColor = {255, 255, 255, 255};
+    SDL_Surface *textSurface;
+    if (strlen(playerName) == 0)
+    {
+        show_image(renderer, "assets/images/entername.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        textSurface = TTF_RenderText_Solid(TTF_OpenFont("assets/fonts/kaiu.ttf", 50), "Enter your name:", textColor);
+    }
+    else
+    {
+        show_image(renderer, "assets/images/entername.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        textSurface = TTF_RenderText_Solid(TTF_OpenFont("assets/fonts/kaiu.ttf", 50), playerName, textColor);
+    }
+
+    if (textSurface)
+    {
+        SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+        if (textTexture)
+        {
+            int textWidth = textSurface->w;
+            int textHeight = textSurface->h;
+            SDL_FreeSurface(textSurface);
+
+            SDL_Rect textRect = {(WINDOW_WIDTH - textWidth) / 2, (WINDOW_HEIGHT - textHeight) / 2 + 70, textWidth, textHeight};
+            SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+            SDL_DestroyTexture(textTexture);
+        }
+        else
+        {
+            SDL_FreeSurface(textSurface);
+            showError("SDL_CreateTextureFromSurface Error");
+        }
+    }
+    else
+    {
+        showError("TTF_RenderText_Solid Error");
+    }
     while (!quit)
     {
+        SDL_RenderPresent(renderer);
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT)
@@ -155,6 +195,48 @@ int8_t enter_name(SDL_Renderer *renderer, TTF_Font *font, char *playerName, int3
                 {
                     strcat(playerName, event.text.text);
                     nameLength++;
+
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                    SDL_RenderClear(renderer);
+
+                    SDL_Color textColor = {255, 255, 255, 255};
+                    SDL_Surface *textSurface;
+                    if (strlen(playerName) == 0)
+                    {
+                        show_image(renderer, "assets/images/entername.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                        textSurface = TTF_RenderText_Solid(TTF_OpenFont("assets/fonts/kaiu.ttf", 50), "Enter your name:", textColor);
+                    }
+                    else
+                    {
+                        show_image(renderer, "assets/images/entername.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                        textSurface = TTF_RenderText_Solid(TTF_OpenFont("assets/fonts/kaiu.ttf", 50), playerName, textColor);
+                    }
+
+                    if (textSurface)
+                    {
+                        SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+                        if (textTexture)
+                        {
+                            int textWidth = textSurface->w;
+                            int textHeight = textSurface->h;
+                            SDL_FreeSurface(textSurface);
+
+                            SDL_Rect textRect = {(WINDOW_WIDTH - textWidth) / 2, (WINDOW_HEIGHT - textHeight) / 2 + 70, textWidth, textHeight};
+                            SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+                            SDL_DestroyTexture(textTexture);
+                        }
+                        else
+                        {
+                            SDL_FreeSurface(textSurface);
+                            showError("SDL_CreateTextureFromSurface Error");
+                        }
+                    }
+                    else
+                    {
+                        showError("TTF_RenderText_Solid Error");
+                    }
+
+                    SDL_RenderPresent(renderer);
                 }
             }
             else if (event.type == SDL_KEYDOWN)
@@ -162,6 +244,47 @@ int8_t enter_name(SDL_Renderer *renderer, TTF_Font *font, char *playerName, int3
                 if (event.key.keysym.sym == SDLK_BACKSPACE && nameLength > 0)
                 {
                     playerName[--nameLength] = '\0';
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                    SDL_RenderClear(renderer);
+
+                    SDL_Color textColor = {255, 255, 255, 255};
+                    SDL_Surface *textSurface;
+                    if (strlen(playerName) == 0)
+                    {
+                        show_image(renderer, "assets/images/entername.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                        textSurface = TTF_RenderText_Solid(TTF_OpenFont("assets/fonts/kaiu.ttf", 50), "Enter your name:", textColor);
+                    }
+                    else
+                    {
+                        show_image(renderer, "assets/images/entername.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                        textSurface = TTF_RenderText_Solid(TTF_OpenFont("assets/fonts/kaiu.ttf", 50), playerName, textColor);
+                    }
+
+                    if (textSurface)
+                    {
+                        SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+                        if (textTexture)
+                        {
+                            int textWidth = textSurface->w;
+                            int textHeight = textSurface->h;
+                            SDL_FreeSurface(textSurface);
+
+                            SDL_Rect textRect = {(WINDOW_WIDTH - textWidth) / 2, (WINDOW_HEIGHT - textHeight) / 2 + 70, textWidth, textHeight};
+                            SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+                            SDL_DestroyTexture(textTexture);
+                        }
+                        else
+                        {
+                            SDL_FreeSurface(textSurface);
+                            showError("SDL_CreateTextureFromSurface Error");
+                        }
+                    }
+                    else
+                    {
+                        showError("TTF_RenderText_Solid Error");
+                    }
+
+                    SDL_RenderPresent(renderer);
                 }
                 else if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_RETURN2)
                 {
@@ -169,48 +292,6 @@ int8_t enter_name(SDL_Renderer *renderer, TTF_Font *font, char *playerName, int3
                 }
             }
         }
-
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-
-        SDL_Color textColor = {255, 255, 255, 255};
-        SDL_Surface *textSurface;
-        if (strlen(playerName) == 0)
-        {
-            show_image(renderer, "assets/images/entername.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-            textSurface = TTF_RenderText_Solid(font, "Enter your name:", textColor);
-        }
-        else
-        {
-            show_image(renderer, "assets/images/entername.png", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-            textSurface = TTF_RenderText_Solid(font, playerName, textColor);
-        }
-
-        if (textSurface)
-        {
-            SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-            if (textTexture)
-            {
-                int textWidth = textSurface->w;
-                int textHeight = textSurface->h;
-                SDL_FreeSurface(textSurface);
-
-                SDL_Rect textRect = {(WINDOW_WIDTH - textWidth) / 2, (WINDOW_HEIGHT - textHeight) / 2 + 70, textWidth, textHeight};
-                SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
-                SDL_DestroyTexture(textTexture);
-            }
-            else
-            {
-                SDL_FreeSurface(textSurface);
-                showError("SDL_CreateTextureFromSurface Error");
-            }
-        }
-        else
-        {
-            showError("TTF_RenderText_Solid Error");
-        }
-
-        SDL_RenderPresent(renderer);
     }
 
     SDL_StopTextInput();

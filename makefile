@@ -26,6 +26,6 @@ install:
 
 
 clean:
-	rm -f test *.exe engine cp1 menu 
+	rm -f test *.exe engine cp1 menu gif name sound
 
 .PHONY: all cp1 menu gif name clean 
