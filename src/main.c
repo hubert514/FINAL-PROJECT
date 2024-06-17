@@ -13,7 +13,7 @@
 #include "init.h"
 #include <stdbool.h>
 #include "back_pack.h"
-#include "playsound.h"
+#include "playSound.h"
 // #include "SDL_functions.h"
 
 void showError(const char *title);
