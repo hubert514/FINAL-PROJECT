@@ -27,7 +27,7 @@ int main(int argc, char const *argv[])
     SDL_Renderer *renderer = NULL;
     int imgFlags;
     int32_t success = initialize_window(&window, &renderer, &imgFlags);
-    TTF_Font *font = TTF_OpenFont("assets/fonts/kaiu.ttf", 24);
+    TTF_Font *font = TTF_OpenFont("assets/fonts/NotoSansTC-Bold.ttf", 24);
     if (font == NULL)
     {
         printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
